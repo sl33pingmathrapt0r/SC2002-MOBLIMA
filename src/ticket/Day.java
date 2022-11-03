@@ -1,0 +1,15 @@
+
+ enum TypeOfMovie{
+	D3,BLOCKBUSTER,REGULAR,DIGITAL
+}
+
+enum Day {
+
+	SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
+    THURSDAY, FRIDAY, SATURDAY, PH
+}
+
+enum ClassOfCinema {
+
+	PLATINUM,REGULAR, ATMOS
+}
