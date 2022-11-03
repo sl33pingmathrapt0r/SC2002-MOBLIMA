@@ -64,6 +64,6 @@ public class MovieGoer extends User {
     // }
 
     public void listTop5Movies(boolean ratingSort) {
-        // comment
+        
     }
 }
