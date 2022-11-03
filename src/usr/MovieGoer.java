@@ -30,11 +30,21 @@ public class MovieGoer extends User {
 
     // TODO
     // public void viewMovieDetails(Movie movie) {
-
+        /* 
+         * prints details of movies offered by CINEPLEX, not
+         * cinema, i.e. without showtimes, screening hall, 
+         * seat number. 
+         */
     // }
 
     public void selectSeat() {
-
+        /* 
+         * choose a seat from CINEMA, w.r.t movie, 
+         * showtime, and no single-seat gaps. 
+         * Requires Cinema to check for validity (correct 
+         * gap, available). 
+         * Stores selected Seats temporarily before booking
+         */
     }
 
     public void bookTicket() {
@@ -53,7 +63,7 @@ public class MovieGoer extends User {
     //     }
     // }
 
-    public void listTop5Movies() {
-        
+    public void listTop5Movies(boolean ratingSort) {
+        // comment
     }
 }

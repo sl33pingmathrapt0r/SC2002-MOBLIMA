@@ -103,9 +103,9 @@ public class Accounts {
         else {
             System.out.print("Enter name (as per NRIC):\t");
             name= scan.nextLine();
-            System.out.println("Enter your mobile number:\t");
+            System.out.print("Enter your mobile number:\t");
             hp= scan.nextLine();
-            System.out.println("Enter your email:\t");
+            System.out.print("Enter your email address:\t");
             email= scan.nextLine();
             account= new MovieGoer(username, pw, name, hp, email);
         }
