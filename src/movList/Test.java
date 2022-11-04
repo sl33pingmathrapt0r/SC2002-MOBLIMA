@@ -6,14 +6,13 @@ public class Test {
 	public static void main(String[] args)
 	{
 		Scanner sc = new Scanner(System.in);
-		MovieList movlist = new MovieList(sc);
-		for(Movie mov : movlist.listMovies()) System.out.println(mov.getTitle());
-		movlist.createMovie();
-		movlist.listMovies();
+		for(Movie mov : MovieList.listMovies()) System.out.println(mov.getTitle());
+		MovieList.createMovie();
+		MovieList.listMovies();
 		for(int i=0; i<2; i++) {
 			System.out.print("Select movie to be inspected ");
 			String s = sc.nextLine();
-			Movie mov = movlist.getMovie(s);
+			Movie mov = MovieList.getMovie(s);
 			int n = 0;
 			while(n!=8) {
 				System.out.println("0: Get title");

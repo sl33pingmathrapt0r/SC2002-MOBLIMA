@@ -5,15 +5,10 @@ import java.io.*;
 
 public class MovieList {
 	
-	private String cwd = Path.of("").toAbsolutePath().toString()  + "/Movies";
-	private Scanner sc;
+	final private static String cwd = Path.of("").toAbsolutePath().toString()  + "/Movies";
+	private static Scanner sc = new Scanner(System.in);
 	
-	MovieList(Scanner scan) {
-		new File(cwd).mkdirs();
-		sc = scan;
-	}
-	
-	void createMovie() {
+	public static void createMovie() {
 		String movie = "";
 		System.out.print("Enter movie title: ");
 		String title = sc.nextLine();
@@ -62,11 +57,11 @@ public class MovieList {
         }
 	}
 	
-	Movie getMovie(String Title) {
+	public static Movie getMovie(String Title) {
 		return new Movie(cwd + "/" + Title + ".txt");		
 	}
 	
-	Movie[] listMovies() {
+	public static Movie[] listMovies() {
 		File[] movFolder = new File(cwd).listFiles();
 		if(movFolder == null) return new Movie[0];
 		Movie [] movList = new Movie[movFolder.length];
@@ -77,7 +72,7 @@ public class MovieList {
 		return movList;
 	}
 	
-	void deleteMovie(String Title) {
+	public static void deleteMovie(String Title) {
 		File f = new File(cwd + "/" + Title + ".txt");
 		if(f.delete()) {
 			System.out.printf("Movie %s deleted successfully \n", Title);
@@ -87,7 +82,7 @@ public class MovieList {
 		}
 	}
 	
-	String getCwd() {
+	public static String getCwd() {
 		return cwd;
 	}
 }
