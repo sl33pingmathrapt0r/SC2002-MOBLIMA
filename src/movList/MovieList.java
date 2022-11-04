@@ -46,6 +46,18 @@ public class MovieList {
 		movie += rating/n;
 		
 		String filepath = cwd + "/" + title + ".txt";
+		if(new File(filepath).exists()){
+			System.out.printf("Movie %s exists. Overwrite movie file? Y/N \n", title);
+			String in = sc.nextLine().strip();
+			while(!in.equals("Y") && !in.equals("N")){
+				System.out.printf("%s not valid input. Enter Y/N \n", in);
+				in = sc.nextLine().strip();
+			}
+			if(in.equals("N")){
+				System.out.println("Movie creation aborted");
+				return;
+			}
+		}
 		try {
 			FileWriter fwriter = new FileWriter(filepath);
 			fwriter.write(movie);
