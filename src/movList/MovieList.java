@@ -58,18 +58,30 @@ public class MovieList {
 	}
 	
 	public static Movie getMovie(String Title) {
-		return new Movie(cwd + "/" + Title + ".txt");		
+		try{
+			return new Movie(cwd + "/" + Title + ".txt");		
+		}
+		catch(FileNotFoundException e){
+			System.out.printf("Movie %s does not exist! \n", Title);
+			return new Movie();
+		}
 	}
 	
 	public static Movie[] listMovies() {
 		File[] movFolder = new File(cwd).listFiles();
 		if(movFolder == null) return new Movie[0];
-		Movie [] movList = new Movie[movFolder.length];
-		int i = 0;
-		for(File mov : movFolder) {
-			movList[i++] = new Movie(cwd + "/" + mov.getName());
+		try{
+			Movie [] movList = new Movie[movFolder.length];
+			int i = 0;
+			for(File mov : movFolder) {
+				movList[i++] = new Movie(cwd + "/" + mov.getName());
+			}
+			return movList;
 		}
-		return movList;
+		catch(FileNotFoundException e){
+            System.out.print(e.getMessage());
+			return new Movie[0];
+		}
 	}
 	
 	public static void deleteMovie(String Title) {

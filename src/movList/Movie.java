@@ -11,8 +11,10 @@ public class Movie {
 	private Integer[] pastRatings;
 	private String[] reviews;
 	private float rating;
+
+	Movie(){}
 	
-	Movie(String movFile){
+	Movie(String movFile) throws FileNotFoundException{
 		
 		try {
 			File file = new File(movFile);
@@ -38,7 +40,7 @@ public class Movie {
 			sc.close();
 		}
 		catch (FileNotFoundException e) {
-			System.out.printf("Movie file %s not found!\n", movFile);
+			throw e;
 		}
 	}
 	
