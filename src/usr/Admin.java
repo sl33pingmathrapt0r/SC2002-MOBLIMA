@@ -1,6 +1,7 @@
 package src.usr;
 
 import java.util.*;
+// import MovieList.*;
 
 class Admin extends User {
     private boolean isAdmin= true;
@@ -28,15 +29,21 @@ class Admin extends User {
 
     // TODO
     public void createMovieListing() {
-
+        // return movList.createMovie();
     }
 
     public void updateMovieListing() {
-
+         /* 
+        * Not implemented under movieList
+        * To update a movie, it is necessary to delete
+        * the target movie then create another
+        */
     }
 
     public void deleteMovieListing() {
-
+        // System.out.println("Which movie would you like to delete? ");
+        // String Title = scan.nextLine();
+        // return movList.deleteMovie(Title);
     }
 
     public void createCinemaShowtimes() {
