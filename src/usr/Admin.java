@@ -9,6 +9,7 @@ class Admin extends User {
     private String pw;
 
     private static Scanner scan= new Scanner(System.in);
+    // private static movList = new MovieList(scan);
 
     Admin(String username, String pw) {
         this.username= username;
