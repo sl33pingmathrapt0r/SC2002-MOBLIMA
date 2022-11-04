@@ -1,5 +1,4 @@
-package Group_Assignment;
-import java.util.ArrayList;
+package movList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;

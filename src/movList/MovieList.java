@@ -1,4 +1,4 @@
-package Group_Assignment;
+package movList;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.io.*;
@@ -9,6 +9,7 @@ public class MovieList {
 	private Scanner sc;
 	
 	MovieList(Scanner scan) {
+		new File(cwd).mkdirs();
 		sc = scan;
 	}
 	
@@ -67,6 +68,7 @@ public class MovieList {
 	
 	Movie[] listMovies() {
 		File[] movFolder = new File(cwd).listFiles();
+		if(movFolder == null) return new Movie[0];
 		Movie [] movList = new Movie[movFolder.length];
 		int i = 0;
 		for(File mov : movFolder) {

@@ -1,4 +1,4 @@
-package Group_Assignment;
+package movList;
 import java.util.Scanner;
 
 public class Test {
@@ -7,7 +7,7 @@ public class Test {
 	{
 		Scanner sc = new Scanner(System.in);
 		MovieList movlist = new MovieList(sc);
-		movlist.listMovies();
+		for(Movie mov : movlist.listMovies()) System.out.println(mov.getTitle());
 		movlist.createMovie();
 		movlist.listMovies();
 		for(int i=0; i<2; i++) {
