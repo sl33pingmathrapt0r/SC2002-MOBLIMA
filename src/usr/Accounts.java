@@ -10,6 +10,7 @@ public class Accounts {
      * be completed here. 
      */
     final private static String adminSecretKey= "helloadmin";
+    // add to text file 
     private static ArrayList<User> goerAcc= new ArrayList<User>();
     private static ArrayList<User> adminAcc= new ArrayList<User>();
 
