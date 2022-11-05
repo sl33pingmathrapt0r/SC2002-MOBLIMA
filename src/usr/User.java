@@ -17,6 +17,8 @@ abstract class User {
         return username;
     }
 
+    // resetPW
+    
     boolean checkPW(String pw) {
         return this.pw.equals(pw) ? true : false;
     }

@@ -113,11 +113,11 @@ public class MovieGoer extends User {
 
                 // show price before proceeding with purchase
                 System.out.println("Ticket Price: $" + Ticket.calculatePrice(cinemaClass, movieType, age, day));
-                do {
-                    System.out.print("Confirm purchase of chosen seats? Y/N: ");
-                    strInput= scan.nextLine();
-                } while ( !( (exit= strInput.equalsIgnoreCase("n")) || strInput.equalsIgnoreCase("y") ) );
-                if (exit) return false;
+                // do {
+                //     System.out.print("Confirm purchase of chosen seats? Y/N: ");
+                //     strInput= scan.nextLine();
+                // } while ( !( (exit= strInput.equalsIgnoreCase("n")) || strInput.equalsIgnoreCase("y") ) );
+                // if (exit) return false;
 
                 Ticket tempTix= new Ticket(movieName, movieType, cinemaClass, name, hp, day, time, age, seat);
                 price+= tempTix.getPrice;
@@ -136,6 +136,7 @@ public class MovieGoer extends User {
             for (Ticket tix: toBook) {
                 bookingHistory.add(tix);
             }
+            // print transactionID
             return true;
         }
     }

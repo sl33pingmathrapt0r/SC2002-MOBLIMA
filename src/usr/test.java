@@ -10,7 +10,7 @@ public class test {
         Accounts.createAcc();
         Accounts.printAcc();
 
-        // login section
+        // LOGIN SECTION
         String username, pw, strInput;
         boolean admin;
         int accLocation;
@@ -41,9 +41,25 @@ public class test {
             // break; // break from switch-case (login), return to main menu
         }
         
-        User current= Accounts.get(admin, accLocation);
+        User currentUser= Accounts.get(admin, accLocation);
 
-        System.out.println(current.isAdmin());
-        System.out.println(current.getUser());
+        System.out.println(currentUser.isAdmin());
+        System.out.println(currentUser.getUser());
+
+        // SELECT SEATS & BOOK TICKETS
+        // int intInput;
+        // Cineplex.listMovies();
+        // intInput= Integer.valueOf(scan.nextLine());
+        // choose Movie
+        // choose showtime
+        // Set<String> selectedSeats= new HashSet<String>();
+        // do {
+        //      cancel selections? if true => break;
+        //      list vacancy
+        //      option to enquire price
+        //      selectSeat(); --> will add if not in set, option for remove if in set
+        // } while ( !currentUser.bookTicket(..., selectedSeats) );
+        //
+        // selectedSeats.clear();
     }    
 }
