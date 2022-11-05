@@ -11,8 +11,8 @@ public class Movie {
 	private Integer[] pastRatings;
 	private String[] reviews;
 	private float rating;
-	private int counter;
 	private STATUS status;
+	private int counter;
 
 	Movie(){
 		counter = 0;
@@ -110,7 +110,7 @@ public class Movie {
 		System.out.print("Enter status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
 		String in = sc.nextLine().strip();
 		while(!in.equals("COMING_SOON") && !in.equals("NOW_SHOWING") && !in.equals("END_OF_SHOWING")){
-			System.out.println("Invalid status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"):")
+			System.out.println("Invalid status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
 			in = sc.nextLine().strip();
 		}
 		status = STATUS.valueOf(in);
@@ -178,15 +178,6 @@ public class Movie {
 	public float getRating(){
 		return rating;
 	}
-	
-	// public void print() {
-	// 	System.out.println(title);
-	// 	System.out.println(director);
-	// 	System.out.println(synopsis);
-	// 	for(String i : cast) System.out.println(i);
-	// 	for(int i=0; i < reviews.length; i++) System.out.println(pastRatings[i] + " " + reviews[i]);
-	// 	System.out.println(rating);
-	// }
 
 	public int getCounter() {
 		return counter;
