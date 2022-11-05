@@ -1,5 +1,6 @@
+package src.ticket;
 
- enum TypeOfMovie{
+enum TypeOfMovie{
 	D3,BLOCKBUSTER,REGULAR,DIGITAL
 }
 
