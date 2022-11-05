@@ -13,3 +13,7 @@ enum ClassOfCinema {
 
 	PLATINUM,REGULAR, ATMOS
 }
+
+enum AgeGroup{
+	STUDENT,ADULT,SENIOR
+}
