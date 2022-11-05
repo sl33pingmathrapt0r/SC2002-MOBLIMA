@@ -11,9 +11,19 @@ public class Ticket {
 	private AgeGroup ageGroup;
 	private double price;
 
-
+	/**
+	 * Constructor class for ticket
+	 * @param typeOfMovie
+	 * @param classOfCinema
+	 * @param clientName
+	 * @param clientContact
+	 * @param dayOfWeek
+	 * @param timeOfMovie
+	 * @param ageGroup
+	 * @param price
+	 */
 	public Ticket(TypeOfMovie typeOfMovie, ClassOfCinema classOfCinema, String clientName, String clientContact, Day dayOfWeek,
-			int[] timeOfMovie, AgeGroup ageGroup, double price) {
+			int[] timeOfMovie, AgeGroup ageGroup) {
 		
 		this.typeOfMovie = typeOfMovie;
 		this.classOfCinema = classOfCinema;
@@ -34,6 +44,7 @@ public class Ticket {
 	 * https://www.cathaycineplexes.com.sg/faqs/
 	 * Remaining prices that are not reflected in the website such as 3D movies in general, platinum weekends are just a rough guess
 	 */
+	
 	private double calculatePrice() {
 
 		//Regular Cinema
@@ -202,13 +213,12 @@ public class Ticket {
 	public double getPrice() {
 		return price;
 	}
-
-	public int getAgeOfMovieGoer() {
-		return ageOfMovieGoer;
+	public AgeGroup getAgeGroup() {
+		return ageGroup;
+	}
+	public void setAgeGroup(AgeGroup ageGroup) {
+		this.ageGroup = ageGroup;
 	}
 
-	public void setAgeOfMovieGoer(int ageOfMovieGoer) {
-		this.ageOfMovieGoer = ageOfMovieGoer;
-	}
 
 }
