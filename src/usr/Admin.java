@@ -5,8 +5,7 @@ import java.util.*;
 
 class Admin extends User {
     private boolean isAdmin= true;
-    private String username;
-    private String pw;
+    private String username, pw;
 
     private static Scanner scan= new Scanner(System.in);
     // private static movList = new MovieList(scan);
@@ -28,9 +27,23 @@ class Admin extends User {
         return (this.pw.equals(pw)) ? true : false;
     }
 
-    // TODO
+    public Cinema selectCinema(Cineplex cineplex) {
+        /* 
+         * Cineplex needs a listCinemas function, void function that prints list
+         * of cinemas, preferrably sorted lexicographically. The cinemas are 
+         * numbered when printed. User selects cinema by input choice in integer. 
+         */
+        int choice;
+        cineplex.listCinemas();
+        do {
+            int choice= scan.nextInt();
+        } while ( choice > (int) cineplex.cinemaCount());
+        Cinema cinema= Cineplex.get(choice-1);  // accounts for zero-indexing
+        return cinema;
+    }
+    
     public void createMovieListing() {
-        // return movList.createMovie();
+        return movList.createMovie();
     }
 
     public void updateMovieListing() {

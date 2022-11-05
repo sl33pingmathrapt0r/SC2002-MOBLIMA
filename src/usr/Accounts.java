@@ -8,6 +8,8 @@ public class Accounts {
      * Consequently, the class will be used to whenever a new class is 
      * created. Login verification and account retrieval methods will also 
      * be completed here. 
+     * No instance of this class should be created, since all accounts are
+     * stored together and global. 
      */
     final private static String adminSecretKey= "helloadmin";
     // add to text file 
@@ -62,9 +64,8 @@ public class Accounts {
          * Creates new User objects, and adds accounts to storage. Method 
          * utilises Accounts.add() and Accounts.getAdminKey()
          */
-        String username, pw, strInput;
         boolean admin;
-        String name, hp, email;
+        String username, pw, name, email, hp, strInput;
         User account;
 
         do {
@@ -117,8 +118,8 @@ public class Accounts {
     // testing functions below
     public static void printAcc() {
         System.out.println("goers");
-        for (int i=0; i<goerAcc.size(); i++) System.out.println(goerAcc.get(i).getUser());
+        for (User acc : goerAcc) System.out.println(acc.getUser());
         System.out.println("admin");
-        for (int i=0; i<adminAcc.size(); i++) System.out.println(adminAcc.get(i).getUser());
+        for (User acc : adminAcc) System.out.println(acc.getUser());
     }
 }
