@@ -1,3 +1,4 @@
+package src.ticket;
 
 public class Ticket {
 
@@ -7,12 +8,12 @@ public class Ticket {
 	private String clientContact;
 	private Day dayOfWeek;
 	private int[] timeOfMovie; //2-tuple of int (hour,min) in a 24H system
-	private int ageOfMovieGoer;
+	private AgeGroup ageGroup;
 	private double price;
-	private boolean isStudent;
+
 
 	public Ticket(TypeOfMovie typeOfMovie, ClassOfCinema classOfCinema, String clientName, String clientContact, Day dayOfWeek,
-			int[] timeOfMovie, int ageOfMovieGoer, double price) {
+			int[] timeOfMovie, AgeGroup ageGroup, double price) {
 		
 		this.typeOfMovie = typeOfMovie;
 		this.classOfCinema = classOfCinema;
@@ -20,7 +21,7 @@ public class Ticket {
 		this.clientContact = clientContact;
 		this.dayOfWeek = dayOfWeek;
 		this.timeOfMovie = timeOfMovie;
-		this.ageOfMovieGoer = ageOfMovieGoer;
+		this.ageGroup = ageGroup;
 		this.price=this.calculatePrice();
 		
 	}
@@ -41,7 +42,7 @@ public class Ticket {
 			
 			case THURSDAY:
 				//student
-				if(this.isStudent==true && this.timeOfMovie[0]<18) {
+				if(this.ageGroup==AgeGroup.STUDENT && this.timeOfMovie[0]<18) {
 					//3D movie
 					if(this.typeOfMovie==TypeOfMovie.D3) return 9.00;
 					//regular and digital are $1 cheaper than blockbuster 
@@ -51,7 +52,7 @@ public class Ticket {
 					}
 				}
 				//senior citizen
-				if(this.ageOfMovieGoer>55 && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
+				if(this.ageGroup==AgeGroup.SENIOR && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
 				//adult
 				if(this.typeOfMovie==TypeOfMovie.D3) 	return 12.00;
 				else {
@@ -61,7 +62,7 @@ public class Ticket {
 
 			case FRIDAY:
 				//student
-				if(this.isStudent==true && this.timeOfMovie[0]<18) {
+				if(this.ageGroup==AgeGroup.STUDENT && this.timeOfMovie[0]<18) {
 					if(this.typeOfMovie==TypeOfMovie.D3) return 9.00;
 					else {
 						if(this.typeOfMovie==TypeOfMovie.BLOCKBUSTER) return 8.00;
@@ -69,7 +70,7 @@ public class Ticket {
 					}
 				}
 				//senior citizen
-				if(this.ageOfMovieGoer>55 && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
+				if(this.ageGroup==AgeGroup.SENIOR && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
 				//3D movies on Fridays are regardless of timing
 				if(this.typeOfMovie==TypeOfMovie.D3) {
 					return 18.00;
@@ -99,7 +100,7 @@ public class Ticket {
 				// Monday, Tuesday, Wednesday
 			default:
 				//student
-				if(this.isStudent==true && this.timeOfMovie[0]<18) {
+				if(this.ageGroup==AgeGroup.STUDENT && this.timeOfMovie[0]<18) {
 					if(this.typeOfMovie==TypeOfMovie.D3) return 9.00;
 					else {
 						if(this.typeOfMovie==TypeOfMovie.BLOCKBUSTER) return 8.00;
@@ -107,7 +108,7 @@ public class Ticket {
 					}
 				}
 				//senior citizen
-				if(this.ageOfMovieGoer>55 && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
+				if(this.ageGroup==AgeGroup.SENIOR && this.timeOfMovie[0]<18 && this.classOfCinema==ClassOfCinema.REGULAR)	return 5.00;
 				//adult
 				if(this.typeOfMovie==TypeOfMovie.D3) 	return 12.00;
 				else {
@@ -127,7 +128,7 @@ public class Ticket {
 					if(this.typeOfMovie==TypeOfMovie.BLOCKBUSTER) return 38.00;
 					else return 35.00;
 				default:
-					if(this.isStudent==true) return 16.00;
+					if(this.ageGroup==AgeGroup.STUDENT) return 16.00;
 					if(this.typeOfMovie==TypeOfMovie.BLOCKBUSTER) return 28.00;
 					else return 25.00;
 			}
