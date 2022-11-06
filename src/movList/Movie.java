@@ -120,20 +120,6 @@ public class Movie {
 		sc.nextLine();
 	}
 
-	void inc(String cwd) {
-		counter++;
-		this.write(cwd);
-	}
-
-	void dec(String cwd) {
-		counter--;
-		if(counter==0){
-			status = STATUS.END_OF_SHOWING;
-			System.out.printf("Movie %s no longer showing \n", title);
-		}
-		this.write(cwd);
-	}
-
 	void write(String cwd) {
 		String filepath = cwd + "/" + title + ".txt";
 		try {
@@ -185,6 +171,20 @@ public class Movie {
 
 	public STATUS getStatus(){
 		return status;
+	}
+
+	public void inc(String cwd) {
+		counter++;
+		this.write(cwd);
+	}
+
+	public void dec(String cwd) {
+		counter--;
+		if(counter==0){
+			status = STATUS.END_OF_SHOWING;
+			System.out.printf("Movie %s no longer showing \n", title);
+		}
+		this.write(cwd);
 	}
 
 	public String toString() {
