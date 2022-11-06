@@ -6,6 +6,7 @@ package src.usr;
 abstract class User {
     private boolean isAdmin= false;
     private String username, pw;
+    private String name, hp, email;
 
     // private static Scanner scan= new Scanner(System.in);
 
@@ -17,7 +18,21 @@ abstract class User {
         return username;
     }
 
-    // resetPW
+    public String getName() {
+        return name;
+    }
+
+    public String getHp() {
+        return hp;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    String getPW() {
+        return pw;
+    }
 
     boolean checkPW(String pw) {
         return this.pw.equals(pw) ? true : false;

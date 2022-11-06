@@ -7,6 +7,10 @@ public class test {
     private static Scanner scan= new Scanner(System.in);
     
     public static void main(String[] args) {
+
+        // APPLICATION STARTUP
+        Accounts.load();
+
         Accounts.createAcc();
         Accounts.printAcc();
 

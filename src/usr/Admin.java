@@ -23,6 +23,10 @@ class Admin extends User {
         return username;
     }
 
+    String getPW() {
+        return pw;
+    }
+
     boolean checkPW(String pw) {
         return (this.pw.equals(pw)) ? true : false;
     }
