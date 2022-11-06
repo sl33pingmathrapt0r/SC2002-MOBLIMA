@@ -14,6 +14,7 @@ public class test {
         Accounts.createAcc();
         Accounts.printAcc();
 
+        Accounts.store();
         // LOGIN SECTION
         String username, pw, strInput;
         boolean admin;

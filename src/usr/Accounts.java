@@ -20,6 +20,7 @@ public class Accounts{
 
     private static ArrayList<User> goerAcc= new ArrayList<User>();
     private static ArrayList<User> adminAcc= new ArrayList<User>();
+    private static Scanner scan= new Scanner(System.in);
 
     /**
      * Used upon starting application, loading all 
@@ -29,8 +30,8 @@ public class Accounts{
         File adminDir= new File(ADMIN_PATH);
         if (adminDir.exists()) {
             try {
-                for (String accPath : adminDir.list()) {
-                    BufferedReader adminFile= new BufferedReader(new FileReader(adminDir+accPath));
+                for (File accFile : adminDir.listFiles()) {
+                    BufferedReader adminFile= new BufferedReader(new FileReader(accFile));
                     if (adminFile.ready()) {
                         String[] userDetails= adminFile.readLine().split(",", 2);
                         add(new Admin(userDetails[0], userDetails[1]));
@@ -52,8 +53,8 @@ public class Accounts{
         File goerDir= new File(GOER_PATH);
         if (goerDir.exists()) {
             try {
-                for (String accPath : goerDir.list()) {
-                    BufferedReader goerFile= new BufferedReader(new FileReader(goerDir+accPath));
+                for (File accFile : goerDir.listFiles()) {
+                    BufferedReader goerFile= new BufferedReader(new FileReader(accFile));
                     if (goerFile.ready()) {
                         String[] userDetails= goerFile.readLine().split(",", 5);
                         User user= new MovieGoer(
@@ -200,7 +201,6 @@ public class Accounts{
          * Creates new User objects, and adds accounts to storage. Method 
          * utilises Accounts.add() and Accounts.getAdminKey()
          */
-        Scanner scan= new Scanner(System.in);
         boolean admin;
         String username, pw, name, email, hp, strInput;
         User account;
@@ -222,15 +222,18 @@ public class Accounts{
 
             if (tries==3) {
                 System.out.println("Too many tries. Exiting account creation...");
-                scan.close();
                 return;
             }
         }
 
-        do {
+        File adminFile= new File(ADMIN_PATH);
+        System.out.print("New username (no whitespaces):\t");
+        username= scan.nextLine();
+        while (username.indexOf(' ')!=-1 || Arrays.asList(adminFile.list()).contains(username + ".txt")) {
+            System.out.println("Invalid username or username already taken.");
             System.out.print("New username (no whitespaces):\t");
             username= scan.nextLine();
-        } while (username.indexOf(' ')!=-1);
+        }
 
         do {
             System.out.print("New password:\t\t");
@@ -251,7 +254,6 @@ public class Accounts{
             account= new MovieGoer(username, pw, name, hp, email);
         }
         
-        scan.close();
         add(account);
     }
 
