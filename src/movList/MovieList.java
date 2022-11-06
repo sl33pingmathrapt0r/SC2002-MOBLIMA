@@ -51,6 +51,7 @@ public class MovieList {
 				else{
 					System.out.println("Overwriting movie...");
 					at = movieList.indexOf(mov);
+					break;
 				}
 			}
 		}
