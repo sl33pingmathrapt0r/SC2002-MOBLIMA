@@ -11,13 +11,15 @@ public class test {
 		String s = sc.next();
 		System.out.println("Enter showtime");
 		int i = sc.nextInt();
-		System.out.println("Enter endtime");
-		int e = sc.nextInt();
+		System.out.println("Enter date");
+		int d = sc.nextInt();
 		Cinema c = new Cinema(1);
-		//c.AddMovie(s, i, e);
-		//c.listMovie();
-		//c.listVacancy(s,i,e);
-		c.updateVacancy(s, i,"1 B");
+		Movie movie = new Movie(s,sc);
+		Ticket ticket = new Ticket(s, TypeOfMovie.DIGITAL, ClassOfCinema.ATMOS, s, s, Day.FRIDAY, null,AgeGroup.ADULT, "1 A");
+		c.AddMovie(movie, i,d);
+		c.listMovie();
+		c.listVacancy(movie,i,d);
+		c.updateVacancy(movie, i, ticket,d);
 	}
 
 }

@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Cinema {
 	int name;
-	String path = System.getProperty("user.dir") + "\\src\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\Cinema\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	public Cinema(int s){
 		this.name = s;
@@ -18,9 +18,11 @@ public class Cinema {
 			b = f.mkdir();
 	}
 	
-	public void AddMovie(String s, int t, int e) throws IOException {
+	public void AddMovie(Movie movie, int t, int date) throws IOException {
+		String s = movie.getTitle();
+		int e = calculateEndTime(t,movie);
 		boolean b;
-		File g = new File(this.path+this.name+"\\"+t+"@"+e+"@"+s+"@.txt");
+		File g = new File(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return;
@@ -31,13 +33,13 @@ public class Cinema {
 		String s2[];
 		for (int i=0;i<l.length;i++) {
 			s1 = l[i];
-			s2 = s1.split("@",4);
-			if (Integer.valueOf(s2[0]) >= e || i == l.length-1) {
+			s2 = s1.split("@",5);
+			if (Integer.valueOf(s2[1]) >= e || i == l.length-1) {
 				if(i==0)
 					break;
 				s1 = l[i-1];
-				s2 = s1.split("@",4);
-				if (Integer.valueOf(s2[1]) > t) {
+				s2 = s1.split("@",5);
+				if (Integer.valueOf(s2[2]) > t) {
 					System.out.println("Timing clash, failed to add movie");
 					return;
 				}
@@ -46,7 +48,7 @@ public class Cinema {
 			}
 		}
 		b=g.createNewFile();
-		FileWriter w = new FileWriter(this.path+this.name+"\\"+t+"@"+e+"@"+s+"@.txt",true);
+		FileWriter w = new FileWriter(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt",true);
 		w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -63,36 +65,41 @@ public class Cinema {
 		System.out.println("List of movie and showtime");
 		for (int i=0;i<l.length;i++) {
 			s = l[i];
-			String k[] = s.split("@",4);
-			System.out.println("Name of movie: "+k[2]+ " |ShowTime: "+ k[0]);
+			String k[] = s.split("@",5);
+			System.out.println("Name of movie: "+k[3]+ " |ShowTime: "+ k[1]);
 		}
 	}
 	
-	public void listVacancy(String s, int t, int e) throws FileNotFoundException {
-		File f = new File(this.path+this.name+"\\"+t+"@"+e+"@"+s+"@"+".txt");
+	public void listVacancy(Movie movie, int t, int date) throws FileNotFoundException {
+		String s = movie.getTitle();
+		int e = calculateEndTime(t, movie);
+		File f = new File(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt");
 		if(!f.exists()) {
 			System.out.println("No such movie with the showtime exists");
 			return;
 		}
 		Scanner sc = new Scanner(f);
 		int i=1;
-		System.out.println("Vacancy of "+s+" at "+t);
+		System.out.println("Vacancy of "+s+" at "+t+" on "+date);
 		System.out.println("   A B C D E F G H I J");
 		System.out.println("   ___________________");
 		while(sc.hasNextLine()) {
 			System.out.println(i + " |" +sc.nextLine());
 			i++;
 		}
+		sc.close();
 	}
 
-	public void updateVacancy(String m,int t,String s) throws IOException{
+	public void updateVacancy(Movie movie,int t,Ticket ticket, int date) throws IOException{
+		String s = ticket.getSeatID();
+		String m = movie.getTitle();
 		File f = new File(this.path+this.name);
 		String l[] = f.list();
 		String temp = "";
 		for (int i=0;i<l.length;i++) {
 			temp = l[i];
-			String k[] = temp.split("@",4);
-			if(Integer.valueOf(k[0])== t || k[2]==m)
+			String k[] = temp.split("@",5);
+			if(Integer.valueOf(k[1])== t || k[3]==m)
 				break;
 			if (i==l.length-1){
 				System.out.println("No such movie exists");
@@ -128,5 +135,23 @@ public class Cinema {
 		bw.write(buffer.toString());
 		bw.flush();
 		bw.close();
+		sc.close();
+	}
+
+	public String getCinemaCode(){
+		return "CN"+this.name;
+	}
+
+	public int calculateEndTime(int startTime,Movie movie){
+		int i = movie.getDuration();
+		int hour = i/60;
+		int min = i-(hour)*60;
+		startTime = startTime + min;
+		if(startTime-(startTime/100)*100 >60)
+			startTime = startTime+40;
+		startTime = startTime + hour*100;
+		if(startTime>2500)
+			startTime = startTime -2400;
+		return startTime;	
 	}
 }
