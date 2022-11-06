@@ -14,9 +14,10 @@ public class test {
 		System.out.println("Enter endtime");
 		int e = sc.nextInt();
 		Cinema c = new Cinema(1);
-		c.AddMovie(s, i, e);
-		c.listMovie();
-		c.listVacancy(s,i,e);
+		//c.AddMovie(s, i, e);
+		//c.listMovie();
+		//c.listVacancy(s,i,e);
+		c.updateVacancy(s, i,"1 B");
 	}
 
 }

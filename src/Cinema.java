@@ -1,4 +1,5 @@
 package src;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -7,7 +8,7 @@ import java.util.Scanner;
 
 public class Cinema {
 	int name;
-	String path = "C:\\Users\\yeozo\\eclipse-workspace\\sce.sc2002.zh.first\\src\\cinema\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	public Cinema(int s){
 		this.name = s;
@@ -51,6 +52,7 @@ public class Cinema {
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n");
+		w.flush();
 		w.close();
 	}
 	
@@ -81,5 +83,50 @@ public class Cinema {
 			System.out.println(i + " |" +sc.nextLine());
 			i++;
 		}
+	}
+
+	public void updateVacancy(String m,int t,String s) throws IOException{
+		File f = new File(this.path+this.name);
+		String l[] = f.list();
+		String temp = "";
+		for (int i=0;i<l.length;i++) {
+			temp = l[i];
+			String k[] = temp.split("@",4);
+			if(Integer.valueOf(k[0])== t || k[2]==m)
+				break;
+			if (i==l.length-1){
+				System.out.println("No such movie exists");
+				return;
+			}
+		}
+		File g = new File(this.path+this.name+"\\"+temp);
+		Scanner sc = new Scanner(g);
+		String h[] = s.split(" ",2);
+		int del = h[1].charAt(0)-65;
+		String new1="";
+		StringBuffer buffer = new StringBuffer();
+		for(int k=1;k<=5;k++){
+			if(sc.hasNextLine()){
+				if(k==Integer.valueOf(h[0])){
+					String curr = sc.nextLine();
+					for(int j=0;j<10;j++){
+						if(j!=del)
+							new1 = new1+curr.charAt(j*2);
+						else
+							new1 = new1+"X";
+						if(j!=9)
+							new1 = new1 + " ";
+					}
+					buffer.append(new1+System.lineSeparator());
+					continue;
+				}
+				buffer.append(sc.nextLine()+System.lineSeparator());
+			}
+		}
+		FileWriter wr = new FileWriter(g);
+		BufferedWriter bw = new BufferedWriter(wr);
+		bw.write(buffer.toString());
+		bw.flush();
+		bw.close();
 	}
 }
