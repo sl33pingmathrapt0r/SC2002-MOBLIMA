@@ -1,4 +1,4 @@
-package src;
+package src.cinema;
 import java.util.Scanner;
 import java.io.IOException;
 
