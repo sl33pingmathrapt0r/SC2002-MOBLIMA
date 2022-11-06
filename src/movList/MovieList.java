@@ -10,6 +10,7 @@ public class MovieList {
 	private static ArrayList<Movie> movieList = new ArrayList<Movie>();
 
 	public static void initMovList() {
+		new File(cwd).mkdirs();
 		// Initialises movieList for ease of access
 		File[] movFolder = new File(cwd).listFiles();
 		if(movFolder == null) movieList = new ArrayList<Movie>();
@@ -63,6 +64,7 @@ public class MovieList {
 		// Updating movieList
 		if(at==-1) movieList.add(mov);
 		else movieList.add(at, mov);
+		System.out.println("Movie successfully created.");
 		return mov;
 	}
 

@@ -158,7 +158,6 @@ public class Movie {
 			FileWriter fwriter = new FileWriter(filepath);
 			fwriter.write(this.toString());
 			fwriter.close();
-            System.out.println("Movie successfully created.");
 		}
         catch (IOException e) {
             System.out.print(e.getMessage());
