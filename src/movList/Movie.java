@@ -1,4 +1,5 @@
 package movList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.*;
 
@@ -62,6 +63,25 @@ public class Movie {
 		counter = 0;
 	}
 
+	private int getInt(String message, Scanner sc) {
+		int n;
+		while(true){
+			System.out.println(message);
+			try{
+				n = sc.nextInt();
+				if(n < 0){
+					System.out.println("Input must be positive. ");
+					continue;
+				}
+				else break;
+			}
+			catch(InputMismatchException e){
+				System.out.println("Input not a valid integer. ");
+			}
+		}
+		return n;
+	}
+
 	void setDirector(Scanner sc){
 		System.out.print("Enter director's name: ");
 		director = sc.nextLine();
@@ -73,15 +93,11 @@ public class Movie {
 	}
 
 	void setDuration(Scanner sc){
-		System.out.print("Enter duration in minutes: ");
-		duration = sc.nextInt();
-		sc.nextLine();
+		duration = getInt("Enter duration in minutes: ", sc);
 	}
 
 	void setCast(Scanner sc){
-		System.out.print("Enter number of cast members: ");
-		int n = sc.nextInt();
-		sc.nextLine();
+		int n = getInt("Enter number of cast members: ", sc);
 		cast = new String[n];
 		for(int i=0; i<n; i++) {
 			System.out.printf("Enter cast member %d: ", i+1);
@@ -90,17 +106,30 @@ public class Movie {
 	}
 
 	void setPastRatings(Scanner sc){
-		System.out.print("Enter number of reviews: ");
-		int n = sc.nextInt();
-		sc.nextLine();
+		int n = getInt("Enter number of reviews: ", sc);
 		pastRatings = new Integer[n];
-		rating = 0;
 		reviews = new String[n];
+		rating = 0;
 		for(int i=0; i<n; i++) {
-			System.out.printf("Enter rating %d: ", i+1);
-			pastRatings[i] = sc.nextInt();
+			int r;
+			while(true){
+				System.out.printf("Enter rating %d: ", i+1);
+				try{
+					r = sc.nextInt();
+					if(r < 0 || r > 5){
+						System.out.println("Input must be between 0 and 5. ");
+						continue;
+					}
+					else break;
+				}
+				catch(InputMismatchException e){
+					System.out.println("Input not a valid integer. ");
+				}
+			}
+			pastRatings[i] = r;
 			rating += pastRatings[i];
 			System.out.printf("Enter review %d: ", i+1);
+			System.out.println();
 			reviews[i] = sc.nextLine().strip();
 		}
 		rating /= n;
