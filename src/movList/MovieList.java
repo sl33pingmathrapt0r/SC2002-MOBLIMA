@@ -8,7 +8,7 @@ public class MovieList {
 	final private static String cwd = Path.of("").toAbsolutePath().toString() + "/Movies";
 	private static Scanner sc = new Scanner(System.in);
 	private static ArrayList<Movie> movieList = new ArrayList<Movie>();
-	
+
 	public static void initMovList() {
 		// Initialises movieList for ease of access
 		File[] movFolder = new File(cwd).listFiles();
@@ -153,11 +153,15 @@ public class MovieList {
 	}
 	
 	public static void incMovieCounter(Movie mov) {
-		mov.inc(cwd);
+		mov.incCounter(cwd);
 	}
 	
 	public static void decMovieCounter(Movie mov) {
-		mov.dec(cwd);
+		mov.decCounter(cwd);
+	}
+	
+	public static void incTicketSales(Movie mov) {
+		mov.incSales(cwd);
 	}
 	
 	public boolean titleExists(String Title) {
@@ -167,6 +171,26 @@ public class MovieList {
 
 	public boolean fileExists(File filepath) {
 		return filepath.exists();
+	}
+
+	public Movie[] sortByRating(Movie[] movAr) {
+		ArrayList<Movie> movList = new ArrayList<Movie>(Arrays.asList(movAr));
+		movList.sort(new Comparator<Movie>(){
+			public int compare(Movie mov1, Movie mov2) {
+				return mov1.getRating()>mov2.getRating() ? 1 : 0;
+			}
+		});
+		return movList.toArray(new Movie[movAr.length]); 
+	}
+
+	public Movie[] sortBySales(Movie[] movAr) {
+		ArrayList<Movie> movList = new ArrayList<Movie>(Arrays.asList(movAr));
+		movList.sort(new Comparator<Movie>(){
+			public int compare(Movie mov1, Movie mov2) {
+				return mov1.getSales() - mov2.getSales();
+			}
+		});
+		return movList.toArray(new Movie[movAr.length]); 
 	}
 
 	public static String getCwd() {

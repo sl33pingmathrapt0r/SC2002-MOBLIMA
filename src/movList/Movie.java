@@ -1,6 +1,5 @@
 package movList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 public class Movie {
@@ -14,10 +13,9 @@ public class Movie {
 	private float rating;
 	private STATUS status;
 	private int counter;
+	private int ticketSales;
 
-	Movie(){
-		counter = 0;
-	}
+	Movie(){}
 	
 	Movie(File movFile) throws FileNotFoundException{
 		try {
@@ -45,6 +43,7 @@ public class Movie {
 			sc.nextLine();
 			status = STATUS.valueOf(sc.nextLine());
 			counter = sc.nextInt();
+			ticketSales = sc.nextInt();
 			sc.close();
 		}
 		catch (FileNotFoundException e) {
@@ -61,6 +60,7 @@ public class Movie {
 		setPastRatings(sc);
 		setStatus(sc);
 		counter = 0;
+		ticketSales = 0;
 	}
 
 	private int getInt(String message, Scanner sc) {
@@ -162,6 +162,33 @@ public class Movie {
         }
 	}
 
+	void incCounter(String cwd) {
+		if(counter==3){
+			System.out.println("Counter at 3, cannot increment");
+			return;
+		}
+		counter++;
+		this.write(cwd);
+	}
+
+	void decCounter(String cwd) {
+		if(counter==0){
+			System.out.println("Counter at 0, cannot decrement");
+			return;
+		}
+		counter--;
+		if(counter==0){
+			status = STATUS.END_OF_SHOWING;
+			System.out.printf("Movie %s no longer showing \n", title);
+		}
+		this.write(cwd);
+	}
+
+	void incSales(String cwd) {
+		ticketSales++;
+		this.write(cwd);
+	}
+
 	public String getTitle(){
 		return title;
 	}
@@ -194,34 +221,16 @@ public class Movie {
 		return rating;
 	}
 
-	public int getCounter() {
-		return counter;
-	}
-
 	public STATUS getStatus(){
 		return status;
 	}
 
-	public void inc(String cwd) {
-		if(counter==3){
-			System.out.println("Counter at 3, cannot increment");
-			return;
-		}
-		counter++;
-		this.write(cwd);
+	public int getCounter() {
+		return counter;
 	}
 
-	public void dec(String cwd) {
-		if(counter==0){
-			System.out.println("Counter at 0, cannot decrement");
-			return;
-		}
-		counter--;
-		if(counter==0){
-			status = STATUS.END_OF_SHOWING;
-			System.out.printf("Movie %s no longer showing \n", title);
-		}
-		this.write(cwd);
+	public int getSales(){
+		return ticketSales;
 	}
 
 	public String toString() {
