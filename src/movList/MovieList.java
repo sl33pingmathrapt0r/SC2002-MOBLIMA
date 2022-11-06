@@ -157,9 +157,6 @@ public class MovieList {
 	
 	public static void decMovieCounter(Movie mov) {
 		mov.dec(cwd);
-		if(mov.getStatus() == STATUS.END_OF_SHOWING){
-			System.out.printf("Movie %s no longer showing \n", mov.getTitle());
-		}
 	}
 	
 	public boolean titleExists(String Title) {
