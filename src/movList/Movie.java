@@ -203,11 +203,19 @@ public class Movie {
 	}
 
 	public void inc(String cwd) {
+		if(counter==3){
+			System.out.println("Counter at 3, cannot increment");
+			return;
+		}
 		counter++;
 		this.write(cwd);
 	}
 
 	public void dec(String cwd) {
+		if(counter==0){
+			System.out.println("Counter at 0, cannot decrement");
+			return;
+		}
 		counter--;
 		if(counter==0){
 			status = STATUS.END_OF_SHOWING;
