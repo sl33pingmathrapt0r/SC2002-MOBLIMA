@@ -12,7 +12,7 @@ public class Ticket {
 	private AgeGroup ageGroup;
 	private double price;
 	private String seatID;
-	private PriceTable priceTable=new PriceTable();
+	private static PriceTable priceTable=new PriceTable();
 	
 	/**
 	 * Constructor class for ticket
@@ -39,8 +39,7 @@ public class Ticket {
 		this.timeOfMovie = timeOfMovie;
 		this.ageGroup = ageGroup;
 		this.seatID = seatID;
-		this.priceTable = new PriceTable();
-		this.price = priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
+		this.price = Ticket.priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
 
 	}
 
@@ -66,7 +65,7 @@ public class Ticket {
 	 * @param timeOfMovie
 	 * @return price of ticket
 	 */
-	public double calculatePrice(ClassOfCinema classOfCinema, TypeOfMovie typeOfMovie, AgeGroup ageGroup,
+	public static double calculatePrice(ClassOfCinema classOfCinema, TypeOfMovie typeOfMovie, AgeGroup ageGroup,
 			Day dayOfWeek, int[] timeOfMovie) {
 			
 	/**
@@ -106,10 +105,10 @@ public class Ticket {
 	 */
 		//lazy man method to convert fri evening to weekend price pog
 		if(dayOfWeek==Day.FRIDAY && timeOfMovie[0]>18){
-			return this.priceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup, typeOfMovie);
+			return priceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup, typeOfMovie);
 		}
 		else{
-			return this.priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
+			return priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
 		}
 	}
 
