@@ -69,17 +69,17 @@ public class Movie {
 		int n;
 		while(true){
 			System.out.println(message);
+			String str = sc.nextLine();
 			try{
-				n = sc.nextInt();
-				sc.nextLine();
+				n = Integer.parseInt(str);
 				if(n < 0){
 					System.out.println("Input must be positive. ");
 					continue;
 				}
 				else break;
 			}
-			catch(InputMismatchException e){
-				System.out.println("Input not a valid integer. ");
+			catch(NumberFormatException e){
+				System.out.printf("Input %s not a valid integer. \n", str);
 			}
 		}
 		return n;
@@ -119,6 +119,7 @@ public class Movie {
 				System.out.printf("Enter rating %d: ", i+1);
 				try{
 					r = sc.nextInt();
+					sc.nextLine();
 					if(r < 0 || r > 5){
 						System.out.println("Input must be between 0 and 5. ");
 						continue;
@@ -149,7 +150,6 @@ public class Movie {
 		if(status==STATUS.END_OF_SHOWING) {
 			System.out.printf("Movie %s no longer showing \n", title);
 		}
-		sc.nextLine();
 	}
 
 	void write(String cwd) {
@@ -250,7 +250,8 @@ public class Movie {
 		}
 		mov += String.valueOf(rating) + "\n"
 				+ String.valueOf(status) + "\n"
-				+ String.valueOf(counter);
+				+ String.valueOf(counter) + "\n"
+				+ String.valueOf(ticketSales);
 		return mov;
 	}
 }

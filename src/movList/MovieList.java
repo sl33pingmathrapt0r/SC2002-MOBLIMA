@@ -9,6 +9,16 @@ public class MovieList {
 	private static Scanner sc = new Scanner(System.in);
 	private static ArrayList<Movie> movieList = new ArrayList<Movie>();
 
+	private static void updateMovieList(Movie mov) {
+		for(int i=0; i < movieList.size(); i++){
+			if(movieList.get(i).getTitle().equals(mov.getTitle())){
+				movieList.set(i, mov);
+				return;
+			}
+		}
+		movieList.add(mov);
+	}
+
 	public static void initMovList() {
 		new File(cwd).mkdirs();
 		// Initialises movieList for ease of access
@@ -106,7 +116,7 @@ public class MovieList {
 	}
 
 	public static void updateMovie(Movie mov) {
-		int n;
+		int n = 100;
 		do {
 			System.out.println("Select attribute to update: ");
 			System.out.println("1. Director ");
@@ -116,11 +126,22 @@ public class MovieList {
 			System.out.println("5. Past Ratings and Reviews ");
 			System.out.println("6. Status ");
 			System.out.println("7. Exit ");
-			n = sc.nextInt();
-			while(n<1 || n>7){
-				System.out.print("Invalid input. Reenter n: ");
-				n = sc.nextInt();
+
+			while(true){
+				String str = sc.nextLine();
+				try{
+					n = Integer.parseInt(str);
+					if(n<1 || n>7){
+						System.out.print("Invalid input. Reenter n: ");
+						continue;
+					}
+					else break;
+				}
+				catch(NumberFormatException e){
+					System.out.printf("Input %s not a valid integer. \n", str);
+				}
 			}
+
 			switch(n){
 				case 1:
 					mov.setDirector(sc);
@@ -152,44 +173,48 @@ public class MovieList {
 			}
 		} while(n!=7);
 		mov.write(cwd);
+		updateMovieList(mov);
 	}
 	
 	public static void incMovieCounter(Movie mov) {
 		mov.incCounter(cwd);
+		updateMovieList(mov);
 	}
 	
 	public static void decMovieCounter(Movie mov) {
 		mov.decCounter(cwd);
+		updateMovieList(mov);
 	}
 	
 	public static void incTicketSales(Movie mov) {
 		mov.incSales(cwd);
+		updateMovieList(mov);
 	}
 	
-	public boolean titleExists(String Title) {
+	public static boolean titleExists(String Title) {
 		String filepath = cwd + "/" + Title + ".txt";
 		return new File(filepath).exists();
 	}
 
-	public boolean fileExists(File filepath) {
+	public static boolean fileExists(File filepath) {
 		return filepath.exists();
 	}
 
-	public Movie[] sortByRating(Movie[] movAr) {
+	public static Movie[] sortByRating(Movie[] movAr) {
 		ArrayList<Movie> movList = new ArrayList<Movie>(Arrays.asList(movAr));
 		movList.sort(new Comparator<Movie>(){
 			public int compare(Movie mov1, Movie mov2) {
-				return mov1.getRating()>mov2.getRating() ? 1 : 0;
+				return Float.compare(mov2.getRating(), mov1.getRating());
 			}
 		});
 		return movList.toArray(new Movie[movAr.length]); 
 	}
 
-	public Movie[] sortBySales(Movie[] movAr) {
+	public static Movie[] sortBySales(Movie[] movAr) {
 		ArrayList<Movie> movList = new ArrayList<Movie>(Arrays.asList(movAr));
 		movList.sort(new Comparator<Movie>(){
 			public int compare(Movie mov1, Movie mov2) {
-				return mov1.getSales() - mov2.getSales();
+				return mov2.getSales() - mov1.getSales();
 			}
 		});
 		return movList.toArray(new Movie[movAr.length]); 
