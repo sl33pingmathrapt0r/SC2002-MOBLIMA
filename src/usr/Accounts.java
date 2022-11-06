@@ -1,6 +1,7 @@
 package src.usr;
 
 import java.util.*;
+import java.io.*;
 
 public class Accounts {
     /* 
@@ -11,15 +12,39 @@ public class Accounts {
      * No instance of this class should be created, since all accounts are
      * stored together and global. 
      */
-    final private static String adminSecretKey= "helloadmin";
-    // add to text file 
+    final private static String PKG_DIR= System.getProperty("user.dir") +File.separator+ "src" +File.separator+ "usr";
+    final private static String ADMIN_PATH= PKG_DIR +  File.separator +"adminAcc.txt";
+    final private static String GOER_PATH= PKG_DIR + File.separator +"goerAcc.txt";
+    final private static String ADMIN_KEY_PATH= PKG_DIR + File.separator +"adminSecret.txt";
+
+
     private static ArrayList<User> goerAcc= new ArrayList<User>();
     private static ArrayList<User> adminAcc= new ArrayList<User>();
 
     private static Scanner scan= new Scanner(System.in);
 
+    /**
+     * Used upon starting application, loading all 
+     * accounts into code for access. 
+     */
+    // private static void load() {
+    //     File adminFile= new File(ADMINPATH);
+    //     if (adminFile.exists()) {
+            
+    //     }
+
+    // }
+
+    // private static void store() {
+
+    // }
+    
     private static String getAdminKey() {
-        return adminSecretKey;
+        FileReader keyFile= new FileReader(ADMIN_KEY_PATH);
+        BufferedReader keyFileInfo= new BufferedReader(keyFile);
+        String adminSecretString= keyFileInfo.readLine();
+        keyFileInfo.close();
+        return adminSecretString;
     }
     
     private static void add(User user) {
