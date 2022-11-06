@@ -2,6 +2,8 @@ package movList;
 import java.util.*;
 import java.io.*;
 
+/** */
+
 public class Movie {
 	private String title;
 	private String director;
@@ -69,6 +71,7 @@ public class Movie {
 			System.out.println(message);
 			try{
 				n = sc.nextInt();
+				sc.nextLine();
 				if(n < 0){
 					System.out.println("Input must be positive. ");
 					continue;
