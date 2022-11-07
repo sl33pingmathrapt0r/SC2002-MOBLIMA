@@ -47,8 +47,8 @@ public class MovieList {
 		String title = sc.nextLine().strip();
 
 		// Checking for overwrites
-		for(Movie mov : movieList){
-			if(mov.getTitle().equals(title)){
+		for(int i=0; i < movieList.size(); i++){
+			if(movieList.get(i).getTitle().equals(title)){
 				System.out.printf("Movie %s exists. Overwrite movie file? Y/N \n", title);
 				String in = sc.nextLine().strip();
 				while(!in.equals("Y") && !in.equals("N")){
@@ -61,7 +61,7 @@ public class MovieList {
 				}
 				else{
 					System.out.println("Overwriting movie...");
-					at = movieList.indexOf(mov);
+					at = i;
 					break;
 				}
 			}
