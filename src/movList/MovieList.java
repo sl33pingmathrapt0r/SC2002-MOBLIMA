@@ -73,7 +73,7 @@ public class MovieList {
 
 		// Updating movieList
 		if(at==-1) movieList.add(mov);
-		else movieList.add(at, mov);
+		else movieList.set(at, mov);
 		System.out.println("Movie successfully created.");
 		return mov;
 	}
