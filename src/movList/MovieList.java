@@ -37,7 +37,7 @@ public class MovieList {
 		}
 	}
 
-	public static Movie createMovie() {
+	public static Movie createMovie() throws Exception {
 
 		// Flag for overwriting use
 		int at = -1;
@@ -57,7 +57,7 @@ public class MovieList {
 				}
 				if(in.equals("N")){
 					System.out.println("Movie creation aborted");
-					return new Movie();
+					throw new Exception();
 				}
 				else{
 					System.out.println("Overwriting movie...");
