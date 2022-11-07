@@ -45,4 +45,6 @@ public class Cineplex {
         File[] movFolder = new File(this.path+"MovieList").listFiles();
         for(File it : movFolder) System.out.println(it.getName());
     }
+
+    
 }
