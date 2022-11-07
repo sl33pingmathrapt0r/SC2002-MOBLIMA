@@ -29,7 +29,7 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
-				catch(FileNotFoundException e){
+				catch(Exception e){
 					movieList.add(new Movie());
 					System.out.println(e.getMessage());
 				}
@@ -82,7 +82,7 @@ public class MovieList {
 		return movieList;
 	}
 	
-	public static Movie getMovieByTitle(String Title) throws FileNotFoundException {
+	public static Movie getMovieByTitle(String Title) throws Exception {
 		try{
 			// Returns Movie constructor
 			return new Movie(new File(cwd + "/" + Title + ".txt"));		
@@ -104,13 +104,13 @@ public class MovieList {
 		}
 	}
 
-	public static void updateMovieByTitle(String title) throws FileNotFoundException {
+	public static void updateMovieByTitle(String title) throws Exception {
 		try{
 			// Calls updateMovie
 			Movie mov = getMovieByTitle(title);
 			updateMovie(mov);
 		}
-		catch(FileNotFoundException e){
+		catch(Exception e){
 			throw e;
 		}
 	}

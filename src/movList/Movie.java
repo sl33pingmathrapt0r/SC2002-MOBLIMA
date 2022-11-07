@@ -19,7 +19,7 @@ public class Movie {
 
 	Movie(){}
 	
-	Movie(File movFile) throws FileNotFoundException{
+	Movie(File movFile) throws Exception{
 		try {
 			Scanner sc = new Scanner(movFile);
 			title = sc.nextLine();
@@ -48,7 +48,7 @@ public class Movie {
 			ticketSales = sc.nextInt();
 			sc.close();
 		}
-		catch (FileNotFoundException e) {
+		catch (Exception e) {
 			throw e;
 		}
 	}
