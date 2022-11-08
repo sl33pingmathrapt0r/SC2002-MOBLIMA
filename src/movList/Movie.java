@@ -5,7 +5,7 @@ import java.io.*;
 /** */
 
 public class Movie {
-	private String title;
+	final private String title;
 	private String director;
 	private String synopsis;
 	private int duration;
@@ -16,8 +16,6 @@ public class Movie {
 	private STATUS status;
 	private int counter;
 	private int ticketSales;
-
-	Movie(){}
 	
 	Movie(File movFile) throws Exception{
 		try {
@@ -48,7 +46,7 @@ public class Movie {
 			ticketSales = sc.nextInt();
 			sc.close();
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 			throw e;
 		}
 	}
@@ -68,7 +66,7 @@ public class Movie {
 	private int getInt(String message, Scanner sc) {
 		int n;
 		while(true){
-			System.out.println(message);
+			System.out.print(message);
 			String str = sc.nextLine();
 			try{
 				n = Integer.parseInt(str);
@@ -132,8 +130,7 @@ public class Movie {
 			}
 			pastRatings[i] = r;
 			rating += pastRatings[i];
-			System.out.printf("Enter review %d: ", i+1);
-			System.out.println();
+			System.out.printf("Enter review %d: \n", i+1);
 			reviews[i] = sc.nextLine().strip();
 		}
 		rating /= n;
@@ -143,7 +140,7 @@ public class Movie {
 		System.out.print("Enter status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
 		String in = sc.nextLine().strip();
 		while(!in.equals("COMING_SOON") && !in.equals("NOW_SHOWING") && !in.equals("END_OF_SHOWING")){
-			System.out.println("Invalid status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
+			System.out.print("Invalid status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
 			in = sc.nextLine().strip();
 		}
 		status = STATUS.valueOf(in);
@@ -164,31 +161,36 @@ public class Movie {
         }
 	}
 
-	void incCounter(String cwd) {
+	void incCounter() {
 		if(counter==3){
 			System.out.println("Counter at 3, cannot increment");
+			System.out.println();
 			return;
 		}
 		counter++;
-		this.write(cwd);
+		if(counter==1){
+			status = STATUS.NOW_SHOWING;
+			System.out.printf("Movie %s now showing \n", title);
+			System.out.println();
+		}
 	}
 
-	void decCounter(String cwd) {
+	void decCounter() {
 		if(counter==0){
 			System.out.println("Counter at 0, cannot decrement");
+			System.out.println();
 			return;
 		}
 		counter--;
 		if(counter==0){
 			status = STATUS.END_OF_SHOWING;
 			System.out.printf("Movie %s no longer showing \n", title);
+			System.out.println();
 		}
-		this.write(cwd);
 	}
 
-	void incSales(String cwd) {
+	void incSales() {
 		ticketSales++;
-		this.write(cwd);
 	}
 
 	public String getTitle(){

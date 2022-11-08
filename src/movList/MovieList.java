@@ -29,15 +29,23 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
+				catch(FileNotFoundException e){
+					String T = mov.getName();
+					System.out.printf("Movie %s not found \n", T.substring(0, T.length()-4));
+				}
 				catch(Exception e){
-					movieList.add(new Movie());
-					System.out.println(e.getMessage());
+					String T = mov.getName();
+					System.out.printf("Movie %s corrupted \n", T.substring(0, T.length()-4));
 				}
 			}
 		}
 	}
 
-	public static Movie createMovie() throws Exception {
+	public static void updateFiles() {
+		for(Movie mov : movieList) mov.write(cwd);
+	}
+
+	public static Movie createMovie() {
 
 		// Flag for overwriting use
 		int at = -1;
@@ -57,7 +65,7 @@ public class MovieList {
 				}
 				if(in.equals("N")){
 					System.out.println("Movie creation aborted");
-					throw new Exception();
+					return null;
 				}
 				else{
 					System.out.println("Overwriting movie...");
@@ -67,9 +75,7 @@ public class MovieList {
 			}
 		}
 
-		// Writing to file
 		Movie mov = new Movie(title, sc);
-		mov.write(cwd);
 
 		// Updating movieList
 		if(at==-1) movieList.add(mov);
@@ -82,41 +88,26 @@ public class MovieList {
 		return movieList;
 	}
 	
-	public static Movie getMovieByTitle(String Title) throws Exception {
-		try{
-			// Returns Movie constructor
-			return new Movie(new File(cwd + "/" + Title + ".txt"));		
-		}
-		catch(FileNotFoundException e){
-			System.out.printf("Movie %s does not exist! \n", Title);
-			throw e;
-		}
+	public static Movie getMovieByTitle(String Title) {
+		for(Movie mov : movieList) if(mov.getTitle().equals(Title)) return mov;
+		System.out.printf("Movie %s not found \n", Title);
+		return null;
 	}
 	
-	public static Movie getMovieByIndex(int n) throws IndexOutOfBoundsException {
+	public static Movie getMovieByIndex(int n) {
 		try{
-			// Queries movieList at index n
 			return movieList.get(n);
 		}
 		catch(IndexOutOfBoundsException e){
-			System.out.printf("Index %d out of range! \n", n);
-			throw e;
+			System.out.printf("Index %d out of range \n", n);
+			return null;
 		}
 	}
 
-	public static void updateMovieByTitle(String title) throws Exception {
-		try{
-			// Calls updateMovie
-			Movie mov = getMovieByTitle(title);
-			updateMovie(mov);
-		}
-		catch(Exception e){
-			throw e;
-		}
-	}
-
-	public static void updateMovie(Movie mov) {
-		int n = 100;
+	public static void updateMovieByTitle(String title) {
+		Movie mov = getMovieByTitle(title);
+		if(mov == null) return;
+		int n;
 		do {
 			System.out.println("Select attribute to update: ");
 			System.out.println("1. Director ");
@@ -129,6 +120,7 @@ public class MovieList {
 
 			while(true){
 				String str = sc.nextLine();
+				System.out.println();
 				try{
 					n = Integer.parseInt(str);
 					if(n<1 || n>7){
@@ -145,59 +137,60 @@ public class MovieList {
 			switch(n){
 				case 1:
 					mov.setDirector(sc);
-					System.out.println("Director updated ");
+					System.out.println("Director updated \n");
 					break;
 				case 2:
 					mov.setSynopsis(sc);
-					System.out.println("Synopsis updated ");
+					System.out.println("Synopsis updated \n");
 					break;
 				case 3:
 					mov.setDuration(sc);
-					System.out.println("Duration updated ");
+					System.out.println("Duration updated \n");
 					break;
 				case 4:
 					mov.setCast(sc);
-					System.out.println("Cast updated ");
+					System.out.println("Cast updated \n");
 					break;
 				case 5:
 					mov.setPastRatings(sc);
-					System.out.println("Past Ratings and Reviews updated ");
+					System.out.println("Past Ratings and Reviews updated \n");
 					break;
 				case 6:
 					mov.setStatus(sc);
-					System.out.println("Status updated ");
+					System.out.println("Status updated \n");
 					break;
 				case 7:
-					System.out.println("Exiting... ");
+					System.out.println("Exiting... \n");
 					break;
 			}
 		} while(n!=7);
-		mov.write(cwd);
 		updateMovieList(mov);
 	}
 	
-	public static void incMovieCounter(Movie mov) {
-		mov.incCounter(cwd);
+	public static void incMovieCounter(String title) {
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.incCounter();
 		updateMovieList(mov);
 	}
 	
-	public static void decMovieCounter(Movie mov) {
-		mov.decCounter(cwd);
+	public static void decMovieCounter(String title) {
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.decCounter();
 		updateMovieList(mov);
 	}
 	
-	public static void incTicketSales(Movie mov) {
-		mov.incSales(cwd);
+	public static void incTicketSales(String title) {
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.incSales();
 		updateMovieList(mov);
 	}
 	
 	public static boolean titleExists(String Title) {
-		String filepath = cwd + "/" + Title + ".txt";
-		return new File(filepath).exists();
-	}
-
-	public static boolean fileExists(File filepath) {
-		return filepath.exists();
+		for(Movie mov : movieList) if(mov.getTitle().equals(Title)) return true;
+		return false;
 	}
 
 	public static Movie[] sortByRating(Movie[] movAr) {
