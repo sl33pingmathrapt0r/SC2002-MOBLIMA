@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,8 +17,11 @@ public class Cineplex {
     final private String path;
     final private String cineplex;
     private static int CineplexCount=0;
+    private static Choice choice=Choice.BOTH;
+    ArrayList[] 
 
-    public Cineplex(String cineplex) throws Exception{
+
+    public Cineplex(String cineplex,int noOfCinema) throws Exception{
         try{
         boolean b;
         this.cineplex=cineplex;
@@ -124,8 +128,15 @@ public class Cineplex {
         }
         SortedMovie=MovieList.sortByRating(MovieListMovies);
         System.out.println("Top 5 Movies by rating: \n");
-        for(int i=0;i<5;i++){
-            System.out.println(SortedMovie[i].getTitle()+"\n");
+        if(size>=5){
+            for(int i=0;i<5;i++){
+                System.out.println(SortedMovie[i].getTitle()+"\n");
+            }
+        }
+        else{
+            for(int i=0;i<size;i++){
+                System.out.println(SortedMovie[i].getTitle()+"\n");
+            }
         }
     }
 
@@ -141,8 +152,37 @@ public class Cineplex {
         }
         SortedMovie=MovieList.sortBySales(MovieListMovies);
         System.out.println("Top 5 Movies by sales: \n");
-        for(int i=0;i<5;i++){
-            System.out.println(SortedMovie[i].getTitle()+"\n");
+        if(size>=5){
+            for(int i=0;i<5;i++){
+                System.out.println(SortedMovie[i].getTitle()+"\n");
+            }
         }
+        else{
+            for(int i=0;i<size;i++){
+                System.out.println(SortedMovie[i].getTitle()+"\n");
+            }
+        }
+    }
+
+    public void AdminListChoice()throws Exception{
+        switch(choice){
+            case RATINGTOP:
+                ListTopRating();break;
+            case SALESTOP:
+                ListTopSales();break;
+            case BOTH:
+                ListTopRating();
+                ListTopSales();
+                break;
+        }
+    }
+
+    public void setChoice(Choice AdminChoice){
+        choice=AdminChoice;
+        return;
+    }
+
+    public Choice getChoice(Choice AdminChoice){
+        return choice;
     }
 }
