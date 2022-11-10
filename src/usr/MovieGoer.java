@@ -99,7 +99,7 @@ public class MovieGoer extends User {
     // String movieName,
     // ClassOfCinema cinemaClass,
     // TypeOfMovie movieType,
-    // int[] time,
+    // int time,
     // Day day,
     // Set<String> seatInfo,
     // Cinema cinema
@@ -242,8 +242,9 @@ public class MovieGoer extends User {
     // }
 
     // TODO
-    public void listTop5Movies(boolean ratingSort) {
-        if (ratingSort) {
+    public void listTop5Movies() {
+        int ratingSort = InputHandling("Sort by Rating? Enter 1 for rating else sort by sales");
+        if (ratingSort==1) {
             Movie[] movieList = MovieList.sortByRating();
             for (int i = 0; i < 5; i++) {
                 System.out.println(movieList.get(i).getTitle);

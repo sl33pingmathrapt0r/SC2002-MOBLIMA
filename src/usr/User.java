@@ -10,6 +10,15 @@ abstract class User {
 
     // private static Scanner scan= new Scanner(System.in);
 
+    public abstract void banner();
+    /*
+     * Search/ List Movie
+     * View Movie details
+     * Check seat availability
+     * Book and purchase ticket
+     * View booking history
+     * List top 5 ranking by ticket sales
+     */
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -52,4 +61,5 @@ abstract class User {
     //     Movie movie= movList.get(choice-1);  // accounts for zero-indexing
     //     return movie;
     // }
+
 }

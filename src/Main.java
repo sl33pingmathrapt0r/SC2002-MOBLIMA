@@ -56,8 +56,7 @@ public class Main {
                 switch(choice){
                     //Create/Update/Remove movie listing
                     case 1:
-                        int option;
-                        option=InputHandling.getInt("Enter a digit between 1 and 3");
+                        int option=InputHandling.getInt("Enter a digit between 1 and 3");
                         System.out.println("1: Create movie listing");
                         System.out.println("2: Update movie listing");
                         System.out.println("3: Remove movie listing");
@@ -65,10 +64,10 @@ public class Main {
                             currentUser.createMovieListing();
                         }
                         else if (option == 2){
-
+                            currentUser.updateMovieListing();
                         }
                         else if (option == 3){
-
+                            currentUser.deleteMovieListing();
                         }
                         else{
                             System.out.println("Invalid option");
@@ -76,9 +75,26 @@ public class Main {
                         break;
                     //Create/Update/Remove cinema showtimes and the movies to be shown
                     case 2:
+                        int option=InputHandling.getInt("Enter a digit between 1 and 3");
+                        System.out.println("1: Create cinema showtimes");
+                        System.out.println("2: Update cinema showtimes");
+                        System.out.println("3: Remove cinema showtimes");
+                        if(option==1){
+                            currentUser.createCinemaShowtimes();
+                        }
+                        else if (option == 2){
+                            currentUser.updateCinemaListing();
+                        }
+                        else if (option == 3){
+                            currentUser.deleteMovieListing();
+                        }
+                        else{
+                            System.out.println("Invalid option");
+                        }
                         break;
                     //Configure System Settings
                     case 3:
+                        currentUser.configureSystemSettings();
                         break;
                     case 4:
                         System.out.println("Program Terminating");
@@ -93,18 +109,23 @@ public class Main {
                 switch(choice){
                     //Search List Movie
                     case 1:
+
                         break;
 
                     //View movie details – including reviews and ratings
                     case 2:
+
                         break;
 
                     //Check seat availability and selection of seat/s.
+                    //rmb to print legend
                     case 3:
+
                         break;
 
                     //Book and purchase ticket
                     case 4:
+                    
                         break;
 
                     //View booking history
