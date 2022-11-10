@@ -38,6 +38,17 @@ public class inputHandling {
         return n;
     }
 
+
+    public static int getInt(String message, String errmessage, int lower, int upper) {
+        int n;
+        while(true){
+            n = getInt(message);
+            if(n<lower || n>upper) System.out.print(errmessage);
+            else break;
+        }
+        return n;
+    }
+
     // public static Calendar getDate() {
 	// 	Calendar cal = Calendar.getInstance();
 	// 	int year;
