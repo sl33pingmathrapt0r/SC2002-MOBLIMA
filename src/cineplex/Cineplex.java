@@ -18,12 +18,15 @@ public class Cineplex {
     final private String cineplex;
     private static int CineplexCount=0;
     private static Choice choice=Choice.BOTH;
-    ArrayList[] 
+    private static ArrayList<Movie> cinemaList;
+    private ArrayList<Cinema> cinemas = new ArrayList<Cinema>();
+    private int noOfCinema;
 
 
     public Cineplex(String cineplex,int noOfCinema) throws Exception{
         try{
         boolean b;
+        this.noOfCinema=noOfCinema;
         this.cineplex=cineplex;
 		this.path=route+"\\"+cineplex;
         File f = new File(path+"\\");
@@ -32,6 +35,9 @@ public class Cineplex {
             File j = new File(path+"\\MovieList");
             b = j.mkdir();
             CineplexCount++;
+            for(int i=1;i<=noOfCinema;i++){
+                cinemas.add(new Cinema(i,cineplex));
+            }
         }
     }
     catch(Exception e){
@@ -48,24 +54,23 @@ public class Cineplex {
         System.out.println("There are currently "+CineplexCount+" Cineplexes.");   
     }
 
+    public void AddScreening(int i,Movie movie, int startTime, int date){
+        Cinema ScreeningCinema = cinemas.get(i-1);
+        ScreeningCinema.AddMovie
+    }
 
-    public void AddMovie(String MovieName,String Type,String MovieRating) throws Exception {
+
+    public void AddMovie(String MovieName) throws Exception {
         if(MovieList.titleExists(MovieName)){
             File g = new File(path+"\\MovieList\\"+MovieName+".txt");
             if (g.exists()) {
                 System.out.println("Movie already exists");
                 return;
             }
-            FileWriter w = new FileWriter(path+"\\MovieList\\"+MovieName+".txt",true);
-            w.append( Type + "\n" + MovieRating + "\n" );
-            w.close();
             MovieList.incMovieCounter(MovieName);
         }
         else{
             FileWriter w = new FileWriter(path+"\\MovieList\\"+MovieName+".txt",true);
-            MovieList.createMovie();
-            w.append( Type + "\n" + MovieRating + "\n" );
-            w.close();
             MovieList.incMovieCounter(MovieName);
         }
 	}
@@ -164,7 +169,7 @@ public class Cineplex {
         }
     }
 
-    public void AdminListChoice()throws Exception{
+    public void ListTop5()throws Exception{
         switch(choice){
             case RATINGTOP:
                 ListTopRating();break;
