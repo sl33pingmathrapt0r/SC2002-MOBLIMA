@@ -10,14 +10,15 @@ public class Movie {
 	private String synopsis;
 	private int duration;
 	private String[] cast;
-	private Integer[] pastRatings;
-	private String[] reviews;
-	private float rating;
-	private STATUS status;
-	private int counter;
-	private int ticketSales;
+	private ArrayList<Integer> pastRatings = new ArrayList<Integer>();
+	private ArrayList<String> reviews = new ArrayList<String>();
+	private HashMap<String, Integer> tixIDToIdx = new HashMap<String, Integer>();
+	private float totalRating = 0;
+	private STATUS status = STATUS.COMING_SOON;
+	private int counter = 0;
+	private int ticketSales = 0;
 	
-	Movie(File movFile) throws Exception{
+	Movie(File movFile) throws FileNotFoundException {
 		try {
 			Scanner sc = new Scanner(movFile);
 			title = sc.nextLine();
@@ -33,20 +34,21 @@ public class Movie {
 			}
 			n = sc.nextInt();
 			sc.nextLine();
-			pastRatings = new Integer[n];
-			reviews = new String[n];
 			for(int i=0; i<n; i++) {
-				pastRatings[i] = sc.nextInt();
-				reviews[i] = sc.nextLine().substring(1);
+				tixIDToIdx.put(sc.next(), i);
+				pastRatings.add(sc.nextInt());
+				reviews.add(sc.nextLine().substring(1));
 			}
-			rating = sc.nextFloat();
+			totalRating = sc.nextFloat();
 			sc.nextLine();
 			status = STATUS.valueOf(sc.nextLine());
 			counter = sc.nextInt();
 			ticketSales = sc.nextInt();
 			sc.close();
 		}
-		catch(Exception e) {
+		catch(FileNotFoundException e){
+			String T = movFile.getName();
+			System.out.printf("Movie %s not found \n\n", T.substring(0, T.length()));
 			throw e;
 		}
 	}
@@ -57,10 +59,7 @@ public class Movie {
 		setSynopsis(sc);
 		setDuration(sc);
 		setCast(sc);
-		setPastRatings(sc);
-		setStatus(sc);
-		counter = 0;
-		ticketSales = 0;
+		System.out.println();
 	}
 
 	private int getInt(String message, Scanner sc) {
@@ -81,6 +80,26 @@ public class Movie {
 			}
 		}
 		return n;
+	}
+
+	private int getR(Scanner sc) {
+		int r;
+		while(true){
+			System.out.printf("Enter rating: ");
+			try{
+				r = sc.nextInt();
+				sc.nextLine();
+				if(r < 0 || r > 5){
+					System.out.println("Input must be between 0 and 5. ");
+					continue;
+				}
+				else break;
+			}
+			catch(InputMismatchException e){
+				System.out.println("Input not a valid integer. ");
+			}
+		}
+		return r;
 	}
 
 	void setDirector(Scanner sc){
@@ -106,44 +125,28 @@ public class Movie {
 		}
 	}
 
-	void setPastRatings(Scanner sc){
-		int n = getInt("Enter number of reviews: ", sc);
-		pastRatings = new Integer[n];
-		reviews = new String[n];
-		rating = 0;
-		for(int i=0; i<n; i++) {
-			int r;
-			while(true){
-				System.out.printf("Enter rating %d: ", i+1);
-				try{
-					r = sc.nextInt();
-					sc.nextLine();
-					if(r < 0 || r > 5){
-						System.out.println("Input must be between 0 and 5. ");
-						continue;
-					}
-					else break;
-				}
-				catch(InputMismatchException e){
-					System.out.println("Input not a valid integer. ");
-				}
-			}
-			pastRatings[i] = r;
-			rating += pastRatings[i];
-			System.out.printf("Enter review %d: \n", i+1);
-			reviews[i] = sc.nextLine().strip();
+	String editReview(String tixID, Scanner sc) {
+		int idx = tixIDToIdx.containsKey(tixID) ? tixIDToIdx.get(tixID) : -1;
+		int r = getR(sc);
+		System.out.println("Enter review: ");
+		String newReview = sc.nextLine();
+		if(idx!=-1){
+			reviews.set(idx, newReview);
+			totalRating -= (pastRatings.get(idx) - r)/pastRatings.size();
+			pastRatings.set(idx, r);
 		}
-		rating /= n;
+		else{
+			tixIDToIdx.put(tixID, reviews.size());
+			reviews.add(newReview);
+			totalRating = (totalRating*pastRatings.size() + r)/reviews.size();
+			pastRatings.add(r);
+		}
+		System.out.println("Review edited");
+		return newReview;
 	}
 
-	void setStatus(Scanner sc){
-		System.out.print("Enter status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
-		String in = sc.nextLine().strip();
-		while(!in.equals("COMING_SOON") && !in.equals("NOW_SHOWING") && !in.equals("END_OF_SHOWING")){
-			System.out.print("Invalid status (\"COMING_SOON\", \"NOW_SHOWING\", \"END_OF_SHOWING\"): ");
-			in = sc.nextLine().strip();
-		}
-		status = STATUS.valueOf(in);
+	void setStatus(STATUS newStatus){
+		status = newStatus;
 		if(status==STATUS.END_OF_SHOWING) {
 			System.out.printf("Movie %s no longer showing \n", title);
 		}
@@ -213,16 +216,16 @@ public class Movie {
 		return cast;
 	}
 
-	public Integer[] getPastRatings(){
+	public ArrayList<Integer> getPastRatings(){
 		return pastRatings;
 	}
 
-	public String[] getReviews(){
+	public ArrayList<String> getReviews(){
 		return reviews;
 	}
 
 	public float getRating(){
-		return rating;
+		return totalRating;
 	}
 
 	public STATUS getStatus(){
@@ -246,11 +249,14 @@ public class Movie {
 		for(String actor : cast){
 			mov += actor + "\n";
 		}
-		mov += String.valueOf(pastRatings.length) + "\n";
-		for(int i=0; i < pastRatings.length; i++){
-			mov += pastRatings[i].toString() + " " + reviews[i] + "\n";
+		if(pastRatings!=null){
+			mov += String.valueOf(pastRatings.size()) + "\n";
+			for(String tixID : tixIDToIdx.keySet()){
+				int i = tixIDToIdx.get(tixID);
+				mov += tixID + " " + pastRatings.get(i).toString() + " " + reviews.get(i) + "\n";
+			}
 		}
-		mov += String.valueOf(rating) + "\n"
+		mov += String.valueOf(totalRating) + "\n"
 				+ String.valueOf(status) + "\n"
 				+ String.valueOf(counter) + "\n"
 				+ String.valueOf(ticketSales);

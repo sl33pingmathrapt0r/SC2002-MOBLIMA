@@ -29,14 +29,7 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
-				catch(FileNotFoundException e){
-					String T = mov.getName();
-					System.out.printf("Movie %s not found \n", T.substring(0, T.length()-4));
-				}
-				catch(Exception e){
-					String T = mov.getName();
-					System.out.printf("Movie %s corrupted \n", T.substring(0, T.length()-4));
-				}
+				catch(FileNotFoundException e){}
 			}
 		}
 	}
@@ -104,7 +97,7 @@ public class MovieList {
 		}
 	}
 
-	public static void updateMovieByTitle(String title) {
+	public static void updateMovieAdmin(String title) {
 		Movie mov = getMovieByTitle(title);
 		if(mov == null) return;
 		int n;
@@ -114,16 +107,14 @@ public class MovieList {
 			System.out.println("2. Synopsis ");
 			System.out.println("3. Duration ");
 			System.out.println("4. Cast ");
-			System.out.println("5. Past Ratings and Reviews ");
-			System.out.println("6. Status ");
-			System.out.println("7. Exit ");
+			System.out.println("5. Exit ");
 
 			while(true){
 				String str = sc.nextLine();
 				System.out.println();
 				try{
 					n = Integer.parseInt(str);
-					if(n<1 || n>7){
+					if(n<1 || n>5){
 						System.out.print("Invalid input. Reenter n: ");
 						continue;
 					}
@@ -152,21 +143,21 @@ public class MovieList {
 					System.out.println("Cast updated \n");
 					break;
 				case 5:
-					mov.setPastRatings(sc);
-					System.out.println("Past Ratings and Reviews updated \n");
-					break;
-				case 6:
-					mov.setStatus(sc);
-					System.out.println("Status updated \n");
-					break;
-				case 7:
 					System.out.println("Exiting... \n");
 					break;
 			}
-		} while(n!=7);
+		} while(n!=5);
 		updateMovieList(mov);
 	}
 	
+	public static String updateMovieReviews(String tixId, String title) {
+		Movie mov = getMovieByTitle(title);
+		if(mov == null) return null;
+		String newReview = mov.editReview(tixId, sc);
+		updateMovieList(mov);
+		return newReview;
+	}
+
 	public static void incMovieCounter(String title) {
 		Movie mov = getMovieByTitle(title);
 		if(mov==null) return;
