@@ -11,6 +11,13 @@ class Admin extends User {
     private static Scanner scan= new Scanner(System.in);
     // private static movList = new MovieList(scan);
 
+    public void banner(){
+        System.out.println("1: Create/Update/Remove movie listing");
+        System.out.println("2: Create/Update/Remove cinema showtimes and the movies to be shown");
+        System.out.println("3: Configure system settings");
+        System.out.println("4: Exit");
+    }
+
     Admin(String username, String pw) {
         this.username= username;
         this.pw= pw;
@@ -56,10 +63,20 @@ class Admin extends User {
         * Not implemented under movieList
         * To update a movie, it is necessary to delete
         * the target movie then create another
-        *
-        * Wesley code already accounts for overwriting of Movie files :)
+        * updates one of the 4 things in movie
         */
-        MovieList.createMovie();
+        ArrayList <Movie> movieList = MovieList.getMovieList();
+        System.out.println("Which movie would you like to update? ");
+        for(int i=0;i<movieList.size();i++){
+            System.out.println(i+" " +movieList.get(i));
+        }
+        int choice = InputHandling.getInt("Movie index: ");
+        if(choice<0 ||  choice>movieList.size()){
+            System.out.println("Invalid Option");
+            return;
+        }
+        String title = movieList.get(choice).getTitle();
+        MovieList.updateMovieAdmin(title);
     }
 
     public void deleteMovieListing() {
@@ -77,14 +94,10 @@ class Admin extends User {
                 if(x<0 || x>movieList.size()){
                     throw new Exception("Invalid index"); 
                 }
-            } catch (NumberFormatException e) {
-                // TODO: handle exception
-                System.out.println("Invalid option");
-                e.getMessage();
-                e.printStackTrace();
+                break;
             }
             catch(Exception e){
-                //System.out.println("Invalid index");
+                System.out.println("Invalid index");
                 e.getMessage();
                 e.printStackTrace();
             }
