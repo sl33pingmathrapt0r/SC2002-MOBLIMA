@@ -51,7 +51,7 @@ public class Movie {
 		}
 	}
 	
-	Movie(String Title, Scanner sc){
+	public Movie(String Title, Scanner sc){
 		title = Title;
 		setDirector(sc);
 		setSynopsis(sc);
