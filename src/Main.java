@@ -3,15 +3,23 @@ package src;
 import java.util.*;
 
 public class Main {
-    final int MAX_CINEMA = 3;
-    final int MAX_CINEPLEX = 3;
+    final static int MAX_CINEMA = 3;
+    final static int MAX_CINEPLEX = 3;
     private static Scanner scan = new Scanner(System.in);
-
+    
     public static void main(String[] args) {
         // APPLICATION STARTUP
         Accounts.load();
         // Accounts.store();
-
+        ArrayList<Cineplex> cineplex;
+        String cinemaCode="AA";
+        StringBuilder strBuilder = new StringBuilder(cinemaCode);
+        for(int i=0;i<MAX_CINEPLEX;i++){
+            cineplex.add(new Cineplex(strBuilder.toString(),3));
+            char digit = strBuilder.charAt(1);
+            digit++;
+            strBuilder.setCharAt(1,digit);
+        }
         // LOGIN SECTION
         String username, pw, strInput;
         boolean admin;
@@ -137,7 +145,17 @@ public class Main {
 
                     //List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings
                     case 6:
-                        currentUser.listTop5Movies();
+                        for(int i=0;i<MAX_CINEMA;i++){
+                            System.out.println(cineplex.get(i));
+                        }
+                        int cineplexIndex;
+                        do{
+                            cineplexIndex= InputHandler.getInt("Choose Cineplex to list from");
+                            if(cineplexIndex<0 || cineplexIndex>=3){
+                                System.out.println("Invalid option");
+                            }
+                        }while(cineplexIndex>=0 && cineplexIndex<3);
+                        currentUser.listTop5Movies(cineplex.get(cineplexIndex));
                         break;
                     
                     //exit
