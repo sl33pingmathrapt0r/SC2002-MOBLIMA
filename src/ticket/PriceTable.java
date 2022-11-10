@@ -8,10 +8,11 @@ import java.util.*;
 public class PriceTable {
 
     private Path currentRelativePath = Paths.get("");
-    private String s = currentRelativePath.toAbsolutePath().toString();
-    File rPT = new File(s + "/src/ticket/regularPriceTable");
-    File pPT = new File(s + "/src/ticket/platinumPriceTable");
-    File aPT = new File(s + "/src/ticket/atmosPriceTable");
+    private String absolutePath = currentRelativePath.toAbsolutePath().toString();
+    private File rPT = new File(absolutePath + "/src/ticket/regularPriceTable");
+    private File pPT = new File(absolutePath + "/src/ticket/platinumPriceTable");
+    private File aPT = new File(absolutePath + "/src/ticket/atmosPriceTable");
+
     private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> regularPriceTable;
     private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> platinumPriceTable;
     private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> atmosPriceTable;
@@ -28,6 +29,11 @@ public class PriceTable {
         this.fileToTable(this.atmosPriceTable, this.aPT);
     }
 
+    /**
+     * Converting text file to a hashtable for corresponding parameter and price
+     * @param table the hashtable
+     * @param file text file containing the price
+     */
     private void fileToTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file) {
         try {
             Scanner fr = new Scanner(file);
@@ -55,6 +61,7 @@ public class PriceTable {
 
                 }
             }
+            fr.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             System.out.println(e.getMessage());
@@ -62,9 +69,14 @@ public class PriceTable {
         }
     }
 
+    /**
+     * Saving any updates to a price table
+     * @param table the pricetable
+     * @param file text file 
+     */
     private void saveTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file){
         try {
-            FileWriter fw = new FileWriter(rPT);
+            FileWriter fw = new FileWriter(file);
             for (Object i : this.regularPriceTable.keySet()) {
                 fw.append(i + "\n");
                 for (Object j : regularPriceTable.get(i).keySet()) {
@@ -83,6 +95,15 @@ public class PriceTable {
         }
     }
 
+    /**
+     * Change price of a ticket
+     * @param classOfCinema 
+     * @param day
+     * @param ageGroup
+     * @param typeOfMovie
+     * @param price new price
+     * @return boolean whether ticket has been successfully updated
+     */
     public boolean setPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie, double price){
         try {
             switch (classOfCinema){
@@ -97,7 +118,7 @@ public class PriceTable {
                     break;
                 default:
                     System.out.println("Invalid option");
-                    break;
+                    return false;
             }
             return true;
             
@@ -107,11 +128,20 @@ public class PriceTable {
             return false;
         }
     }
+
+    /**
+     * Method to check price given the parameters
+     * @param classOfCinema Regular/ Atmos/ Platinum
+     * @param day Mon-Sum/ PH
+     * @param ageGroup Student/ Adult/ Senior
+     * @param typeOfMovie 3D/ Digital
+     * @return price of the ticket
+     */
     public double checkPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie){
         double price=0;
         switch (classOfCinema){
             case REGULAR:
-                price=this.regularPriceTable.get(day).get(ageGroup).get(typeOfMovie);
+                price=regularPriceTable.get(day).get(ageGroup).get(typeOfMovie);
                 break;
             case PLATINUM:
                 price=this.platinumPriceTable.get(day).get(ageGroup).get(typeOfMovie);
@@ -132,32 +162,4 @@ public class PriceTable {
         saveTable(this.atmosPriceTable, this.aPT);
     }
 
-    //for me to test stuff cuz mans lazy to make a test app
-    public static void main(String[] args) {
-
-        PriceTable p = new PriceTable();
-        System.out.println(p.regularPriceTable);
-        System.out.println();
-        System.out.println(p.platinumPriceTable);
-        System.out.println();
-        System.out.println(p.atmosPriceTable);
-
-        /*
-         * PriceTable p = new PriceTable();
-         * for(Object i : p.regularPriceTable.keySet()){
-         *      for(Object j :p.regularPriceTable.get(i).keySet()){
-         *          for(Object k:p.regularPriceTable.get(i).get(j).keySet()){
-         *              for(Map.Entry<Day,Double> l:p.regularPriceTable.get(i).get(j).get(k).entrySet()){
-         *                  System.out.println(i);
-         *                  System.out.println(j);
-         *                  System.out.println(k);
-         *                  System.out.println(l.getKey());
-         *                  System.out.println(l.getValue());
-         *                  System.out.println();
-         *              }
-         *          }
-         *      }
-         * }
-         */
-    }
 }
