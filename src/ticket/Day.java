@@ -1,7 +1,7 @@
 package src.ticket;
 
 enum TypeOfMovie{
-	D3,BLOCKBUSTER,DIGITAL
+	D3,DIGITAL
 }
 
 enum Day {
@@ -12,9 +12,9 @@ enum Day {
 
 enum ClassOfCinema {
 
-	PLATINUM,REGULAR, ATMOS
+	PLATINUM, REGULAR, ATMOS
 }
 
 enum AgeGroup{
-	STUDENT,ADULT,SENIOR
+	STUDENT, ADULT, SENIOR
 }
