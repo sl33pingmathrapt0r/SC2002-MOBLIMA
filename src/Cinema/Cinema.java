@@ -9,11 +9,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/*
+   Reperesents a Cinema hall  within a specific Cineplex. 
+   Can be used to screen movies.
+ */
+
 public class Cinema {
+
+	/*
+	 * Name of the Cinema hall that will be used to screen movies
+	 */
 	int name;
+
+	/*
+	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
+	 */
 	String path = System.getProperty("user.dir") + "\\src\\Cinema\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	
+	/*
+	 * An array list of all the movies that are scheduled to be screened in the cinema.
+	 */
 	List<MovieScreening> mlist = new ArrayList<>();
 
+	/*
+	 * Creates a cinema with the given name.
+	 * Loads all relevant data for this cinema hall such as movie screenings and occupancy
+	 * @param s the unique identifier for this cinema hall
+	 */
 	public Cinema(int s) throws FileNotFoundException{
 		this.name = s;
 		boolean b;
@@ -35,11 +57,17 @@ public class Cinema {
 
 	}
 	
-	public void AddMovie(Movie movie, int t, int date) throws IOException {
+	/*
+	 * Adds a screening of a movie to this cinema hall.
+	 * @param movie An object from the movie class that contains all information about the movie
+	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
+	 * @param date A 6 digit integer in the format DDMMYY to record the date of the movie screening
+	 */
+	public void AddMovie(Movie movie, int startTime, int date) throws IOException {
 		String s = movie.getTitle();
-		int e = calculateEndTime(t,movie);
+		int e = calculateEndTime(startTime,movie);
 		boolean b;
-		File g = new File(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt");
+		File g = new File(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return;
@@ -58,7 +86,7 @@ public class Cinema {
 					break;
 				s1 = l[i-1];
 				s2 = s1.split("@",5);
-				if (Integer.valueOf(s2[2]) > t) {
+				if (Integer.valueOf(s2[2]) > startTime) {
 					System.out.println("Timing clash, failed to add movie");
 					return;
 				}
@@ -66,9 +94,9 @@ public class Cinema {
 					break;
 			}
 		}
-		mlist.add(new MovieScreening(this.name, date, t, e, s));
+		mlist.add(new MovieScreening(this.name, date, startTime, e, s));
 		b=g.createNewFile();
-		FileWriter w = new FileWriter(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt",true);
+		FileWriter w = new FileWriter(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -81,6 +109,9 @@ public class Cinema {
 		w.close();
 	}
 	
+	/*
+	 * Lists all movies scheduled to be screen in this cinema
+	 */
 	public void listMovie(){
 		/*File f = new File(this.path+this.name);
 		String l[] = f.list();
@@ -96,6 +127,10 @@ public class Cinema {
 		}
 	}
 	
+	/*
+	 * Lists the vacancy of a specific movie screening for this cinema
+	 * @param index The index to be passed into the arrayList to iddentify which movie screening to list its vacancy
+	 */
 	public void listVacancy(int index) throws FileNotFoundException {
 		mlist.get(index).listVacancy();
 		/*String s = movie.getTitle();
@@ -138,6 +173,12 @@ public class Cinema {
 		}*/
 	}
 
+	/*
+	 * Converts the string format of the SeatID into an integer
+	 * Checks whether or not the seat is already taken
+	 * @param index The index of the movie screening in the arrayList to be updated
+	 * @param SeatID The seatID that the guest would wish to book
+	 */
 	public void updateVacancy(int index, String SeatID) throws IOException{
 		/*String m = movie.getTitle();
 		File f = new File(this.path+this.name);
@@ -184,7 +225,6 @@ public class Cinema {
 		bw.close();
 		sc.close();*/
 		int del = SeatID.charAt(0)-65;
-		System.out.println(del);
 		int var;
 		if(del<6){
 			var = del*10+Integer.valueOf(SeatID.charAt(1))-48;
@@ -195,7 +235,6 @@ public class Cinema {
 			var +=del*5;
 			var +=Integer.valueOf(SeatID.charAt(1))-48;
 		}
-		System.out.println(var);
 		if(mlist.get(index).seats[var].taken){
 			System.out.println("Seat already taken");
 			return;
@@ -204,10 +243,19 @@ public class Cinema {
 		System.out.println("Successfully updated");
 		return;
 	}
+
+	/*
+	 * Returns a unique identifier for this cinema hall.
+	 */
 	public String getCinemaCode(){
 		return "CN"+this.name;
 	}
 
+	/*
+	 * Calculates the ending time for any movie scheduled.
+	 * @param startTime The starting time of a movie screening.
+	 * @param movie The movie object which would be screened.
+	 */
 	public int calculateEndTime(int startTime,Movie movie){
 		int i = movie.getDuration();
 		int hour = i/60;
