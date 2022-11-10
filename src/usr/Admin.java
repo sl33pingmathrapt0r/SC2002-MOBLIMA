@@ -106,9 +106,31 @@ class Admin extends User {
         movieList.get(x).setStatus(STATUS.END_OF_SHOWING);
     }
 
-    // public void createCinemaShowtimes() {
+    public void createCinemaShowtimes() {
+        ArrayList<Movie> movieList = MovieList.getMovieList();
+        for(int i=0;i<movieList.size();i++){
+            System.out.println(i+" " +movieList.get(i));
+        }   
+        Systen.out.println("Enter Movie Title to add");
+        String title=scan.nextLine();
+        if(MovieList.titleExists(title)){
 
-    // }
+        }
+        else{
+            String strInput;
+            System.out.println("Movie Not in Movie List");
+            System.out.println("Create new movie? Y/N");
+            do {
+                System.out.print("Invalid Input! Please input Y/N: ");
+                strInput= scan.nextLine();
+            } while (! ( (admin= strInput.charat(0).equalsIgnoreCase("y")) || strInput.charat(0).equalsIgnoreCase("n")) );
+            if(strInput.charat(0).equalsIgnoreCase("y")){
+                Movie newMovie = MovieList.createMovie(); //adds into master list
+                
+            }
+        }
+        
+    }
 
     // public void updateCinemaListing() {
 

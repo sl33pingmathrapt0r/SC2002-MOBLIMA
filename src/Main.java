@@ -3,6 +3,8 @@ package src;
 import java.util.*;
 
 public class Main {
+    final int MAX_CINEMA = 3;
+    final int MAX_CINEPLEX = 3;
     private static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -125,7 +127,7 @@ public class Main {
 
                     //Book and purchase ticket
                     case 4:
-                    
+
                         break;
 
                     //View booking history
