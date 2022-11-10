@@ -1,13 +1,14 @@
 package src.usr;
 
 import java.util.*;
+
 // import MovieList.*;
 
 class Admin extends User {
     private boolean isAdmin= true;
     private String username, pw;
 
-    // private static Scanner scan= new Scanner(System.in);
+    private static Scanner scan= new Scanner(System.in);
     // private static movList = new MovieList(scan);
 
     Admin(String username, String pw) {
@@ -46,23 +47,51 @@ class Admin extends User {
     //     return cinema;
     // }
 
-    // public void createMovieListing() {
-    //     return movList.createMovie();
-    // }
+    public void createMovieListing() {
+        MovieList.createMovie();
+    }
 
-    // public void updateMovieListing() {
-    //      /* 
-    //     * Not implemented under movieList
-    //     * To update a movie, it is necessary to delete
-    //     * the target movie then create another
-    //     */
-    // }
+    public void updateMovieListing() {
+        /**
+        * Not implemented under movieList
+        * To update a movie, it is necessary to delete
+        * the target movie then create another
+        *
+        * Wesley code already accounts for overwriting of Movie files :)
+        */
+        MovieList.createMovie();
+    }
 
-    // public void deleteMovieListing() {
-    //     System.out.println("Which movie would you like to delete? ");
-    //     String Title = scan.nextLine();
-    //     return movList.deleteMovie(Title);
-    // }
+    public void deleteMovieListing() {
+        ArrayList <Movie> movieList = MovieList.getMovieList();
+        System.out.println("Which movie would you like to delete? ");
+        for(int i=0;i<movieList.size();i++){
+            System.out.println(i+" " +movieList.get(i));
+        }
+        String possibleBadMovieIndex;
+        int x;
+        do{
+            try {
+                possibleBadMovieIndex = scan.nextLine();
+                x=Integer.valueOf(possibleBadMovieIndex);
+                if(x<0 || x>movieList.size()){
+                    throw new Exception("Invalid index"); 
+                }
+            } catch (NumberFormatException e) {
+                // TODO: handle exception
+                System.out.println("Invalid option");
+                e.getMessage();
+                e.printStackTrace();
+            }
+            catch(Exception e){
+                //System.out.println("Invalid index");
+                e.getMessage();
+                e.printStackTrace();
+            }
+
+        }while(true);
+        movieList.get(x).setStatus(STATUS.END_OF_SHOWING);
+    }
 
     // public void createCinemaShowtimes() {
 
