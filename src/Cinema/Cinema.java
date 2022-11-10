@@ -1,4 +1,5 @@
-package src.cinema;
+package src.Cinema;
+import src.movList.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,8 +91,7 @@ public class Cinema {
 		sc.close();
 	}
 
-	public void updateVacancy(Movie movie,int t,Ticket ticket, int date) throws IOException{
-		String s = ticket.getSeatID();
+	public void updateVacancy(Movie movie,int t,String SeatID, int date) throws IOException{
 		String m = movie.getTitle();
 		File f = new File(this.path+this.name);
 		String l[] = f.list();
@@ -108,7 +108,7 @@ public class Cinema {
 		}
 		File g = new File(this.path+this.name+"\\"+temp);
 		Scanner sc = new Scanner(g);
-		String h[] = s.split(" ",2);
+		String h[] = SeatID.split(" ",2);
 		int del = h[1].charAt(0)-65;
 		String new1="";
 		StringBuffer buffer = new StringBuffer();
