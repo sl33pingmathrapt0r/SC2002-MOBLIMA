@@ -1,35 +1,42 @@
-package src.cineplex;
+package TEST2;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.List;
 
 
 public class Cineplex {
   
-    private static String path;
-    public static String cineplex;
+    final private static String route = Path.of("").toAbsolutePath().toString();
+    final private String path;
+    final private String cineplex;
     private static int CineplexCount=0;
 
-    public Cineplex(String Cineplex) throws Exception{
-		path = new java.io.File(".").getCanonicalPath();
+    public Cineplex(String cineplex) throws Exception{
+        try{
         boolean b;
-        cineplex=Cineplex;
-		File f = new File(path+"\\"+cineplex);
+        this.cineplex=cineplex;
+		this.path=route+"\\"+cineplex;
+        File f = new File(path+"\\");
 		if (!f.exists()){
 			b = f.mkdir();
-            File j = new File(path+"\\"+cineplex+"\\MovieList");
-            System.out.println(path);
+            File j = new File(path+"\\MovieList");
             b = j.mkdir();
             CineplexCount++;
         }
+    }
+    catch(Exception e){
+        System.out.println("File not found");
+        throw e;
+    }
 	}
 
-    private static void CineplexList(){
+    public static void CineplexList(){
         if(CineplexCount==0){
             System.out.println("There are no Cineplexes.");
             return;
@@ -38,42 +45,40 @@ public class Cineplex {
     }
 
 
-    public static void AddMovie(String MovieName,String Type,String MovieRating) throws Exception {
+    public void AddMovie(String MovieName,String Type,String MovieRating) throws Exception {
         if(MovieList.titleExists(MovieName)){
-            Movie mov = MovieList.getMovieByTitle(MovieName);
-            File g = new File(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt");
+            File g = new File(path+"\\MovieList\\"+MovieName+".txt");
             if (g.exists()) {
                 System.out.println("Movie already exists");
                 return;
             }
-            FileWriter w = new FileWriter(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt",true);
+            FileWriter w = new FileWriter(path+"\\MovieList\\"+MovieName+".txt",true);
             w.append( Type + "\n" + MovieRating + "\n" );
             w.close();
-            MovieList.incMovieCounter(mov);
+            MovieList.incMovieCounter(MovieName);
         }
         else{
-            Movie mov = MovieList.createMovie();
-            FileWriter w = new FileWriter(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt",true);
+            FileWriter w = new FileWriter(path+"\\MovieList\\"+MovieName+".txt",true);
+            MovieList.createMovie();
             w.append( Type + "\n" + MovieRating + "\n" );
             w.close();
-            MovieList.incMovieCounter(mov);
+            MovieList.incMovieCounter(MovieName);
         }
 	}
 
-    public static void RemoveMovie(String MovieName) throws Exception {
+    public void RemoveMovie(String MovieName) throws Exception {
 		boolean b;
-        File g = new File(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt");
+        File g = new File(path+"\\MovieList\\"+MovieName+".txt");
 		if (g.exists()) {
             b=g.delete();
 			System.out.println("Movie has been deleted.");
-            Movie mov = MovieList.getMovieByTitle(MovieName);
-            MovieList.decMovieCounter(mov);
+            MovieList.decMovieCounter(MovieName);
             return;
 		}
     }
 
-    public static void ListAllMovies() throws Exception {
-        File[] movFolder = new File(path+"\\"+cineplex+"\\MovieList").listFiles();
+    public void ListAllMovies() throws Exception {
+        File[] movFolder = new File(path+"\\MovieList").listFiles();
         if(movFolder.length==0){
             System.out.println("There are currently no movies.");
         }
@@ -87,12 +92,12 @@ public class Cineplex {
         String ShowTimesDate="";
         String ShowTimesLine="";
         String[] ShowTimes=null;
-        File g = new File(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt");
+        File g = new File(path+"\\MovieList\\"+MovieName+".txt");
 		if (!g.exists()) {
 			System.out.println("Movie doesn't exists");
             return;
 		}
-        File MovFile = new File(path+"\\"+cineplex+"\\MovieList\\"+MovieName+".txt");
+        File MovFile = new File(path+"\\MovieList\\"+MovieName+".txt");
         FileReader fileReader = new FileReader(MovFile);
         BufferedReader buffReader= new BufferedReader(fileReader);
         for(int i=0;i<3;i++){
@@ -106,9 +111,9 @@ public class Cineplex {
         }
     }
 
-    public static void ListTopRating() throws Exception{
+    public void ListTopRating() throws Exception{
         String [] MovieListArray;
-        File f = new File(path+"\\"+cineplex+"\\MovieList");
+        File f = new File(path+"\\MovieList");
         MovieListArray = f.list();
         int size =MovieListArray.length;
         Movie [] MovieListMovies=new Movie[size],SortedMovie=new Movie[size];
@@ -124,9 +129,9 @@ public class Cineplex {
         }
     }
 
-    public static void ListTopSales() throws Exception{
+    public void ListTopSales() throws Exception{
         String [] MovieListArray;
-        File f = new File(path+"\\"+cineplex+"\\MovieList");
+        File f = new File(path+"\\MovieList");
         MovieListArray = f.list();
         int size =MovieListArray.length;
         Movie [] MovieListMovies=new Movie[size],SortedMovie=new Movie[size];
