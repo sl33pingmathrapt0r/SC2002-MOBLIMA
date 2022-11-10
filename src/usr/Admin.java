@@ -85,24 +85,12 @@ class Admin extends User {
         for(int i=0;i<movieList.size();i++){
             System.out.println(i+" " +movieList.get(i));
         }
-        String possibleBadMovieIndex;
         int x;
-        do{
-            try {
-                possibleBadMovieIndex = scan.nextLine();
-                x=Integer.valueOf(possibleBadMovieIndex);
-                if(x<0 || x>movieList.size()){
-                    throw new Exception("Invalid index"); 
-                }
-                break;
-            }
-            catch(Exception e){
-                System.out.println("Invalid index");
-                e.getMessage();
-                e.printStackTrace();
-            }
-
-        }while(true);
+        while(true){
+            x = InputHandling.getInt("");
+            if(x<0 || x>movieList.size()) System.out.print("Invalid input: ");
+            else break;
+        }
         movieList.get(x).setStatus(STATUS.END_OF_SHOWING);
     }
 
