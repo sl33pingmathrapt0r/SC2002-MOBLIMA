@@ -1,14 +1,13 @@
 package Cinema;
 import movList.*;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 /*
    Reperesents a Cinema hall  within a specific Cineplex. 
    Can be used to screen movies.
@@ -38,10 +37,10 @@ public class Cinema {
 	 */
 	public Cinema(int s) throws FileNotFoundException{
 		this.name = s;
-		boolean b;
+		//boolean b;
 		File f = new File(this.path+this.name);
 		if (!f.exists())
-			b = f.mkdir();
+			f.mkdir();
 		else{
 			String l[] = f.list();
 			String s2[];
@@ -61,12 +60,11 @@ public class Cinema {
 	 * Adds a screening of a movie to this cinema hall.
 	 * @param movie An object from the movie class that contains all information about the movie
 	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
-	 * @param date A 6 digit integer in the format DDMMYY to record the date of the movie screening
+	 * @param date A 6 digit integer in the format YYMMDD to record the date of the movie screening
 	 */
 	public void AddMovie(Movie movie, int startTime, int date) throws IOException {
 		String s = movie.getTitle();
 		int e = calculateEndTime(startTime,movie);
-		boolean b;
 		File g = new File(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
@@ -95,7 +93,7 @@ public class Cinema {
 			}
 		}
 		mlist.add(new MovieScreening(this.name, date, startTime, e, s));
-		b=g.createNewFile();
+		g.createNewFile();
 		FileWriter w = new FileWriter(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -123,7 +121,8 @@ public class Cinema {
 			System.out.println("Name of movie: "+k[3]+ " |ShowTime: "+ k[1]);
 		}*/
 		for (int i=0;i<mlist.size();i++){
-			System.out.println(mlist.get(i).movie+ " showing at " + mlist.get(i).start );
+			if(mlist.get(i).showing == true)
+				System.out.println(mlist.get(i).movie+ " showing at " + mlist.get(i).start );
 		}
 	}
 	
@@ -267,5 +266,37 @@ public class Cinema {
 		if(startTime>2500)
 			startTime = startTime -2400;
 		return startTime;	
+	}
+
+	public void delete(int date,int time){
+		String _path = this.path+this.name+"\\";
+		File f = new File(_path);
+		String l[] = f.list();
+		for(int i=0;i<l.length;i++){
+			String k[] = l[i].split("@",5);
+			int x = Integer.valueOf(k[0]);
+			int y = Integer.valueOf(k[1]);
+			if(date > x){
+				mlist.get(i).showing = false;
+			}
+			if (date == x){
+				if(time > y)
+					mlist.get(i).showing = false;
+			}
+		}
+	}
+
+	public void rename(String movie, int startTime, int date,File f) throws IOException{
+		//String s = movie.getTitle();
+		//int e = calculateEndTime(startTime,movie);
+		FileInputStream fis = new FileInputStream(f);
+		fis.close();
+		File g = new File(this.path+this.name+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
+		if(f.exists()){
+			System.out.println("zam");
+			//Files.move(f.toPath(),g.toPath());
+			f.renameTo(g);
+		}
+		
 	}
 }
