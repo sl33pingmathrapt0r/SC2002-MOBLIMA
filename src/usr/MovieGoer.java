@@ -4,18 +4,14 @@ import java.util.*;
 // import java.text.SimpleDateFormat;
 // import ticket.*;
 
-/**
-   
-   
-   
-  
- */
 public class MovieGoer extends User {
     private String username, pw;
     private String name, hp, email;
     private static Scanner scan= new Scanner(System.in);
     // private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
-    // private ArrayList<String> transactionHistory= new ArrayList<String>();
+    private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
+    private Map<String, String> reviews= new HashMap<String, String>();
+    private Map<String, Integer> ratings= new HashMap<String, Integer>();
 
 
     MovieGoer(String username, String pw, String name, String hp, String email) {
@@ -75,17 +71,6 @@ public class MovieGoer extends User {
     //      */
     // }
     
-    /**
-     * 
-     * @param movieName 
-     * @param cinemaClass
-     * @param movieType
-     * @param time
-     * @param day
-     * @param seatInfo
-     * @param cinema
-     * @return
-     */
     // public boolean bookTicket(
     //     String movieName, 
     //     ClassOfCinema cinemaClass, 
@@ -118,7 +103,10 @@ public class MovieGoer extends User {
     //         return false;
     //     } 
     //     else {
+    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyMMddHHmm").format(new Date());
     //         boolean weekday= day==MONDAY || day==TUESDAY || day==WEDNESDAY || day==THURSDAY;
+    //         int tixNo= 1;
+    //         String tixId;
     //         for (String seat : seatInfo) {
 
     //             // option for student/senior pricing
@@ -155,8 +143,9 @@ public class MovieGoer extends User {
     //             // show price before proceeding with purchase
     //             System.out.println("Ticket Price: $" + Ticket.calculatePrice(cinemaClass, movieType, age, day));
 
-    //             Ticket tempTix= new Ticket(movieName, movieType, cinemaClass, name, hp, day, time, age, seat);
-    //             price+= tempTix.getPrice;
+    //             String tixId= transactionId+Integer.toString(tixNo);
+    //             Ticket tempTix= new Ticket(movieName, movieType, cinemaClass, name, hp, day, time, age, seat, tixId);
+    //             price+= tempTix.getPrice();
     //             toBook.add(tempTix);
     //         }
             
@@ -173,9 +162,16 @@ public class MovieGoer extends User {
     //             );
 
     //         // print transactionID
-    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyMMddHHmm").format(new Date());
     //         bookingHistory.put(transactionId, toBook);
     //         System.out.println(transactionId + "\n");
+
+    //         // store tickets to movieTickets, reviews, ratings
+    //         // if (!movieTickets.contains(movieName)) movieTickets.put(movieName, new ArrayList<String>());
+    //         for (int i=1; i<=tixNo; i++) {
+    //             movieTickets.get(movieName).add(transactionId + Integer.toString(i));
+    //             reviews.put(transactionId + Integer.toString(i), "");
+    //             ratings.put(transactionId + Integer.toString(i), -1);
+    //         }
     //         return true;
     //     }
     // }
@@ -221,12 +217,44 @@ public class MovieGoer extends User {
     //     );
     // }
 
-    // void addTransactionHistory(String transactionId) {
-    //     transactionHistory.add(transactionId);
+    // public void listTop5Movies(Cineplex cineplex) {
+    //     cineplex.listTop5();
     // }
 
-    //TODO 
-    public void listTop5Movies(boolean ratingSort) {
+    public void newReview(String movieName) {
+        // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
+
+        // check valid
+        if (!movieTickets.keySet().contains(movieName)) {
+            System.out.println("You have not watched this movie.");
+            return;
+        }
         
+        ArrayList<String> tickets= movieTickets.get(movieName);
+        String review;
+        int intInput;
+
+        System.out.println("Choose a review to edit: "); 
+        for (int i=0; i<tickets.size(); i++) {
+            if (ratings.get(tickets.get(i))== -1) {
+                System.out.println(i +":\t---ADD A REVIEW---");
+            } else {
+                System.out.println(
+                    i +":\t"+ 
+                    ratings.get(tickets.get(i)) +" / 5 STARS;\t"+
+                    reviews.get(tickets.get(i))
+                    );
+            }
+        }
+        do {
+            System.out.println("Select Option:\t");
+            intInput= Integer.valueOf(scan.nextLine());
+        } while (intInput>tickets.size() || intInput<=0);
+        
+        // review= updateMovieReviews(tickets.get(intInput-1), movieName);
+        // reviews.replace(tickets.get(intInput-1), review.substring(1));
+        // ratings.replace(tickets.get(intInput-1), Integer.valueOf(review.substring(0,1)));
+        
+        return;
     }
 }

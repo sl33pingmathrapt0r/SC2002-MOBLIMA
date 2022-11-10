@@ -12,10 +12,10 @@ public class Accounts{
      * No instance of this class should be created, since all accounts are
      * stored together and global. 
      */
-    final private static String PKG_DIR= System.getProperty("user.dir") +File.separator+ "src" +File.separator+ "usr" +File.separator+ "accounts" +File.separator;
-    final private static String ADMIN_PATH= PKG_DIR + "admin" +File.separator;
-    final private static String GOER_PATH= PKG_DIR + "moviegoer" +File.separator;
-    final private static String ADMIN_KEY_PATH= PKG_DIR + "adminSecret.txt";
+    final private static String ACC_DIR= System.getProperty("user.dir") +File.separator+ "src" +File.separator+ "usr" +File.separator+ "accounts" +File.separator;
+    final private static String ADMIN_PATH= ACC_DIR + "admin" +File.separator;
+    final private static String GOER_PATH= ACC_DIR + "moviegoer" +File.separator;
+    final private static String ADMIN_KEY_PATH= ACC_DIR + "adminSecret.txt";
 
 
     private static ArrayList<User> goerAcc= new ArrayList<User>();
