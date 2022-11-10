@@ -20,13 +20,13 @@ public class PriceTable {
     public PriceTable() {
 
         this.regularPriceTable = new Hashtable<>();
-        this.fileToTable(this.regularPriceTable, rPT);
+        this.fileToTable(this.regularPriceTable, this.rPT);
 
         this.platinumPriceTable = new Hashtable<>();
-        this.fileToTable(this.platinumPriceTable, pPT);
+        this.fileToTable(this.platinumPriceTable, this.pPT);
 
         this.atmosPriceTable = new Hashtable<>();
-        this.fileToTable(this.atmosPriceTable, aPT);
+        this.fileToTable(this.atmosPriceTable, this.aPT);
     }
 
     /**

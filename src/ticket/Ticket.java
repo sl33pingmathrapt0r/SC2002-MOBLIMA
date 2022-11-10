@@ -12,7 +12,6 @@ public class Ticket {
 	private AgeGroup ageGroup;
 	private double price;
 	private String seatID;
-	private static PriceTable priceTable=new PriceTable();
 	private boolean isBlockBuster;
 	/**
 	 * Constructor class for ticket
@@ -41,8 +40,7 @@ public class Ticket {
 		this.ageGroup = ageGroup;
 		this.seatID = seatID;
 		this.isBlockBuster=isBlockBuster;
-		this.price = Ticket.priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
-
+		this.price = Ticket.calculatePrice(this);
 	}
 
 	/**
@@ -106,6 +104,7 @@ public class Ticket {
 		 * 14 Digital
 		 */
 		double price;
+		PriceTable priceTable = new PriceTable();
 		//weekdays after 6 no student/ senior promo 
 		if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
@@ -118,6 +117,26 @@ public class Ticket {
 			price=priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
 		}
 		if(isBlockBuster) return price+1;
+		return price;
+	}
+
+	//overload to take in only ticket
+	public static double calculatePrice(Ticket ticket) {
+			
+		double price;
+		PriceTable priceTable = new PriceTable();
+		//weekdays after 6 no student/ senior promo 
+		if((ticket.getAgeGroup()==AgeGroup.STUDENT || ticket.getAgeGroup()==AgeGroup.SENIOR) && ticket.getTimeOfMovie()>1800 &&
+		(ticket.getDayOfWeek()==Day.MONDAY||ticket.getDayOfWeek()==Day.TUESDAY||ticket.getDayOfWeek()==Day.WEDNESDAY||ticket.getDayOfWeek()==Day.THURSDAY)){
+			price=priceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), AgeGroup.ADULT, ticket.getTypeOfMovie());
+		}
+		if(ticket.getDayOfWeek()==Day.FRIDAY && ticket.getTimeOfMovie()>1800){
+			price=priceTable.checkPrice(ticket.getClassOfCinema(), Day.SATURDAY, ticket.getAgeGroup(), ticket.getTypeOfMovie());
+		}
+		else{
+			price=priceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), ticket.getAgeGroup(), ticket.getTypeOfMovie());
+		}
+		if(ticket.isBlockBuster()) return price+1;
 		return price;
 	}
 
