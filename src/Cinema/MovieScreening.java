@@ -70,7 +70,8 @@ public class MovieScreening {
         this.end = end;
         this.movie = movie;
         this.typeOfMovie = typeOfMovie;
-        File f = new File(this.path+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt");
+        this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt";
+        File f = new File(path);
         if(!f.exists())
             this.seats = Seats.create(cinema);
         else
