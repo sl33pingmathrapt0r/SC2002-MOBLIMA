@@ -29,7 +29,7 @@ public class MovieGoer extends User {
         System.out.println("4: Book and purchase ticket");
         System.out.println("5: View booking history");
         System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
-        System.out.println("7: Exit");
+        System.out.println("7: Log out");
     }
 
     public String getUser() {
