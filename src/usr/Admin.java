@@ -1,4 +1,4 @@
-package src.usr;
+package usr;
 
 import java.util.*;
 
@@ -58,40 +58,31 @@ class Admin extends User {
         MovieList.createMovie();
     }
 
-    public void updateMovieListing() {
+    public void updateMovieListing(Cineplex cineplex) {
         /**
         * Not implemented under movieList
         * To update a movie, it is necessary to delete
         * the target movie then create another
         * updates one of the 4 things in movie
         */
-        ArrayList <Movie> movieList = MovieList.getMovieList();
+        ArrayList <Movie> movieList = cineplex.getMovieList();
         System.out.println("Which movie would you like to update? ");
-        for(int i=0;i<movieList.size();i++){
-            System.out.println(i+" " +movieList.get(i));
-        }
-        int choice = InputHandling.getInt("Movie index: ");
-        if(choice<0 ||  choice>movieList.size()){
-            System.out.println("Invalid Option");
-            return;
-        }
+        for(int i=0;i<movieList.size();i++) System.out.println(i+". " +movieList.get(i).getTitle());
+        
+        int choice = InputHandling.getInt("", "Invalid input: ", 0, movieList.size());
         String title = movieList.get(choice).getTitle();
         MovieList.updateMovieAdmin(title);
     }
 
-    public void deleteMovieListing() {
-        ArrayList <Movie> movieList = MovieList.getMovieList();
+    public void deleteMovieListing(Cineplex cineplex) {
+        ArrayList <Movie> movieList = cineplex.getMovieList();
         System.out.println("Which movie would you like to delete? ");
         for(int i=0;i<movieList.size();i++){
-            System.out.println(i+" " +movieList.get(i));
+            System.out.println(i+" " +movieList.get(i).getTitle());
         }
-        int x;
-        while(true){
-            x = InputHandling.getInt("");
-            if(x<0 || x>movieList.size()) System.out.print("Invalid input: ");
-            else break;
-        }
-        movieList.get(x).setStatus(STATUS.END_OF_SHOWING);
+        int x = InputHandling.getInt("", "Invalid input: ", 0, movieList.size());
+        Date endDate = cineplex.getFinalScreening();
+        MovieList.setEndDate(movieList.get(x).getTitle());
     }
 
     public void createCinemaShowtimes() {
@@ -99,7 +90,7 @@ class Admin extends User {
         for(int i=0;i<movieList.size();i++){
             System.out.println(i+" " +movieList.get(i));
         }   
-        Systen.out.println("Enter Movie Title to add");
+        System.out.println("Enter Movie Title to add");
         String title=scan.nextLine();
         if(MovieList.titleExists(title)){
 
