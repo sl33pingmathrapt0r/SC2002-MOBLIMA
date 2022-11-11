@@ -15,8 +15,14 @@ class Admin extends User {
         System.out.println("1: Create/Update/Remove movie listing");
         System.out.println("2: Create/Update/Remove cinema showtimes and the movies to be shown");
         System.out.println("3: Configure system settings");
-        System.out.println("4: Exit");
+        System.out.println("4: Logout");
     }
+
+    public void logout(){
+
+    }
+
+    
 
     Admin(String username, String pw) {
         this.username= username;
