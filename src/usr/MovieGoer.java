@@ -1,4 +1,5 @@
-package src.usr;
+package usr;
+
 
 import java.util.*;
 // import java.text.SimpleDateFormat;

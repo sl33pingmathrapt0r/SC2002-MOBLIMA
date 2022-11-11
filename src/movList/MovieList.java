@@ -1,5 +1,5 @@
 package movList;
-import movList.inputHandling;
+import movList.InputHandling;
 import java.util.*;
 import java.nio.file.Path;
 import java.io.*;
@@ -164,7 +164,7 @@ public class MovieList {
 			System.out.println("5. Exit ");
 
 			while(true){
-				n = inputHandling.getInt("");
+				n = InputHandling.getInt("");
 				if(n<1 || n>6) System.out.print("Invalid input. Reenter n: ");
 				else break;
 			}

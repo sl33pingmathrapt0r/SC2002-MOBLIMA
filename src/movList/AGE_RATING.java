@@ -5,5 +5,5 @@ enum AGE_RATING {
     PG,
     PG_13,
     R,
-    NC_17
+    NC_16
 }

@@ -1,10 +1,13 @@
+package src;
 
-package src.usr;
 
-// import java.util.*;
-// import cineplex.*;
 
-abstract class User {
+import java.util.*;
+import Cineplex.*;
+import movList.*;
+import Cinema.*;
+
+public abstract class User {
     private boolean isAdmin= false;
     private String username, pw;
     private String name, hp, email;
@@ -19,8 +22,8 @@ abstract class User {
         for(int i=0;i<cineplex.size();i++){
             System.out.println(i+": "+cineplex.get(i).getName());
         }
-        int choice=InputHandler.getInt("Enter Cineplex index","Invalid index",0,cineplex.size()--);
-        return cineplex.get(i);
+        int choice=InputHandling.getInt("Enter Cineplex index","Invalid index",0,cineplex.size()--);
+        return cineplex.get(choice);
     }
     /*
      * Search/ List Movie

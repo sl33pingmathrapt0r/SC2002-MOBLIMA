@@ -73,13 +73,7 @@ public class Cinema {
 		//h.delete();
 	}
 
-	public boolean deleteSelect(MovieScreening movieScreening){
-		File f = new File(movieScreening.path);
-		if(f.exists())
-		  return f.delete();
-		else
-		  return false;
-	  }
+
 	
 	/*
 	 * Adds a screening of a movie to this cinema hall.
@@ -127,11 +121,6 @@ public class Cinema {
 		g.createNewFile();
 
 		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt",true);
-		/*w.append("O O O O O O O O O O\n"
-				+ "O O O O O O O O O O\n"
-				+ "O O O O O O O O O O\n"
-				+ "O O O O O O O O O O\n"
-				+ "O O O O O O O O O O\n");*/
 		for (int i=0;i<80;i++){
 			w.append("A \n");
 		}
