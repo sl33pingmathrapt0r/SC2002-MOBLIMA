@@ -85,18 +85,11 @@ public class Cineplex {
         return listofMovies;
     }
 
-    public void addScreening(int cinema,String MovieName, int startTime, int date)throws Exception{
+    public boolean addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
+        boolean b=false;
         Movie mov= MovieList.getMovieByTitle(MovieName);
         if(mov.getEndDate().before(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
-            if(MovieList.titleExists(MovieName)){
-                Cinema ScreeningCinema = cinemas.get(cinema-1);
-                ScreeningCinema.AddMovie(mov,startTime,date);
-            }
-            else{
-                MovieList.createMovie();
-                Cinema ScreeningCinema = cinemas.get(i-1);
-                ScreeningCinema.AddMovie(mov,startTime,date);
-            }
+            b=cinemas.get(cinema-1).AddMovie(mov,startTime,date,typeOfMovie);
             File g = new File(path+"\\MovieList\\"+MovieName+".txt");
             if(!g.exists()) {
                 listofMovies.add(MovieName);
@@ -112,6 +105,17 @@ public class Cineplex {
             return;
         }
             
+    }
+
+    public void addCineplexList(String MovieName){
+        if(searchMovies(MovieName)==-1){
+            listofMovies.add(MovieName);
+            ScreeningTimes.add(new Screenings(MovieName));
+            MovieCount++;
+            File newMov = new File(path+"\\MovieList\\"+MovieName+".txt");
+            newMov.createNewFile();
+        }
+        
     }
 
     private int searchMovies(String MovieName){
@@ -146,7 +150,8 @@ public class Cineplex {
     }
 
     public void updateScreeningShowtime(int Cinema, String MovieName, int prevStartTime, int afterStartTime, int prevDate, int afterDate){
-        cinemas.get(Cinema-1).updateScreening(MovieName, prevStartTime, afterStartTime, prevDate, afterDate);
+        Movie mov = MovieList.getMovieByTitle(MovieName);
+        cinemas.get(Cinema-1).updateScreening(mov, prevStartTime, afterStartTime, prevDate, afterDate);
         int index=searchMovies(MovieName);
         ScreeningTimes.get(index).update(prevStartTime, afterStartTime, prevDate, afterDate);
     }
