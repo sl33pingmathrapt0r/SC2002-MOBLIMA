@@ -11,15 +11,6 @@ abstract class User {
     // private static Scanner scan= new Scanner(System.in);
 
     public abstract void banner();
-    public abstract void logout();
-
-    public Cineplex selectCineplex(ArrayList<Cineplex> cineplex){
-        for(int i=0;i<cineplex.size();i++){
-            System.out.println(i+": "+cineplex.get(i).getName());
-        }
-        int choice=InputHandler.getInt("Enter Cineplex index","Invalid index",0,cineplex.size()--);
-        return cineplex.get(i);
-    }
     /*
      * Search/ List Movie
      * View Movie details

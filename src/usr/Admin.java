@@ -1,29 +1,15 @@
-package usr;
+package src.usr;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 // import MovieList.*;
 
 class Admin extends User {
     private boolean isAdmin= true;
     private String username, pw;
 
-    private static Scanner scan= new Scanner(System.in);
+    // private static Scanner scan= new Scanner(System.in);
     // private static movList = new MovieList(scan);
-
-    public void banner(){
-        System.out.println("1: Create/Update/Remove movie listing");
-        System.out.println("2: Create/Update/Remove cinema showtimes and the movies to be shown");
-        System.out.println("3: Configure system settings");
-        System.out.println("4: Logout");
-    }
-
-    public void logout(){
-
-    }
-
-    
 
     Admin(String username, String pw) {
         this.username= username;
@@ -61,9 +47,9 @@ class Admin extends User {
     //     return cinema;
     // }
 
-    public void createMovieListing() {
-        MovieList.createMovie();
-    }
+    // public void createMovieListing() {
+    //     return movList.createMovie();
+    // }
 
     public void updateMovieListing(Cineplex cineplex) {
         /**
@@ -117,6 +103,7 @@ class Admin extends User {
             System.out.println();
         }       
     }
+
 
     public void updateCinemaShowtimes(Cineplex cineplex) {
         while(true){

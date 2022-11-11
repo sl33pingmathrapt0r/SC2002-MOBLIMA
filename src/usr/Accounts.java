@@ -1,5 +1,6 @@
 package src.usr;
 
+
 import java.util.*;
 import java.io.*;
 
@@ -51,27 +52,46 @@ public class Accounts{
         }
 
         File goerDir= new File(GOER_PATH);
+        String strInput= "";
+        String[] data;
         if (goerDir.exists()) {
             try {
                 for (File accFile : goerDir.listFiles()) {
                     BufferedReader goerFile= new BufferedReader(new FileReader(accFile));
-                    if (goerFile.ready()) {
-                        String[] userDetails= goerFile.readLine().split(",", 5);
-                        User user= new MovieGoer(
-                            userDetails[0], 
-                            userDetails[1], 
-                            userDetails[2], 
-                            userDetails[3],
-                            userDetails[4]
-                            );
-                        // user;
-                        add(user);
+                    if (!goerFile.ready()) {
+                        goerFile.close();
+                        continue;
+                    }
+                    String[] userDetails= goerFile.readLine().split(",", 5);
+                    MovieGoer user= new MovieGoer(
+                        userDetails[0], 
+                        userDetails[1], 
+                        userDetails[2], 
+                        userDetails[3],
+                        userDetails[4]
+                        );
+                    // user;
+                    add(user);
 
-                        //add booking history
-                        // while (goerFile.ready()) {
-                        //     user.addTransactionHistory(goerFile.readLine());
-                        //     user.addBookingHistory(goerFile.readLine().split(",", 10));
-                        // }
+                    // No booking history:
+                    if (!goerFile.ready()) {
+                        goerFile.close();
+                        continue;   
+                    }
+
+                    // add booking history
+                    // while ( (strInput= goerFile.readLine()).length() != "XXXyyyyMMddHHmmi".length() ) {
+                    //     user.addTransactionHistory(goerFile.readLine());
+                    //     user.addBookingHistory(goerFile.readLine().split(",", 10));
+                    // }
+
+                    // add reviews
+                    data= goerFile.readLine().split(",", 2);
+                    user.addReview(strInput, data[0], data[1]);
+                    while (goerFile.ready()) {
+                        strInput= goerFile.readLine();
+                        data= goerFile.readLine().split(",", 2);
+                        user.addReview(strInput, data[0], data[1]);
                     }
                     goerFile.close();
                 }
@@ -138,6 +158,8 @@ public class Accounts{
                 //         );
                 //     }
                 // }
+
+                // for (Map.Entry review : acc.)
 
                 writer.close();
             }
