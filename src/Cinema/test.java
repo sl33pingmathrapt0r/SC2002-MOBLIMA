@@ -27,9 +27,9 @@ public class test {
 		Movie movie = new Movie(s,sc);*/
 		//Ticket ticket = new Ticket(s, TypeOfMovie.DIGITAL, ClassOfCinema.ATMOS, s, s, Day.FRIDAY, null,AgeGroup.ADULT, "1 A");
 		//c.AddMovie(movie, i,d,TypeOfMovie.valueOf("D3"));
-		c.listMovie();
+		//c.listMovie();
 		//c.delete(500000,30000);
-		c.listVacancy(0);
+		//c.listVacancy(0);
 		//c.updateVacancy( 0,"G1");
 		//c.delete(500000000,10000000);
 		//c.listMovie();

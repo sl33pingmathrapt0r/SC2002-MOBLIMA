@@ -70,13 +70,13 @@ public class Cinema {
 	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
 	 * @param date A 6 digit integer in the format YYMMDD to record the date of the movie screening
 	 */
-	public void AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
+	public boolean AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
 		String s = movie.getTitle();
 		int e = calculateEndTime(startTime,movie);
 		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
-			return;
+			return false;
 		}
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		String l[] = f.list();
@@ -87,7 +87,7 @@ public class Cinema {
 				break;
 			s1 = l[i];
 			s2 = s1.split("@",5);
-			if(Integer.valueOf(s2[0]) == date)
+			if(Integer.valueOf(s2[0]) != date)
 				continue;
 			if (Integer.valueOf(s2[1]) >= e || i == l.length-1) {
 				if(i==0)
@@ -96,7 +96,7 @@ public class Cinema {
 				s2 = s1.split("@",5);
 				if (Integer.valueOf(s2[2]) > startTime) {
 					System.out.println("Timing clash, failed to add movie");
-					return;
+					return false;
 				}
 				else 
 					break;
@@ -120,6 +120,7 @@ public class Cinema {
 		}
 		w.flush();
 		w.close();
+		return true;
 	}
 	
 	/*
@@ -330,9 +331,25 @@ public class Cinema {
 	public int search(String movie,int startTime, int date){
 		for(int i=0;i<this.mlist.size();i++){
 			MovieScreening movieScreening = this.mlist.get(i);
-			if(movieScreening.date == date && movieScreening.start == startTime && movieScreening.movie == movie)
+			System.out.println(movieScreening.movie+movieScreening.start+movieScreening.date + movie+startTime+date);
+			if(movieScreening.date == date && movieScreening.start == startTime && movieScreening.movie.equals(movie)){
+				System.out.println("found");
 				return i;
+			}
 		}
 		return -1;
+	}
+
+	public void updateScreening(Movie movie, int prevStartTime,int afterStartTime,int prevDate,int afterDate){
+		int index = search(movie.getTitle(),prevStartTime,prevDate);
+		int afterEndTime = calculateEndTime(afterStartTime, movie);
+		System.out.println(index);
+		MovieScreening update = this.mlist.get(0);
+		File f = new File(update.path);
+		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+afterDate+"@"+afterStartTime+"@"+afterEndTime+"@"+movie.getTitle()+"@"+update.typeOfMovie+"@.txt");
+		update.date = afterDate;
+		update.start = afterStartTime;
+		update.end = afterEndTime;
+		f.renameTo(g);
 	}
 }
