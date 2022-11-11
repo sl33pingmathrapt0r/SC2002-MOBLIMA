@@ -4,14 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 // import MovieList.*;
 
-class Admin extends User {
+public class Admin extends User {
     private boolean isAdmin= true;
     private String username, pw;
 
     // private static Scanner scan= new Scanner(System.in);
     // private static movList = new MovieList(scan);
 
-    Admin(String username, String pw) {
+   public Admin(String username, String pw) {
         this.username= username;
         this.pw= pw;
     }
