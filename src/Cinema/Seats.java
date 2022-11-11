@@ -62,6 +62,19 @@ public class Seats {
         return s;
     }
 
+    public static Seats[] createP(int Cinema){
+        Seats s[] = new Seats[20];
+        type t = type.normal;
+        for (int k=0;k<20;k++){
+            if(k<15)
+                t = type.normal;
+            else
+                t = type.couple;
+            s[k] = new Seats(Cinema,k,t);
+        }
+        return s;
+    }
+
     /*
      * A function used to load the pre-existing seat layout for a movie screening on opening the app
      * @param Cinema The cinema hall that this movie screening would be taking place in
@@ -71,7 +84,6 @@ public class Seats {
         Seats s[] = new Seats[80];
         type t = type.normal;
         Scanner sc = new Scanner(f);
-        boolean b = true;
         String p = "";
         for (int k=0;k<80;k++){
             p = sc.nextLine();
@@ -87,6 +99,26 @@ public class Seats {
             if (p.charAt(0) != 'A')
                 s[k].taken = true;
         }
+        sc.close();
+        return s;
+    }
+
+    public static Seats[] createP(int Cinema, File f) throws FileNotFoundException{
+        Seats s[] = new Seats[20];
+        type t = type.normal;
+        Scanner sc = new Scanner(f);
+        String p = "";
+        for (int k=0;k<80;k++){
+            p = sc.nextLine();
+            if(k<15)
+                t = type.normal;
+            else
+                t = type.couple;
+            s[k] = new Seats(Cinema,k,t);
+            if (p.charAt(0) != 'A')
+                s[k].taken = true;
+        }
+        sc.close();
         return s;
     }
 

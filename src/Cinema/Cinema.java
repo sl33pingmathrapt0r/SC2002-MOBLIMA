@@ -5,12 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 /*
    Reperesents a Cinema hall  within a specific Cineplex. 
    Can be used to screen movies.
  */
+import java.util.stream.Stream;
 
 public class Cinema {
 
@@ -41,6 +45,8 @@ public class Cinema {
 		this.name = s;
 		this.Cineplex = cineplex;
 		boolean b;
+		//Path path = Paths.get(this.path+this.Cineplex+"\\"+this.name);
+		//Stream<Path> stream = Files.list(path);
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		System.out.println(this.path+this.Cineplex+"\\"+this.name);
 		if (!f.exists()){
@@ -60,7 +66,8 @@ public class Cinema {
 				mlist.add(new MovieScreening(s, temp[0], temp[1], temp[2], s2[3],TypeOfMovie.valueOf(s2[4]),this.Cineplex));
 			}
 		}
-
+		//File h = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\gg\\1\\3@200@211@ca@D3@.txt");
+		//h.delete();
 	}
 	
 	/*
@@ -277,20 +284,31 @@ public class Cinema {
 		return startTime;	
 	}
 
+	public boolean deleteSelect(MovieScreening movieScreening){
+		File f = new File(movieScreening.path);
+		if(f.exists())
+			return f.delete();
+		else
+			return false;
+	}
+
 	public void delete(int date,int time){
-		String _path = this.path;
-		File f = new File(_path);
+		String path = this.path+this.Cineplex+"\\"+this.name+"\\";
+		File f = new File(path);
+		File g = new File(path);
 		String l[] = f.list();
 		for(int i=0;i<l.length;i++){
 			String k[] = l[i].split("@",5);
 			int x = Integer.valueOf(k[0]);
 			int y = Integer.valueOf(k[1]);
 			if(date > x){
-				mlist.get(i).showing = false;
+				g = new File(path+l[i]);
+				g.delete();
 			}
 			if (date == x){
 				if(time > y)
-					mlist.get(i).showing = false;
+					g = new File(path+l[i]);
+					g.delete();
 			}
 		}
 	}
@@ -298,8 +316,6 @@ public class Cinema {
 	public void rename(String movie, int startTime, int date,File f) throws IOException{
 		//String s = movie.getTitle();
 		//int e = calculateEndTime(startTime,movie);
-		FileInputStream fis = new FileInputStream(f);
-		fis.close();
 		File g = new File(this.path+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
 		if(f.exists()){
 			System.out.println("zam");

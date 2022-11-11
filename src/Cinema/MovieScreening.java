@@ -73,8 +73,9 @@ public class MovieScreening {
         this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt";
         File f = new File(path);
         if(!f.exists())
-            this.seats = Seats.create(cinema);
-        else
+            if(this.Cinema == 3)
+                this.seats = Seats.create(cinema);
+        else if(this.Cinema == 3)
             this.seats = Seats.create(cinema, f);
     }
 
@@ -106,11 +107,12 @@ public class MovieScreening {
      * @param SeatID The seat that will be booked by the guest
      */
     public void updateVacancy(int SeatID) throws IOException{
-        File f = new File(this.path+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt");
+        File f = new File(this.path);
         Scanner sc = new Scanner(f);
         StringBuffer buffer = new StringBuffer();
         String s = sc.nextLine();
-        for (int k=0;k<80;k++){
+        int k =0;
+        while(sc.hasNextLine()){
             if (k == SeatID)
                 buffer.append("X "+System.lineSeparator());
             else if (s.charAt(0) != 'A')
@@ -119,6 +121,7 @@ public class MovieScreening {
                 buffer.append("A "+System.lineSeparator());
             if(sc.hasNextLine())
                 s = sc.nextLine();
+            k++;
         }
         FileWriter wr = new FileWriter(f);
         BufferedWriter bw = new BufferedWriter(wr);
