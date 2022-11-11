@@ -84,13 +84,14 @@ class Admin extends User {
     }
 
     public void deleteMovieListing(Cineplex cineplex) {
-        ArrayList <Movie> movieList = cineplex.getListOfMovies();
-        System.out.println("Which movie would you like to delete? ");
-        for(int i=0;i<movieList.size();i++) System.out.println((i+1)+". " +movieList.get(i).getTitle());
-        System.out.println((movieList.size()+1) + ". Exit");
-        int choice = InputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
-        if(choice==movieList.size()) return;
-        MovieList.setEndDate(movieList.get(x).getTitle());
+        ArrayList<String> movieList = cineplex.getListOfMovies();
+        ArrayList<String> deleteTitles = new ArrayList<String>();
+        for(String title : movieList){
+            if(MovieList.getMovieByTitle(title).getStatus()==STATUS.END_OF_SHOWING){
+                deleteTitles.add(title);
+            }
+        }
+        for(String title : deleteTitles) cineplex.removeMovieCineplex(title);
     }
 
     public void createCinemaShowtimes(Cineplex cineplex) {
@@ -161,8 +162,9 @@ class Admin extends User {
     }
 
     // public void configureSystemSettings() {
-    //     // ticket prices
-    //     // public holiday changes
-    //     // top5list filter enable
+    //  // ticket prices
+    //  // system set time
+        // change admin key
+        // 
     // }
 }
