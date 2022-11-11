@@ -1,20 +1,15 @@
 package Cinema;
 import movList.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 /*
    Reperesents a Cinema hall  within a specific Cineplex. 
    Can be used to screen movies.
  */
-import java.util.stream.Stream;
 
 public class Cinema {
 
@@ -48,7 +43,6 @@ public class Cinema {
 		//Path path = Paths.get(this.path+this.Cineplex+"\\"+this.name);
 		//Stream<Path> stream = Files.list(path);
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
-		System.out.println(this.path+this.Cineplex+"\\"+this.name);
 		if (!f.exists()){
 			System.out.println("creating file");
 			b=f.mkdirs();
@@ -116,7 +110,12 @@ public class Cinema {
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n");*/
-		for (int i=0;i<80;i++){
+		int seatcount;
+		if(this.name == 3)
+			seatcount = 20;
+		else
+			seatcount = 80;
+		for (int i=0;i<seatcount;i++){
 			w.append("A \n");
 		}
 		w.flush();
@@ -297,18 +296,22 @@ public class Cinema {
 		File f = new File(path);
 		File g = new File(path);
 		String l[] = f.list();
-		for(int i=0;i<l.length;i++){
+		for(int i=l.length-1;i>=0;i--){
 			String k[] = l[i].split("@",5);
 			int x = Integer.valueOf(k[0]);
 			int y = Integer.valueOf(k[1]);
 			if(date > x){
-				g = new File(path+l[i]);
+				g = new File(this.mlist.get(i).path);
 				g.delete();
+				System.out.println("delete");
+				this.mlist.remove(i);
 			}
 			if (date == x){
-				if(time > y)
-					g = new File(path+l[i]);
+				if(time > y){
+					g = new File(this.mlist.get(i).path);
 					g.delete();
+					this.mlist.remove(i);
+				}
 			}
 		}
 	}
@@ -322,6 +325,14 @@ public class Cinema {
 			//Files.move(f.toPath(),g.toPath());
 			f.renameTo(g);
 		}
-		
+	}
+
+	public int search(String movie,int startTime, int date){
+		for(int i=0;i<this.mlist.size();i++){
+			MovieScreening movieScreening = this.mlist.get(i);
+			if(movieScreening.date == date && movieScreening.start == startTime && movieScreening.movie == movie)
+				return i;
+		}
+		return -1;
 	}
 }

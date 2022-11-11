@@ -86,7 +86,8 @@ public class Seats {
         Scanner sc = new Scanner(f);
         String p = "";
         for (int k=0;k<80;k++){
-            p = sc.nextLine();
+            if(sc.hasNextLine())
+                p = sc.nextLine();
             if(k<60)
                 t = type.normal;
             else if (k<70)
@@ -108,8 +109,9 @@ public class Seats {
         type t = type.normal;
         Scanner sc = new Scanner(f);
         String p = "";
-        for (int k=0;k<80;k++){
-            p = sc.nextLine();
+        for (int k=0;k<20;k++){
+            if(sc.hasNextLine())
+                p = sc.nextLine();
             if(k<15)
                 t = type.normal;
             else

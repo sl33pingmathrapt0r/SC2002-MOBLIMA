@@ -87,32 +87,51 @@ public class MovieScreening {
      * Lists the vacancy available for this movie screening
      */
     public void listVacancy(){
+        int alphabet = 0;
         if (Cinema != 3){
+            System.out.print("   0 1 2 3 4 5 6 7 8 9\n" + (char)(alphabet+65)+ "| ");
             for(int i=0;i<60;i++){
                 if(seats[i].getVacancy() == false)
                     System.out.print("O ");
                 else
                     System.out.print("X ");
-                if(i-i/10*10 == 9)
-                    System.out.print("\n");
+                if(i-i/10*10 == 9){
+                    if (i != 59)
+                        System.out.print("\n" + (char)(alphabet+65)+ "| ");
+                    else
+                        System.out.print("\n");
+                    alphabet++;
+                }
             }
+            System.out.print("   0   1   2   3   4\n" + (char)(alphabet+65)+ "| ");
+            alphabet++;
             for (int i=60;i<seats.length;i++){
                 if(seats[i].getVacancy() == false)
                     System.out.print("OOO ");
                 else
                 System.out.print("XXX ");
-                if(i-i/10*10 == 9 || i-i/10*10==4)
-                    System.out.print("\n");
+                if(i-i/10*10 == 9 || i-i/10*10==4){
+                    if(i != seats.length-1)
+                        System.out.print("\n" + (char)(alphabet+65)+ "| ");
+                    else
+                        System.out.print("\n");
+                    alphabet++;
+                }
             }
         }
         else{
+            System.out.print("   0 1 2 3 4\n" + (char)(alphabet+65)+ "| ");
             for(int i=0;i<20;i++){
                 if(seats[i].getVacancy() == false)
                     System.out.print("O ");
                 else
                     System.out.print("X ");
                 if(i-i/10*10 == 9 || i-i/10*10 == 4)
-                    System.out.print("\n");
+                    if(i != seats.length-1)
+                        System.out.print("\n" + (char)(alphabet+65)+ "| ");
+                    else
+                        System.out.print("\n");
+                alphabet++;
             }
         }
     }

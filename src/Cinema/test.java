@@ -16,22 +16,22 @@ public class test {
 		//Files.delete(path);
 		//File f = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\gg\\1\\3@200@211@ca@D3@.txt");
 		//f.delete();
-		Cinema c = new Cinema(3,"gg");
-		Scanner sc = new Scanner(System.in);
+		Cinema c = new Cinema(1,"gg");
+		/*Scanner sc = new Scanner(System.in);
 		System.out.println("Enter name of movie");
 		String s = sc.next();
 		System.out.println("Enter showtime");
 		int i = sc.nextInt();
 		System.out.println("Enter date");
 		int d = sc.nextInt();
-		Movie movie = new Movie(s,sc);
+		Movie movie = new Movie(s,sc);*/
 		//Ticket ticket = new Ticket(s, TypeOfMovie.DIGITAL, ClassOfCinema.ATMOS, s, s, Day.FRIDAY, null,AgeGroup.ADULT, "1 A");
-		c.AddMovie(movie, i,d,TypeOfMovie.valueOf("D3"));
+		//c.AddMovie(movie, i,d,TypeOfMovie.valueOf("D3"));
 		c.listMovie();
 		//c.delete(500000,30000);
 		c.listVacancy(0);
-		c.updateVacancy( 0,"G1");
-		//c.delete(500000000,10000);
+		//c.updateVacancy( 0,"G1");
+		//c.delete(500000000,10000000);
 		//c.listMovie();
 		//c.rename("monke",99999,300021,f);
 	}
