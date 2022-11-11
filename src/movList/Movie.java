@@ -148,7 +148,7 @@ public class Movie {
 		setDuration(sc);
 		setCast(sc);
 		setRating(sc);
-		setEndDate();
+		endDate = setEndDate(sc);
 		System.out.println();
 	}
 
@@ -198,6 +198,21 @@ public class Movie {
 		}
 		return r;
 	}
+
+	private static Date setEndDate(Scanner sc) {
+        while(true){
+            System.out.print("Enter end date in dd/MM/yyyy format: ");
+            String date = sc.nextLine();
+            System.out.println("Enter 24 hour time in HH:mm:ss");
+            String time = sc.nextLine();
+            try{
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                sdf.setLenient(false);
+                return sdf.parse(date + " " + time);
+            }
+            catch(Exception e){System.out.println("Invalid input");}
+        }
+    }
 
 	/**
 	 * Utility method for updating director's name
