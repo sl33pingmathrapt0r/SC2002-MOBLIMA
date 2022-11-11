@@ -85,24 +85,18 @@ public class Cineplex {
         return listofMovies;
     }
 
-    public void addScreening(int cinema,String MovieName, int startTime, int date)throws Exception{
+    public String getCineplexName() {
+        return cineplex;
+    }
+
+    public void addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
+        boolean b=false;
         Movie mov= MovieList.getMovieByTitle(MovieName);
         if(mov.getEndDate().before(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
-            if(MovieList.titleExists(MovieName)){
-                Cinema ScreeningCinema = cinemas.get(cinema-1);
-                ScreeningCinema.AddMovie(mov,startTime,date);
-            }
-            else{
-                MovieList.createMovie();
-                Cinema ScreeningCinema = cinemas.get(i-1);
-                ScreeningCinema.AddMovie(mov,startTime,date);
-            }
-            File g = new File(path+"\\MovieList\\"+MovieName+".txt");
-            if(!g.exists()) {
-                listofMovies.add(MovieName);
-                ScreeningTimes.add(new Screenings(MovieName));
-                MovieList.incMovieCounter(MovieName);
-                MovieCount++;
+            b=cinemas.get(cinema-1).AddMovie(mov,startTime,date,typeOfMovie);
+            if(!b){
+                System.out.println("Movie Screening invalid to add.");
+                return;
             }
             int index=searchMovies(MovieName);
             ScreeningTimes.get(cinema).AddTiming(startTime, date);
@@ -110,8 +104,18 @@ public class Cineplex {
         else{
             System.out.println("Screening cannot be added after last date of showing.");
             return;
+        }      
+    }
+
+    public void addCineplexList(String MovieName)throws Exception{
+        if(searchMovies(MovieName)==-1){
+            listofMovies.add(MovieName);
+            ScreeningTimes.add(new Screenings(MovieName));
+            MovieCount++;
+            File newMov = new File(path+"\\MovieList\\"+MovieName+".txt");
+            newMov.createNewFile();
         }
-            
+        
     }
 
     private int searchMovies(String MovieName){
@@ -146,14 +150,15 @@ public class Cineplex {
     }
 
     public void updateScreeningShowtime(int Cinema, String MovieName, int prevStartTime, int afterStartTime, int prevDate, int afterDate){
-        cinemas.get(Cinema-1).updateScreening(MovieName, prevStartTime, afterStartTime, prevDate, afterDate);
+        Movie mov = MovieList.getMovieByTitle(MovieName);
+        cinemas.get(Cinema-1).updateScreening(mov, prevStartTime, afterStartTime, prevDate, afterDate);
         int index=searchMovies(MovieName);
         ScreeningTimes.get(index).update(prevStartTime, afterStartTime, prevDate, afterDate);
     }
 
     public ArrayList<Integer> listOfScreeningByMovie(String MovieName){
         int index=searchMovies(MovieName);
-        return ScreeningTimes.get(index).getListofTimings();
+        return ScreeningTimes.get(index).listofTimings;
     }
 
     public void removeMovieCineplex(String MovieName)throws Exception{
@@ -262,7 +267,17 @@ public class Cineplex {
         return choice;
     }
 
-    public 
-
-
+    public void updateCineplex()throws Exception{
+        for(int i=0;i<MovieCount;i++){
+            String movie = listofMovies.get(i);
+            FileWriter reset = new FileWriter(path+"\\MovieList\\"+movie+".txt",false);
+            reset.append("");
+            reset.close();
+            FileWriter w = new FileWriter(path+"\\MovieList\\"+movie+".txt",true);
+            for(int j=0;j<ScreeningTimes.get(i).getListingCount();j++){
+                w.append(String.valueOf(ScreeningTimes.get(i).listofTimings.get(j))+"/n");
+            }
+            w.close();
+        }
+    }
 }
