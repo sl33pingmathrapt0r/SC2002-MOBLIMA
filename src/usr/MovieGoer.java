@@ -7,21 +7,30 @@ import java.util.*;
 public class MovieGoer extends User {
     private String username, pw;
     private String name, hp, email;
+
     private static Scanner scan= new Scanner(System.in);
     // private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
     private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
     private Map<String, String> reviews= new HashMap<String, String>();
     private Map<String, Integer> ratings= new HashMap<String, Integer>();
 
-
     MovieGoer(String username, String pw, String name, String hp, String email) {
-        this.username= username;
-        this.pw= pw;
-        this.name= name;
-        this.hp= hp;
-        this.email= email;
+        this.username = username;
+        this.pw = pw;
+        this.name = name;
+        this.hp = hp;
+        this.email = email;
     }
 
+    public void banner() {
+        System.out.println("1: Search/List movie");
+        System.out.println("2: View movie details – including reviews and ratings");
+        System.out.println("3: Check seat availability and selection of seat/s.");
+        System.out.println("4: Book and purchase ticket");
+        System.out.println("5: View booking history");
+        System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
+        System.out.println("7: Exit");
+    }
 
     public String getUser() {
         return username;
@@ -40,7 +49,7 @@ public class MovieGoer extends User {
     }
 
     // Map<String, ArrayList<Ticket>> getBookingHistory() {
-    //     return bookingHistory;
+    // return bookingHistory;
     // }
 
     String getPW() {
@@ -52,16 +61,17 @@ public class MovieGoer extends User {
     }
 
     // public void viewMovieDetails(Movie movie) {
-    //     /* 
-    //      * prints details of movies offered by CINEPLEX, not
-    //      * cinema, i.e. without showtimes, screening hall, 
-    //      * seat number. 
-    //      */
-    //     movie.print();
+    // /*
+    // * prints details of movies offered by CINEPLEX, not
+    // * cinema, i.e. without showtimes, screening hall,
+    // * seat number.
+    // */
+    // movie.print();
     // }
 
     // NO LONGER NEEDED, TO IMPLEMENT DIRECTLY INTO MAIN
     // public void selectSeat(ArrayList<String> seats) {
+
     //     /* 
     //      * choose a seat from CINEMA, w.r.t movie, 
     //      * showtime, and no single-seat gaps. 
@@ -177,44 +187,44 @@ public class MovieGoer extends User {
     // }
 
     // public void viewBookingHistory() {
-    //     System.out.println("Bookings by " + name);
-    //     int i= 0;
-    //     for (Map.Entry transaction : bookingHistory.entrySet()) {
-    //         System.out.println("i: "transaction.getKey());
-    //         for (Ticket tix : bookingHistory.get(transaction.getKey())) {
-    //             printTicket(tix);
-    //         }
-    //         i++;
-    //     }
+    // System.out.println("Bookings by " + name);
+    // int i= 0;
+    // for (Map.Entry transaction : bookingHistory.entrySet()) {
+    // System.out.println("i: "transaction.getKey());
+    // for (Ticket tix : bookingHistory.get(transaction.getKey())) {
+    // printTicket(tix);
+    // }
+    // i++;
+    // }
     // }
 
     // private void printTicket(Ticket tix) {
-    //     System.out.println(
-    //         "\t" + tix.getCinema() + "\n" +
-    //         "\t" + tix.getMovie() + "\n" +
-    //         "\t" + tix.getDate() + "\n" + 
-    //         "\t" + tix.getTime() + "\n" +
-    //         "\t" + tix.getSeat() + "\n"
-    //     );
-    //     if (tix.clientType==STUDENT) System.out.println("\tFree 12oz Coke\n");
-    //     if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
+    // System.out.println(
+    // "\t" + tix.getCinema() + "\n" +
+    // "\t" + tix.getMovie() + "\n" +
+    // "\t" + tix.getDate() + "\n" +
+    // "\t" + tix.getTime() + "\n" +
+    // "\t" + tix.getSeat() + "\n"
+    // );
+    // if (tix.clientType==STUDENT) System.out.println("\tFree 12oz Coke\n");
+    // if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
     // }
 
     // void addBookingHistory(String[] bookingDetails) {
-    //     bookingHistory.add(
-    //         new Ticket(
-    //             bookingDetails[0], 
-    //             TypeOfMovie.valueOf(bookingDetails[1]), 
-    //             ClassOfCinema.valueOf(bookingDetails[2]),
-    //             name, 
-    //             hp,
-    //             Day.valueOf(bookingDetails[3]),
-    //             Integer.valueOf(bookingDetails[4]),
-    //             AgeGroup.valueOf(bookingDetails[5]), 
-    //             bookingDetails[6], 
-    //             Integer.valueOf(bookingDetails[7])
-    //         )
-    //     );
+    // bookingHistory.add(
+    // new Ticket(
+    // bookingDetails[0],
+    // TypeOfMovie.valueOf(bookingDetails[1]),
+    // ClassOfCinema.valueOf(bookingDetails[2]),
+    // name,
+    // hp,
+    // Day.valueOf(bookingDetails[3]),
+    // Integer.valueOf(bookingDetails[4]),
+    // AgeGroup.valueOf(bookingDetails[5]),
+    // bookingDetails[6],
+    // Integer.valueOf(bookingDetails[7])
+    // )
+    // );
     // }
 
     // public void listTop5Movies(Cineplex cineplex) {
