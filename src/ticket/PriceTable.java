@@ -7,26 +7,26 @@ import java.util.*;
 
 public class PriceTable {
 
-    private Path currentRelativePath = Paths.get("");
-    private String absolutePath = currentRelativePath.toAbsolutePath().toString();
-    private File rPT = new File(absolutePath + "/src/ticket/regularPriceTable");
-    private File pPT = new File(absolutePath + "/src/ticket/platinumPriceTable");
-    private File aPT = new File(absolutePath + "/src/ticket/atmosPriceTable");
+    private static Path currentRelativePath = Paths.get("");
+    private static  String absolutePath = currentRelativePath.toAbsolutePath().toString();
+    private static File rPT = new File(absolutePath + "/src/ticket/regularPriceTable");
+    private static File pPT = new File(absolutePath + "/src/ticket/platinumPriceTable");
+    private static File aPT = new File(absolutePath + "/src/ticket/atmosPriceTable");
 
-    private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> regularPriceTable;
-    private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> platinumPriceTable;
-    private Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> atmosPriceTable;
+    private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> regularPriceTable;
+    private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> platinumPriceTable;
+    private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> atmosPriceTable;
 
     public PriceTable() {
 
-        this.regularPriceTable = new Hashtable<>();
-        this.fileToTable(this.regularPriceTable, this.rPT);
+         regularPriceTable = new Hashtable<>();
+         fileToTable( regularPriceTable,  rPT);
 
-        this.platinumPriceTable = new Hashtable<>();
-        this.fileToTable(this.platinumPriceTable, this.pPT);
+         platinumPriceTable = new Hashtable<>();
+         fileToTable( platinumPriceTable,  pPT);
 
-        this.atmosPriceTable = new Hashtable<>();
-        this.fileToTable(this.atmosPriceTable, this.aPT);
+         atmosPriceTable = new Hashtable<>();
+         fileToTable( atmosPriceTable,  aPT);
     }
 
     /**
@@ -34,7 +34,7 @@ public class PriceTable {
      * @param table the hashtable
      * @param file text file containing the price
      */
-    private void fileToTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file) {
+    private static  void fileToTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file) {
         try {
             Scanner fr = new Scanner(file);
             while (fr.hasNextLine()) {
@@ -74,10 +74,10 @@ public class PriceTable {
      * @param table the pricetable
      * @param file text file 
      */
-    private void saveTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file){
+    private static void saveTable(Hashtable<Day, Hashtable<AgeGroup, Hashtable<TypeOfMovie, Double>>> table, File file){
         try {
             FileWriter fw = new FileWriter(file);
-            for (Object i : this.regularPriceTable.keySet()) {
+            for (Object i :  regularPriceTable.keySet()) {
                 fw.append(i + "\n");
                 for (Object j : regularPriceTable.get(i).keySet()) {
                     fw.append(j + "\n");
@@ -104,17 +104,17 @@ public class PriceTable {
      * @param price new price
      * @return boolean whether ticket has been successfully updated
      */
-    public boolean setPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie, double price){
+    public static boolean setPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie, double price){
         try {
             switch (classOfCinema){
                 case REGULAR:
-                    this.regularPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
+                     regularPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
                     break;
                 case PLATINUM:
-                    this.platinumPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
+                     platinumPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
                     break;
                 case ATMOS:
-                    this.atmosPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
+                     atmosPriceTable.get(day).get(ageGroup).put(typeOfMovie,price);
                     break;
                 default:
                     System.out.println("Invalid option");
@@ -137,17 +137,17 @@ public class PriceTable {
      * @param typeOfMovie 3D/ Digital
      * @return price of the ticket
      */
-    public double checkPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie){
+    public static double checkPrice(ClassOfCinema classOfCinema,Day day, AgeGroup ageGroup, TypeOfMovie typeOfMovie){
         double price=0;
         switch (classOfCinema){
             case REGULAR:
                 price=regularPriceTable.get(day).get(ageGroup).get(typeOfMovie);
                 break;
             case PLATINUM:
-                price=this.platinumPriceTable.get(day).get(ageGroup).get(typeOfMovie);
+                price= platinumPriceTable.get(day).get(ageGroup).get(typeOfMovie);
                 break;
             case ATMOS:
-                price=this.atmosPriceTable.get(day).get(ageGroup).get(typeOfMovie);
+                price= atmosPriceTable.get(day).get(ageGroup).get(typeOfMovie);
                 break;
             default:
                 System.out.println("Invalid option");
@@ -155,11 +155,11 @@ public class PriceTable {
         }
         return price;
     }
-    public void saveAllPriceTable() {
+    public static void saveAllPriceTable() {
         
-        saveTable(this.regularPriceTable,this.rPT);
-        saveTable(this.platinumPriceTable, this.pPT);
-        saveTable(this.atmosPriceTable, this.aPT);
+        saveTable( regularPriceTable, rPT);
+        saveTable( platinumPriceTable,  pPT);
+        saveTable( atmosPriceTable,  aPT);
     }
 
 }

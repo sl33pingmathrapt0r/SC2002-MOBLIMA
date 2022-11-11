@@ -18,3 +18,7 @@ enum ClassOfCinema {
 enum AgeGroup{
 	STUDENT, ADULT, SENIOR
 }
+
+enum SeatType{
+	NORMAL, ELITE, COUPLE, ULTIMA
+}
