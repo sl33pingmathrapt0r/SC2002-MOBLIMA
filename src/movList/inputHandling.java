@@ -1,7 +1,6 @@
 package movList;
 import java.util.*;
 import java.text.SimpleDateFormat;
-import java.time.*;
 
 /**
   An input handler that prints custom messages

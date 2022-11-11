@@ -53,7 +53,8 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
-				catch(Exception e){}
+				catch(FileNotFoundException e){System.out.printf("Movie %s not found \n", mov.getName());}
+				catch(Exception e){System.out.printf("Failed to load movie %s \n", mov.getName());}
 			}
 		}
 	}
@@ -186,10 +187,10 @@ public class MovieList {
 					System.out.println("Cast updated \n");
 					break;
 				case 5:
-				// 	mov.setEndDate(sc);
-				// 	System.out.println("End date updated \n");
-				// 	break;
-				// case 6:
+					mov.setEndDate();
+					System.out.println("End date updated \n");
+					break;
+				case 6:
 					System.out.println("Exiting... \n");
 					break;
 			}

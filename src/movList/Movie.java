@@ -111,7 +111,9 @@ public class Movie {
 				cast[i] = sc.nextLine();
 			}
 			ageRating = AGE_RATING.valueOf(sc.nextLine());
-			endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(sc.nextLine());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			sdf.setLenient(false);
+			endDate = sdf.parse(sc.nextLine());
 			n = sc.nextInt();
 			sc.nextLine();
 			for(int i=0; i<n; i++) {
@@ -256,7 +258,18 @@ public class Movie {
 	}
 
 	void setEndDate() {
-		endDate = inputHandling.getDate();
+		if(endDate==null) endDate = inputHandling.getDate();
+		else{
+			while(true){
+				Date newDate = inputHandling.getDate();
+				if(newDate.after(endDate)){
+					endDate = newDate;
+					break;
+				}
+				else System.out.printf("Invalid end date. New end date must be after %s \n", 
+				new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate));
+			}
+		}
 	}
 
 	 /**
