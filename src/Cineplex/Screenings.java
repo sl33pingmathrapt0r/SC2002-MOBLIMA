@@ -89,4 +89,20 @@ public class Screenings {
             System.out.print(time[2]+"/"+time[3]+"/"+time[4]+" "+time[1]+":"+time[0]+" ");
         }
     }
+
+    public void update(int prevStartTime, int afterStartTime, int prevDate, int afterDate){
+        int prevDateandTime=prevDate*10000+prevStartTime;
+        int afterDateandTime=afterDate*10000+afterStartTime;
+        for(int i=0;i<ListingCount;i++){
+            if(prevDateandTime==listofTimings.get(i)){
+                listofTimings.set(i,afterDateandTime);
+            }
+        }
+    }
+
+    public ArrayList<Integer> getListofTimings() {
+        return listofTimings;
+    }
+
+
 }

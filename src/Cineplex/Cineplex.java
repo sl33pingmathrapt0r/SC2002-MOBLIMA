@@ -10,9 +10,11 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,11 +30,11 @@ public class Cineplex {
     private ArrayList<String> listofMovies = new ArrayList<String>();
     private ArrayList<Screenings> ScreeningTimes = new ArrayList<Screenings>();
     private int MovieCount=0;
+    public static ArrayList<String> CineplexNames = new ArrayList<String>();
 
-    public Cineplex(String cineplex,int noOfCinema) throws Exception{
+    public Cineplex(String cineplex) throws Exception{
         try{
         boolean b;
-        this.noOfCinema=noOfCinema;
         this.cineplex=cineplex;
         this.path=route+"\\"+cineplex;
         File f = new File(path+"\\");
@@ -40,20 +42,21 @@ public class Cineplex {
             b = f.mkdir();
             File j = new File(path+"\\MovieList");
             b = j.mkdir();
-            CineplexCount++;
-            for(int i=1;i<=noOfCinema;i++){
-                cinemas.add(new Cinema(i,cineplex));
+        }
+        File[] listofFiles = new File(path).listFiles();
+        noOfCinema=listofFiles.length-1;
+        for(File it:listofFiles){
+            if(it.getName()!="MovieList"){
+                cinemas.add(new Cinema(Integer.valueOf(it.getName()),cineplex));
             }
         }
-        else{
-            File[] movFolder = new File(path+"\\MovieList").listFiles();
-            if(movFolder.length>0){
-                for(File it : movFolder) listofMovies.add(it.getName().substring(0,it.getName().length()-4));
-                for(int i=0;i<listofMovies.size();i++){
-                    ScreeningTimes.add(new Screenings(listofMovies.get(i)));
-                }
-                MovieCount++;
+        File[] movFolder = new File(path+"\\MovieList").listFiles();
+        if(movFolder.length>0){
+            for(File it : movFolder) listofMovies.add(it.getName().substring(0,it.getName().length()-4));
+            for(int i=0;i<listofMovies.size();i++){
+                ScreeningTimes.add(new Screenings(listofMovies.get(i)));
             }
+            MovieCount++;
         }
         }
         catch(Exception e){
@@ -62,7 +65,11 @@ public class Cineplex {
         }
     }
 
-    public static void CineplexList(){
+    public int getMovieCount() {
+        return MovieCount;
+    }
+
+    public static void cineplexList(){
         if(CineplexCount==0){
             System.out.println("There are no Cineplexes.");
             return;
@@ -70,31 +77,44 @@ public class Cineplex {
         System.out.println("There are currently "+CineplexCount+" Cineplexes.");  
     }
 
-    public void AddScreening(int i,String MovieName, int startTime, int date)throws Exception{
-        if(MovieList.titleExists(MovieName)){
-            Movie mov= new MovieList.getMovieByTitle(MovieName);
-            Cinema ScreeningCinema = cinemas.get(i-1);
-            ScreeningCinema.AddMovie(mov,startTime,date);
-        }
-        else{
-            Movie mov = MovieList.createMovie();
-            Cinema ScreeningCinema = cinemas.get(i-1);
-            ScreeningCinema.AddMovie(mov,startTime,date);
-        }
-        File g = new File(path+"\\MovieList\\"+MovieName+".txt");
-        if(!g.exists()) {
-            g.createNewFile();
-            listofMovies.add(MovieName);
-            ScreeningTimes.add(new Screenings(MovieName));
-            MovieList.incMovieCounter(MovieName);
-            MovieCount++;
-        }
-        int index=SearchMovies(MovieName);
-        ScreeningTimes.get(i).AddTiming(startTime, date);
-        
+    public ArrayList<Cinema> getCinemas() {
+        return cinemas;
     }
 
-    public int SearchMovies(String MovieName){
+    public ArrayList<String> getListofMovies() {
+        return listofMovies;
+    }
+
+    public void addScreening(int cinema,String MovieName, int startTime, int date)throws Exception{
+        Movie mov= MovieList.getMovieByTitle(MovieName);
+        if(mov.getEndDate().before(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
+            if(MovieList.titleExists(MovieName)){
+                Cinema ScreeningCinema = cinemas.get(cinema-1);
+                ScreeningCinema.AddMovie(mov,startTime,date);
+            }
+            else{
+                MovieList.createMovie();
+                Cinema ScreeningCinema = cinemas.get(i-1);
+                ScreeningCinema.AddMovie(mov,startTime,date);
+            }
+            File g = new File(path+"\\MovieList\\"+MovieName+".txt");
+            if(!g.exists()) {
+                listofMovies.add(MovieName);
+                ScreeningTimes.add(new Screenings(MovieName));
+                MovieList.incMovieCounter(MovieName);
+                MovieCount++;
+            }
+            int index=searchMovies(MovieName);
+            ScreeningTimes.get(cinema).AddTiming(startTime, date);
+        }
+        else{
+            System.out.println("Screening cannot be added after last date of showing.");
+            return;
+        }
+            
+    }
+
+    private int searchMovies(String MovieName){
         for(int i=0;i<MovieCount;i++){
             if(MovieName==listofMovies.get(i)){
                 return i;
@@ -103,32 +123,58 @@ public class Cineplex {
         return -1;
     }
 
-    public void ListShowtimebyMovie(String MovieName){
-        int index=SearchMovies(MovieName);
+    public void listShowtimebyMovie(String MovieName){
+        int index=searchMovies(MovieName);
         ScreeningTimes.get(index).ListTiming();
     }
 
-    public void ListMoviesbyCinema(int Cinema){
+    public String listShowtimeByMovie(int index){
+        return listofMovies.get(index);
+    }
+
+    public void listMoviesByCinema(int Cinema){
         cinemas.get(Cinema-1).listMovie();
     }
 
-    public void RemoveScreening(int cinema, int Option) throws Exception {
+    public void removeScreening(int cinema, int Option) throws Exception {
         int startTime=cinemas.get(cinema-1).mlist.get(Option-1).start;
         int date=cinemas.get(cinema-1).mlist.get(Option-1).date;
         String MovieName=cinemas.get(cinema-1).mlist.get(Option-1).movie;
-        int index = SearchMovies(MovieName);
+        int index = searchMovies(MovieName);
         ScreeningTimes.get(index).RemoveTiming(startTime, date);
         cinemas.get(cinema-1).deleteSelect(cinemas.get(cinema-1).mlist.get(Option-1));
     }
 
-    public void ListAllMovies() throws Exception {
-        System.out.println("Movies shown at Cineplex"+ cineplex+" is: \n");
-        for(int i=0;i<MovieCount;i++){
-            System.out.println(listofMovies.get(i));
+    public void updateScreeningShowtime(int Cinema, String MovieName, int prevStartTime, int afterStartTime, int prevDate, int afterDate){
+        cinemas.get(Cinema-1).updateScreening(MovieName, prevStartTime, afterStartTime, prevDate, afterDate);
+        int index=searchMovies(MovieName);
+        ScreeningTimes.get(index).update(prevStartTime, afterStartTime, prevDate, afterDate);
+    }
+
+    public ArrayList<Integer> listOfScreeningByMovie(String MovieName){
+        int index=searchMovies(MovieName);
+        return ScreeningTimes.get(index).getListofTimings();
+    }
+
+    public void removeMovieCineplex(String MovieName)throws Exception{
+        if(searchMovies(MovieName)!=-1){
+            int index=searchMovies(MovieName);
+            listofMovies.remove(index);
+            ScreeningTimes.remove(index);
+            MovieCount--;
+            File f=new File(path+"\\MovieList\\"+MovieName+".txt");
+            f.delete();
         }
     }
 
-    public int CinemaFinder(String MovieName, int startTime, int Date){
+    public void listAllMovies() throws Exception {
+        System.out.println("Movies shown at Cineplex"+ cineplex+" is: \n");
+        for(int i=0;i<MovieCount;i++){
+            System.out.println(i+" "+listofMovies.get(i));
+        }
+    }
+
+    public int cinemaFinder(String MovieName, int startTime, int Date){
         for(int i=0;i<noOfCinema;i++){
             if(cinemas.get(i).search(MovieName,startTime,Date)>0){
                 return i+1;
@@ -137,7 +183,7 @@ public class Cineplex {
         return -1;
     }
 
-    public void ListTimingsbyCineplex(){
+    public void listTimingsByCineplex(){
         for(int i=0;i<MovieCount;i++){
             System.out.print(listofMovies.get(i)+": ");
             ScreeningTimes.get(i).ListTimingbyLine();
@@ -145,7 +191,7 @@ public class Cineplex {
         }
     }
 
-    public void ListTopRating() throws Exception{
+    public void listTopRating() throws Exception{
         String [] MovieListArray;
         File f = new File(path+"\\MovieList");
         MovieListArray = f.list();
@@ -170,7 +216,7 @@ public class Cineplex {
         }
     }
 
-    public void ListTopSales() throws Exception{
+    public void listTopSales() throws Exception{
         String [] MovieListArray;
         File f = new File(path+"\\MovieList");
         MovieListArray = f.list();
@@ -194,15 +240,15 @@ public class Cineplex {
         }
     }
 
-    public void ListTop5()throws Exception{
+    public void listTop5()throws Exception{
         switch(choice){
             case RATINGTOP:
-                ListTopRating();break;
+                listTopRating();break;
             case SALESTOP:
-                ListTopSales();break;
+                listTopSales();break;
             case BOTH:
-                ListTopRating();
-                ListTopSales();
+                listTopRating();
+                listTopSales();
                 break;
         }
     }
@@ -216,9 +262,7 @@ public class Cineplex {
         return choice;
     }
 
-    public static void updateCineplex(){
-        for(int i=0;i<CineplexCount;i++){
-            File f =new 
-        }
-    }
+    public 
+
+
 }
