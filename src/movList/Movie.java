@@ -38,6 +38,8 @@ public class Movie {
 	 */
 	private String[] cast;
 
+	private AGE_RATING ageRating;
+
 	/**
 	 * History of ratings; movies are rated from 1-5
 	 * Ratings are made by moviegoers and are paired with reviews
@@ -103,6 +105,7 @@ public class Movie {
 			for(int i=0; i<n; i++) {
 				cast[i] = sc.nextLine();
 			}
+			ageRating = AGE_RATING.valueOf(sc.nextLine());
 			n = sc.nextInt();
 			sc.nextLine();
 			for(int i=0; i<n; i++) {
@@ -136,6 +139,7 @@ public class Movie {
 		setSynopsis(sc);
 		setDuration(sc);
 		setCast(sc);
+		setRating(sc);
 		System.out.println();
 	}
 
@@ -180,7 +184,7 @@ public class Movie {
 		int r;
 		while(true){
 			r = inputHandling.getInt("Enter number of cast members: ");
-			if(r < 2) System.out.println("Input must be greater than 2. ");
+			if(r < 2) System.out.println("Input must be at least 2. ");
 			else break;
 		}
 		return r;
@@ -222,6 +226,21 @@ public class Movie {
 		for(int i=0; i<n; i++) {
 			System.out.printf("Enter cast member %d: ", i+1);
 			cast[i] = sc.nextLine().strip();
+		}
+	}
+
+	void setRating(Scanner sc) {
+		String newRating;
+		while(true) {
+			System.out.print("Enter new age rating (G, PG, PG_13, R, NC_17): ");
+			newRating = sc.nextLine();
+			try{
+				ageRating = AGE_RATING.valueOf(newRating);
+				break;
+			}
+			catch(Exception e){
+				System.out.printf("Input %s not valid. \n", newRating);
+			}
 		}
 	}
 
@@ -348,6 +367,7 @@ public class Movie {
 		for(String actor : cast){
 			mov += actor + "\n";
 		}
+		mov += String.valueOf(ageRating) + "\n";
 		if(pastRatings!=null){
 			mov += String.valueOf(pastRatings.size()) + "\n";
 			for(String tixID : tixIDToIdx.keySet()){
@@ -400,6 +420,10 @@ public class Movie {
 	 */
 	public String[] getCast(){
 		return cast;
+	}
+
+	public AGE_RATING getAgeRating(){
+		return ageRating;
 	}
 
 	/**
