@@ -102,7 +102,7 @@ public class Ticket {
 	 * @param isBlockBuster boolean to check if a movie is a block buster
 	 * @return corresponding price of ticket
 	 */
-	public static double calculatePrice(ClassOfCinema classOfCinema, TypeOfMovie typeOfMovie, AgeGroup ageGroup,
+	public static double calculatePrice(ClassOfCinema classOfCinema, TypeOfMovie typeOfMovie, AgeGroup ageGroup, SeatType seatType,
 			Day dayOfWeek, int timeOfMovie,boolean isBlockBuster, boolean isPreview) {
 			
 		/**
@@ -141,17 +141,16 @@ public class Ticket {
 		 * 14 Digital
 		 */
 		double price;
-		PriceTable priceTable = new PriceTable();
 		//weekdays after 6 no student/ senior promo 
 		if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
-			price=priceTable.checkPrice(classOfCinema, dayOfWeek, AgeGroup.ADULT, typeOfMovie);
+			price=PriceTable.checkPrice(classOfCinema, dayOfWeek, AgeGroup.ADULT,seatType, typeOfMovie);
 		}
 		if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
-			price=priceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup, typeOfMovie);
+			price=PriceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup,seatType, typeOfMovie);
 		}
 		else{
-			price=priceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, typeOfMovie);
+			price=PriceTable.checkPrice(classOfCinema, dayOfWeek, ageGroup, seatType,typeOfMovie);
 		}
 		if(isBlockBuster) price++;
 		if(isPreview) price++;
@@ -166,17 +165,29 @@ public class Ticket {
 		//weekdays after 6 no student/ senior promo 
 		if((ticket.getAgeGroup()==AgeGroup.STUDENT || ticket.getAgeGroup()==AgeGroup.SENIOR) && ticket.getTimeOfMovie()>1800 &&
 		(ticket.getDayOfWeek()==Day.MONDAY||ticket.getDayOfWeek()==Day.TUESDAY||ticket.getDayOfWeek()==Day.WEDNESDAY||ticket.getDayOfWeek()==Day.THURSDAY)){
-			price=priceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), AgeGroup.ADULT, ticket.getTypeOfMovie());
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), AgeGroup.ADULT, ticket.getSeatType(),ticket.getTypeOfMovie());
 		}
 		if(ticket.getDayOfWeek()==Day.FRIDAY && ticket.getTimeOfMovie()>1800){
-			price=priceTable.checkPrice(ticket.getClassOfCinema(), Day.SATURDAY, ticket.getAgeGroup(), ticket.getTypeOfMovie());
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), Day.SATURDAY, ticket.getAgeGroup(), ticket.getSeatType(),ticket.getTypeOfMovie());
 		}
 		else{
-			price=priceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), ticket.getAgeGroup(), ticket.getTypeOfMovie());
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), ticket.getAgeGroup(),ticket.getSeatType(), ticket.getTypeOfMovie());
 		}
 		if(ticket.isBlockBuster()) price++;
 		if(ticket.isPreview) price++;
 		return price;
+	}
+
+	public String getTicketID() {
+		return ticketID;
+	}
+
+	public SeatType getSeatType() {
+		return seatType;
+	}
+
+	public boolean isPreview() {
+		return isPreview;
 	}
 
 	public boolean isBlockBuster() {
