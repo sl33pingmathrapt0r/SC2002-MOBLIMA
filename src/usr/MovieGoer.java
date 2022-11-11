@@ -1,5 +1,6 @@
 package src.usr;
 
+
 import java.util.*;
 // import java.text.SimpleDateFormat;
 // import ticket.*;
@@ -29,7 +30,7 @@ public class MovieGoer extends User {
         System.out.println("4: Book and purchase ticket");
         System.out.println("5: View booking history");
         System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
-        System.out.println("7: Log out");
+        System.out.println("7: Exit");
     }
 
     public String getUser() {
@@ -49,8 +50,16 @@ public class MovieGoer extends User {
     }
 
     // Map<String, ArrayList<Ticket>> getBookingHistory() {
-    // return bookingHistory;
+    //     return bookingHistory;
     // }
+
+    Map<String, String> getReviews() {
+        return reviews;
+    }
+
+    Map<String, Integer> getRatings() {
+        return ratings;
+    }
 
     String getPW() {
         return pw;
@@ -113,7 +122,7 @@ public class MovieGoer extends User {
     //         return false;
     //     } 
     //     else {
-    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyMMddHHmm").format(new Date());
+    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
     //         boolean weekday= day==MONDAY || day==TUESDAY || day==WEDNESDAY || day==THURSDAY;
     //         int tixNo= 1;
     //         String tixId;
@@ -176,7 +185,7 @@ public class MovieGoer extends User {
     //         System.out.println(transactionId + "\n");
 
     //         // store tickets to movieTickets, reviews, ratings
-    //         // if (!movieTickets.contains(movieName)) movieTickets.put(movieName, new ArrayList<String>());
+    //         // if (!movieTickets.containsKey(movieName)) movieTickets.put(movieName, new ArrayList<String>());
     //         for (int i=1; i<=tixNo; i++) {
     //             movieTickets.get(movieName).add(transactionId + Integer.toString(i));
     //             reviews.put(transactionId + Integer.toString(i), "");
@@ -211,20 +220,23 @@ public class MovieGoer extends User {
     // }
 
     // void addBookingHistory(String[] bookingDetails) {
-    // bookingHistory.add(
-    // new Ticket(
-    // bookingDetails[0],
-    // TypeOfMovie.valueOf(bookingDetails[1]),
-    // ClassOfCinema.valueOf(bookingDetails[2]),
-    // name,
-    // hp,
-    // Day.valueOf(bookingDetails[3]),
-    // Integer.valueOf(bookingDetails[4]),
-    // AgeGroup.valueOf(bookingDetails[5]),
-    // bookingDetails[6],
-    // Integer.valueOf(bookingDetails[7])
-    // )
-    // );
+    //     Ticket tix= new Ticket(
+    //         bookingDetails[0],
+    //         TypeOfMovie.valueOf(bookingDetails[1]),
+    //         ClassOfCinema.valueOf(bookingDetails[2]),
+    //         name,
+    //         hp,
+    //         Day.valueOf(bookingDetails[3]),
+    //         Integer.valueOf(bookingDetails[4]),
+    //         AgeGroup.valueOf(bookingDetails[5]),
+    //         bookingDetails[6],
+    //         Integer.valueOf(bookingDetails[7]), 
+    //         bookingDetails[8]
+    //     );
+    //     if (!movieTickets.containsKey(bookingDetails[0])) 
+    //         movieTickets.put(bookingDetails[0], new ArrayList<String>());
+        
+    //     movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
     // }
 
     // public void listTop5Movies(Cineplex cineplex) {
@@ -235,7 +247,7 @@ public class MovieGoer extends User {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
 
         // check valid
-        if (!movieTickets.keySet().contains(movieName)) {
+        if (!movieTickets.containsKey(movieName)) {
             System.out.println("You have not watched this movie.");
             return;
         }
@@ -266,5 +278,11 @@ public class MovieGoer extends User {
         // ratings.replace(tickets.get(intInput-1), Integer.valueOf(review.substring(0,1)));
         
         return;
+    }
+
+    public void addReview(String tixId, String review, String rating) {
+        reviews.put(tixId, review);
+        ratings.put(tixId, Integer.valueOf(rating));
+        
     }
 }

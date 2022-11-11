@@ -59,7 +59,9 @@ public class Main {
         do {
             currentUser.banner();
             int max;
+            String posssibleBadChoice;
             int choice;
+            // InputHandling.getInt(String message);
             if (currentUser.isAdmin) {
                 max=4;
                 choice=InputHandling.getInt("Enter a digit between 1 and ",max);
@@ -109,7 +111,7 @@ public class Main {
                     case 4:
                         System.out.println("Logging Out");
                         flag=1;
-                        break;
+                        System.exit(0);
                     default:
                         System.out.println("Invalid option");
                 }
@@ -132,6 +134,7 @@ public class Main {
                     //rmb to print legend
                     case 3:
                         //definitely need fix smth here way too nested
+
                         Cineplex selectedCineplex = currentUser.selectCineplex(cineplex);
                         selectedCineplex.ListAllMovies();
                         int movieIndex=InputHandler.getInt("Select Movie Index","Invalid movie index",0,selectedCineplex.getMovieCount);
@@ -161,21 +164,25 @@ public class Main {
                             System.out.println(cineplex.get(i));
                         }
                         int cineplexIndex;
-                        cineplexIndex= InputHandler.getInt("Choose Cineplex to list from","Invalid Option",0,3);
+                        do{
+                            cineplexIndex= InputHandler.getInt("Choose Cineplex to list from");
+                            if(cineplexIndex<0 || cineplexIndex>=3){
+                                System.out.println("Invalid option");
+                            }
+                        }while(cineplexIndex>=0 && cineplexIndex<3);
                         currentUser.listTop5Movies(cineplex.get(cineplexIndex));
                         break;
                     
                     //exit
                     case 7:
                         System.out.println("Logging out");
-                        flag=1;
-                        break;
+                        System.exit(0);
                     default:
                         System.out.println("Invalid option");
                 }
                 
             }
-        } while (flag!=1);
+        } while (true);
     }
 }
 }
