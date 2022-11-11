@@ -74,30 +74,46 @@ public class MovieScreening {
         File f = new File(path);
         if(!f.exists())
             if(this.Cinema == 3)
+                this.seats = Seats.createP(cinema);
+            else
                 this.seats = Seats.create(cinema);
         else if(this.Cinema == 3)
-            this.seats = Seats.create(cinema, f);
+            this.seats = Seats.createP(cinema, f);
+        else
+            this.seats = Seats.create(cinema,f);
     }
 
     /*
      * Lists the vacancy available for this movie screening
      */
     public void listVacancy(){
-        for(int i=0;i<60;i++){
-            if(seats[i].getVacancy() == false)
-                System.out.print("O ");
-            else
-                System.out.print("X ");
-            if(i-i/10*10 == 9)
-                System.out.print("\n");
-        }
-        for (int i=60;i<seats.length;i++){
-            if(seats[i].getVacancy() == false)
-                System.out.print("OOO ");
-            else
+        if (Cinema != 3){
+            for(int i=0;i<60;i++){
+                if(seats[i].getVacancy() == false)
+                    System.out.print("O ");
+                else
+                    System.out.print("X ");
+                if(i-i/10*10 == 9)
+                    System.out.print("\n");
+            }
+            for (int i=60;i<seats.length;i++){
+                if(seats[i].getVacancy() == false)
+                    System.out.print("OOO ");
+                else
                 System.out.print("XXX ");
-            if(i-i/10*10 == 9 || i-i/10*10==4)
-                System.out.print("\n");
+                if(i-i/10*10 == 9 || i-i/10*10==4)
+                    System.out.print("\n");
+            }
+        }
+        else{
+            for(int i=0;i<20;i++){
+                if(seats[i].getVacancy() == false)
+                    System.out.print("O ");
+                else
+                    System.out.print("X ");
+                if(i-i/10*10 == 9 || i-i/10*10 == 4)
+                    System.out.print("\n");
+            }
         }
     }
 
