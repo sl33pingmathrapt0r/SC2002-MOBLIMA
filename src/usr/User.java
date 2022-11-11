@@ -1,9 +1,14 @@
 package src.usr;
+import src.Cineplex.*;
+import java.util.ArrayList;
+
+import Cineplex.Cineplex;
+import movList.inputHandling;
 
 // import java.util.*;
 // import cineplex.*;
 
-abstract class User {
+public abstract class User {
     private boolean isAdmin= false;
     private String username, pw;
     private String name, hp, email;
@@ -11,6 +16,13 @@ abstract class User {
     // private static Scanner scan= new Scanner(System.in);
 
     public abstract void banner();
+    public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
+        for(int i=0;i<cineplex.size();i++){
+            System.out.println(i+cineplex.getCineplexName());
+        }
+        int choice=inputHandling.getInt("Enter Cineplex index","Invalid Index",0,cineplex.size());
+        return cineplex.get(choice);
+    }
     /*
      * Search/ List Movie
      * View Movie details

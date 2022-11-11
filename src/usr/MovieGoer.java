@@ -15,7 +15,7 @@ public class MovieGoer extends User {
     private Map<String, String> reviews= new HashMap<String, String>();
     private Map<String, Integer> ratings= new HashMap<String, Integer>();
 
-    MovieGoer(String username, String pw, String name, String hp, String email) {
+    public MovieGoer(String username, String pw, String name, String hp, String email) {
         this.username = username;
         this.pw = pw;
         this.name = name;
