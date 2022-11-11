@@ -22,11 +22,10 @@ public class test {
 		/*c.listMovie();
 		c.listVacancy(0);
 		c.updateVacancy( 0,"B5");*/
-		File f = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\Cinema\\1\\300400@1800@1900@dog@.txt");
 		//c.listMovie();
 		//c.delete(500000000,10000);
 		//c.listMovie();
-		c.rename("monke",99999,300021,f);
+		//c.rename("monke",99999,300021,f);
 	}
 
 }
