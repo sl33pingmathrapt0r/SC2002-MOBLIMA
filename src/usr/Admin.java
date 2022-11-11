@@ -74,20 +74,21 @@ class Admin extends User {
         ArrayList <Movie> movieList = cineplex.getMovieList();
         System.out.println("Which movie would you like to update? ");
         for(int i=0;i<movieList.size();i++) System.out.println(i+". " +movieList.get(i).getTitle());
-        
+        System.out.println(movieList.size() + ". Exit");
         int choice = InputHandling.getInt("", "Invalid input: ", 0, movieList.size());
+        if(choice==movieList.size()) return;
         String title = movieList.get(choice).getTitle();
         MovieList.updateMovieAdmin(title);
+        cineplex.updateMovieAdmin(title);
     }
 
     public void deleteMovieListing(Cineplex cineplex) {
         ArrayList <Movie> movieList = cineplex.getMovieList();
         System.out.println("Which movie would you like to delete? ");
-        for(int i=0;i<movieList.size();i++){
-            System.out.println(i+" " +movieList.get(i).getTitle());
-        }
-        int x = InputHandling.getInt("", "Invalid input: ", 0, movieList.size());
-        Date endDate = cineplex.getFinalScreening();
+        for(int i=0;i<movieList.size();i++) System.out.println(i+". " +movieList.get(i).getTitle());
+        System.out.println(movieList.size() + ". Exit");
+        int choice = InputHandling.getInt("", "Invalid input: ", 0, movieList.size());
+        if(choice==movieList.size()) return;
         MovieList.setEndDate(movieList.get(x).getTitle());
     }
 
