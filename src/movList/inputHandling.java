@@ -1,5 +1,6 @@
 package movList;
 import java.util.*;
+import java.text.SimpleDateFormat;
 import java.time.*;
 
 /**
@@ -49,45 +50,18 @@ public class inputHandling {
         return n;
     }
 
-    // public static Calendar getDate() {
-	// 	Calendar cal = Calendar.getInstance();
-	// 	int year;
-	// 	while(true){
-	// 		year = inputHandling.getInt("Input year: ");
-	// 		if(year<2000 || year>9999) System.out.print("Invalid input. Enter 4-digit number at least 2000: ");
-	// 		else break;
-    //     }
-	// 	cal.set(Calendar.YEAR, year);
-    //     int month;
-	// 	while(true){
-	// 		month = inputHandling.getInt("Input number of month: ")-1;
-    //         if(month<0 || month>11) System.out.print("Invalid input. Enter integer between 1-12: ");
-    //         else break;
-    //     }
-	// 	cal.set(Calendar.MONTH, month);
-    //     int maxDays = YearMonth.of(year, month+1).lengthOfMonth();
-    //     int date;
-	// 	while(true){
-	// 		date = inputHandling.getInt("Input date: ");
-    //         if(date<1 || date>maxDays) System.out.printf("Invalid input. Enter integer between 1-%d: ", maxDays);
-    //         else break;
-    //     }
-	// 	cal.set(Calendar.DATE, date);
-    //     int hour;
-	// 	while(true){
-	// 		hour = inputHandling.getInt("Input hour of day: ");
-    //         if(hour<0 || hour>23) System.out.print("Invalid input. Enter integer between 0-23: ");
-    //         else break;
-    //     }
-	// 	cal.set(Calendar.HOUR_OF_DAY, hour);
-    //     int half;
-    //     while(true){
-	// 		half = inputHandling.getInt("At 30 minutes? \n1. Yes \n2. No\n");
-    //         if(half!=1 && half!=2) System.out.print("Invalid input. Enter 1 or 2: ");
-    //         else break;
-    //     }
-    //     if(half==1) cal.set(Calendar.MINUTE, 30);
-    //     else cal.set(Calendar.MINUTE, 0);
-    //     return cal;
-    // }
+    public static Date getDate() {
+        while(true){
+            System.out.print("Enter date in dd/MM/yyyy format: ");
+            String date = sc.nextLine();
+            System.out.println("Enter 24 hour time in HH:mm:ss");
+            String time = sc.nextLine();
+            try{
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                sdf.setLenient(false);
+                return sdf.parse(date + " " + time);
+            }
+            catch(Exception e){System.out.println("Invalid input");}
+        }
+    }
 }

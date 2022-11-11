@@ -53,7 +53,7 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
-				catch(FileNotFoundException e){}
+				catch(Exception e){}
 			}
 		}
 	}
@@ -194,6 +194,13 @@ public class MovieList {
 					break;
 			}
 		} while(n!=5);
+		updateMovieList(mov);
+	}
+
+	public static void updateMovieEndDate(String title, Date end) {
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.setEndDate(end);
 		updateMovieList(mov);
 	}
 	

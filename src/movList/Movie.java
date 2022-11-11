@@ -3,6 +3,8 @@ import movList.inputHandling;
 import java.time.*;
 import java.util.*;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
   Movie class that contains metadata not tied
@@ -39,6 +41,8 @@ public class Movie {
 	private String[] cast;
 
 	private AGE_RATING ageRating;
+
+	private Date endDate;
 
 	/**
 	 * History of ratings; movies are rated from 1-5
@@ -90,8 +94,9 @@ public class Movie {
 	 * accessed by the MovieList and Movie classes to maintain proper formatting
 	 * @param movFile Text file's filepath
 	 * @throws FileNotFoundException Error thrown if file is not found
+	 * @throws ParseException
 	 */
-	Movie(File movFile) throws FileNotFoundException {
+	Movie(File movFile) throws Exception {
 		try {
 			Scanner sc = new Scanner(movFile);
 			title = sc.nextLine();
@@ -106,6 +111,7 @@ public class Movie {
 				cast[i] = sc.nextLine();
 			}
 			ageRating = AGE_RATING.valueOf(sc.nextLine());
+			endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(sc.nextLine());
 			n = sc.nextInt();
 			sc.nextLine();
 			for(int i=0; i<n; i++) {
@@ -140,6 +146,7 @@ public class Movie {
 		setDuration(sc);
 		setCast(sc);
 		setRating(sc);
+		setEndDate();
 		System.out.println();
 	}
 
@@ -244,9 +251,13 @@ public class Movie {
 		}
 	}
 
-	// void setEndDate(Scanner sc) {
-	// 	endDate = inputHandling.getDate();
-	// }
+	void setEndDate(Date end) {
+		endDate = end;
+	}
+
+	void setEndDate() {
+		endDate = inputHandling.getDate();
+	}
 
 	 /**
 	  * Utility method for updating reviews
@@ -368,6 +379,7 @@ public class Movie {
 			mov += actor + "\n";
 		}
 		mov += String.valueOf(ageRating) + "\n";
+		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate) + "\n";
 		if(pastRatings!=null){
 			mov += String.valueOf(pastRatings.size()) + "\n";
 			for(String tixID : tixIDToIdx.keySet()){
