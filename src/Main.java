@@ -1,10 +1,10 @@
-package src;
 
-import src.usr.*;
-import src.movList.*;
-import src.Cinema.*;
-import src.Cineplex.*;
-import src.ticket.*;
+import usr.*;
+import movList.*;
+import Cinema.*;
+import Cineplex.*;
+import ticket.*;
+
 import java.util.*;
 
 

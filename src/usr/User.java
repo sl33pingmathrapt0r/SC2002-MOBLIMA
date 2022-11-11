@@ -1,9 +1,14 @@
-package src.usr;
-import src.Cineplex.*;
+package usr;
+
+import movList.*;
+import Cinema.*;
+import Cineplex.*;
+import ticket.*;
+
 import java.util.ArrayList;
 
-import Cineplex.Cineplex;
-import movList.inputHandling;
+//import Cineplex.Cineplex;
+//import movList.inputHandling;
 
 // import java.util.*;
 // import cineplex.*;
@@ -18,7 +23,7 @@ public abstract class User {
     public abstract void banner();
     public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
         for(int i=0;i<cineplex.size();i++){
-            System.out.println(i+cineplex.getCineplexName());
+            System.out.println(i+cineplex.get(i).getCineplexName());
         }
         int choice=inputHandling.getInt("Enter Cineplex index","Invalid Index",0,cineplex.size());
         return cineplex.get(choice);

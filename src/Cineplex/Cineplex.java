@@ -1,7 +1,10 @@
 package Cineplex;
 
-import Cinema.*;
+import usr.*;
 import movList.*;
+import Cinema.*;
+import ticket.*;
+
 import Cineplex.Screenings.*;
 import java.io.File;
 import java.io.FileNotFoundException;

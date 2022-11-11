@@ -56,6 +56,10 @@ public class Movie {
 	 */
 	private ArrayList<String> reviews = new ArrayList<String>();
 
+	public Date getEndDate() {
+		return endDate;
+	}
+
 	/**
 	 * Maps ticket ID to the rating and review made by the ticket holder
 	 */
