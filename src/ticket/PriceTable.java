@@ -1,4 +1,4 @@
-package src.ticket;
+package ticket;
 
 import java.io.*;
 import java.nio.file.Path;
