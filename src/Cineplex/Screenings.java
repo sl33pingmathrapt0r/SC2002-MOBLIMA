@@ -58,7 +58,35 @@ public class Screenings {
     public void ListTiming(){
         System.out.println("List of Timings for "+MovieName+" :\n");
         for(int i=0;i<ListingCount;i++){
-            System.out.println(listofTimings.get(i));
+            int[] time =new int[5];
+            int temp= listofTimings.get(i);
+            time[0]=temp%100;
+            temp=temp/100;
+            time[1]=temp%100;
+            temp=temp/100;
+            time[2]=temp%100;
+            temp=temp/100;
+            time[3]=temp%100;
+            temp=temp/100;
+            time[4]=temp;
+            System.out.println(time[2]+"/"+time[3]+"/"+time[4]+" "+time[1]+":"+time[0]);
+        }
+    }
+
+    public void ListTimingbyLine(){
+        for(int i=0;i<ListingCount;i++){
+            int[] time =new int[5];
+            int temp= listofTimings.get(i);
+            time[0]=temp%100;
+            temp=temp/100;
+            time[1]=temp%100;
+            temp=temp/100;
+            time[2]=temp%100;
+            temp=temp/100;
+            time[3]=temp%100;
+            temp=temp/100;
+            time[4]=temp;
+            System.out.print(time[2]+"/"+time[3]+"/"+time[4]+" "+time[1]+":"+time[0]+" ");
         }
     }
 }

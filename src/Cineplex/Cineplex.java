@@ -122,12 +122,28 @@ public class Cineplex {
     }
 
     public void ListAllMovies() throws Exception {
-        System.out.println("Movies shown at Cineplex"+ cineplex+" is: \n")
+        System.out.println("Movies shown at Cineplex"+ cineplex+" is: \n");
         for(int i=0;i<MovieCount;i++){
             System.out.println(listofMovies.get(i));
         }
     }
 
+    public int CinemaFinder(String MovieName, int startTime, int Date){
+        for(int i=0;i<noOfCinema;i++){
+            if(cinemas.get(i).search(MovieName,startTime,Date)>0){
+                return i+1;
+            }
+        }
+        return -1;
+    }
+
+    public void ListTimingsbyCineplex(){
+        for(int i=0;i<MovieCount;i++){
+            System.out.print(listofMovies.get(i)+": ");
+            ScreeningTimes.get(i).ListTimingbyLine();
+            System.out.print("\n");
+        }
+    }
 
     public void ListTopRating() throws Exception{
         String [] MovieListArray;
@@ -198,5 +214,11 @@ public class Cineplex {
 
     public Choice getChoice(Choice AdminChoice){
         return choice;
+    }
+
+    public static void updateCineplex(){
+        for(int i=0;i<CineplexCount;i++){
+            File f =new 
+        }
     }
 }
