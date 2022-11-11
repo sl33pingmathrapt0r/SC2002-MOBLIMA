@@ -21,7 +21,7 @@ public class Main {
         String cineplexName = "AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
         for (int i = 0; i < MAX_CINEPLEX; i++) {
-            cineplex.add(new Cineplex(strBuilder.toString(), 3));
+            cineplex.add(new Cineplex(strBuilder.toString()));
             char digit = strBuilder.charAt(1);
             digit++;
             strBuilder.setCharAt(1, digit);
@@ -76,43 +76,48 @@ public class Main {
             User currentUser = Accounts.get(admin, accLocation);
             int flag = 0;
             do {
-                currentUser.banner();
                 int max;
-                String posssibleBadChoice;
                 int choice;
                 // InputHandling.getInt(String message);
                 if (currentUser.isAdmin()) {
+                    adminUser.banner();
                     max = 4;
-                    choice = InputHandling.getInt("Enter a digit between 1 and ", "Invalid input", 0, max);
+                    choice = InputHandling.getInt("Enter a digit between 1 and "+max, "Invalid input", 1, max);
                     switch (choice) {
                         // Create/Update/Remove movie listing
                         case 1:
-                            int option = InputHandling.getInt("Enter a digit between 1 and 3");
+                            int option = InputHandling.getInt("Enter a digit between 1 and 3","Invalid Option",1,3);
                             System.out.println("1: Create movie listing");
                             System.out.println("2: Update movie listing");
                             System.out.println("3: Remove movie listing");
                             if (option == 1) {
-                                adminUser.createMovieListing();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.createMovieListing(selectedCineplex);
                             } else if (option == 2) {
-                                adminUser.updateMovieListing();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.updateMovieListing(selectedCineplex);
                             } else if (option == 3) {
-                                adminUser.deleteMovieListing();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.deleteMovieListing(selectedCineplex);
                             } else {
                                 System.out.println("Invalid option");
                             }
                             break;
                         // Create/Update/Remove cinema showtimes and the movies to be shown
                         case 2:
-                            int option = InputHandling.getInt("Enter a digit between 1 and 3");
+                            int option = InputHandling.getInt("Enter a digit between 1 and 3","Invalid Option",1,3);
                             System.out.println("1: Create cinema showtimes");
                             System.out.println("2: Update cinema showtimes");
                             System.out.println("3: Remove cinema showtimes");
                             if (option == 1) {
-                                adminUser.createCinemaShowtimes();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.createCinemaShowtimes(selectedCineplex);
                             } else if (option == 2) {
-                                adminUser.updateCinemaListing();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.updateCinemaListing(selectedCineplex);
                             } else if (option == 3) {
-                                adminUser.deleteMovieListing();
+                                Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
+                                adminUser.deleteMovieListing(selectedCineplex);
                             } else {
                                 System.out.println("Invalid option");
                             }
@@ -124,22 +129,46 @@ public class Main {
                         case 4:
                             System.out.println("Admin Logging Out");
                             flag = 1;
-                            System.exit(0);
+                            break;
                         default:
                             System.out.println("Invalid option");
                     }
                 } else {
                     max = 7;
-                    choice = InputHandling.getInt("Enter a digit between 1 and ", "Invalid option", 0, max);
+                    choice = InputHandling.getInt("Enter a digit between 1 and "+max, "Invalid option", 1, max);
                     switch (choice) {
                         // Search List Movie
                         case 1:
-
+                            int option = InputHandling.getInt("Enter a digit between 1 and 2","Invalid Option",1,2);
+                            System.out.println("1: List Movies ");
+                            System.out.println("2: Search Movie ");
+                            //List Movie
+                            if(option==1){
+                                ArrayList<Movie> movieList = MovieList.getMovieList();
+                                for(int i=0;i<movieList.size();i++){
+                                    System.out.println(movieList.get(i));
+                                }
+                            }
+                            else if(option==2){
+                                System.out.println("Enter Movie Title that you are searching");
+                                String movieTitle = scan.nextLine();
+                                boolean exist = MovieList.titleExists(movieTitle);
+                                if(exist){
+                                    System.out.println("Movie exist");
+                                }
+                                else{
+                                    System.out.println("Movie does not exist");
+                                }
+                            }  
                             break;
 
                         // View movie details – including reviews and ratings
                         case 2:
-
+                            ArrayList<Movie> movieList = MovieList.getMovieList();
+                            for(int i=0;i<movieList.size();i++){
+                                System.out.println(String.valueOf(i+1)+movieList.get(i));
+                            }
+                            int option=InputHandling.getInt("Enter index of movie", "Invalid index", 0,movieList.size());
                             break;
 
                         // Check seat availability and selection of seat/s.
@@ -149,15 +178,15 @@ public class Main {
 
                             Cineplex selectedCineplex = movieUser.selectCineplex(cineplex);
                             selectedCineplex.ListAllMovies();
-                            int movieIndex = InputHandler.getInt("Select Movie Index", "Invalid movie index", 0,
+                            int movieIndex = InputHandling.getInt("Select Movie Index", "Invalid movie index", 0,
                                     selectedCineplex.getMovieCount);
                             String movieTitle = selectedCineplex.SearchMovies(movieIndex);
-                            int startTime = InputHandler.getInt("Enter Start Time");
-                            int date = InputHandler.getInt("Enter Date");
+                            int startTime = InputHandling.getInt("Enter Start Time");
+                            int date = InputHandling.getInt("Enter Date");
                             int cinemaCode = selectedCineplex.CinemaFinder(movieTitle, startTime, date);
                             int screeningIndex = selectedCineplex.getCinema().get(cinemaCode - 1).search(movieTitle,
                                     startTime, date);
-                            selectedCineplex.getCinema().get(cinemaCode - 1).listVacancy(screeningIndex);
+                            selectedCineplex.getCineplexName().get(cinemaCode - 1).listVacancy(screeningIndex);
                             System.out.println("O/X Single Seat Available/ Taken");
                             System.out.println("OOO/XXX Couple Seat Available/ Taken");
                             break;
@@ -169,22 +198,17 @@ public class Main {
 
                         // View booking history
                         case 5:
-                            currentUser.viewBookingHistory();
+                        movieUser.viewBookingHistory();
                             break;
 
                         // List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings
                         case 6:
-                            for (int i = 0; i < MAX_CINEMA; i++) {
+                            for (int i = 0; i < MAX_CINEPLEX; i++) {
                                 System.out.println(cineplex.get(i));
                             }
-                            int cineplexIndex;
-                            do {
-                                cineplexIndex = InputHandler.getInt("Choose Cineplex to list from");
-                                if (cineplexIndex < 0 || cineplexIndex >= 3) {
-                                    System.out.println("Invalid option");
-                                }
-                            } while (cineplexIndex >= 0 && cineplexIndex < 3);
-                            currentUser.listTop5Movies(cineplex.get(cineplexIndex));
+                            int cineplexIndex = InputHandling.getInt("Choose Cineplex to list from","Invalid index",0,3);
+                               
+                            movieUser.listTop5Movies(cineplex.get(cineplexIndex));
                             break;
 
                         // exit
