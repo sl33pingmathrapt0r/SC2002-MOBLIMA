@@ -50,8 +50,16 @@ public class MovieGoer extends User {
     }
 
     // Map<String, ArrayList<Ticket>> getBookingHistory() {
-    // return bookingHistory;
+    //     return bookingHistory;
     // }
+
+    Map<String, String> getReviews() {
+        return reviews;
+    }
+
+    Map<String, Integer> getRatings() {
+        return ratings;
+    }
 
     String getPW() {
         return pw;
@@ -212,20 +220,23 @@ public class MovieGoer extends User {
     // }
 
     // void addBookingHistory(String[] bookingDetails) {
-    // bookingHistory.add(
-    // new Ticket(
-    // bookingDetails[0],
-    // TypeOfMovie.valueOf(bookingDetails[1]),
-    // ClassOfCinema.valueOf(bookingDetails[2]),
-    // name,
-    // hp,
-    // Day.valueOf(bookingDetails[3]),
-    // Integer.valueOf(bookingDetails[4]),
-    // AgeGroup.valueOf(bookingDetails[5]),
-    // bookingDetails[6],
-    // Integer.valueOf(bookingDetails[7])
-    // )
-    // );
+    //     Ticket tix= new Ticket(
+    //         bookingDetails[0],
+    //         TypeOfMovie.valueOf(bookingDetails[1]),
+    //         ClassOfCinema.valueOf(bookingDetails[2]),
+    //         name,
+    //         hp,
+    //         Day.valueOf(bookingDetails[3]),
+    //         Integer.valueOf(bookingDetails[4]),
+    //         AgeGroup.valueOf(bookingDetails[5]),
+    //         bookingDetails[6],
+    //         Integer.valueOf(bookingDetails[7]), 
+    //         bookingDetails[8]
+    //     );
+    //     if (!movieTickets.containsKey(bookingDetails[0])) 
+    //         movieTickets.put(bookingDetails[0], new ArrayList<String>());
+        
+    //     movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
     // }
 
     // public void listTop5Movies(Cineplex cineplex) {
