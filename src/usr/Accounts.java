@@ -51,6 +51,7 @@ public class Accounts{
         }
 
         File goerDir= new File(GOER_PATH);
+        String strInput;
         if (goerDir.exists()) {
             try {
                 for (File accFile : goerDir.listFiles()) {
@@ -67,11 +68,14 @@ public class Accounts{
                         // user;
                         add(user);
 
-                        //add booking history
-                        // while (goerFile.ready()) {
+                        // add booking history
+                        // while (strInput= goerFile.readLine()) {
                         //     user.addTransactionHistory(goerFile.readLine());
                         //     user.addBookingHistory(goerFile.readLine().split(",", 10));
                         // }
+
+                        // add reviews
+                        // 
                     }
                     goerFile.close();
                 }

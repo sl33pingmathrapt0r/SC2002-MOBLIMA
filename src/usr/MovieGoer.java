@@ -166,7 +166,7 @@ public class MovieGoer extends User {
     //         System.out.println(transactionId + "\n");
 
     //         // store tickets to movieTickets, reviews, ratings
-    //         // if (!movieTickets.contains(movieName)) movieTickets.put(movieName, new ArrayList<String>());
+    //         // if (!movieTickets.containsKey(movieName)) movieTickets.put(movieName, new ArrayList<String>());
     //         for (int i=1; i<=tixNo; i++) {
     //             movieTickets.get(movieName).add(transactionId + Integer.toString(i));
     //             reviews.put(transactionId + Integer.toString(i), "");
@@ -225,7 +225,7 @@ public class MovieGoer extends User {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
 
         // check valid
-        if (!movieTickets.keySet().contains(movieName)) {
+        if (!movieTickets.containsKey(movieName)) {
             System.out.println("You have not watched this movie.");
             return;
         }
