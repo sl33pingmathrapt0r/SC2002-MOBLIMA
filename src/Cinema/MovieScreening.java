@@ -1,5 +1,4 @@
 package Cinema;
-import ticket.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,11 +11,16 @@ import java.util.Scanner;
    Typically created within a cinema hall
  */
 
+enum TypeOfMovie{
+	D3,DIGITAL
+}
+
 public class MovieScreening {
     /*
      * Cinema hall that the screening will take place at.
      */
     int Cinema;
+    String Cineplex;
     /*
      * Date of the movie screening.
      */
@@ -41,10 +45,11 @@ public class MovieScreening {
      * Shows whether or not the screening is over
      */
     boolean showing=true;
+    TypeOfMovie typeOfMovie;
     /*
      * The path to the text file containing all information regarding the occupancy of this movie screening
      */
-    String path = System.getProperty("user.dir") + "\\src\\Cinema\\";
+    String path = System.getProperty("user.dir");
 
     /*
      * Loads an instance of a movie screening.
@@ -57,13 +62,15 @@ public class MovieScreening {
      * @param movie The movie title that will be screened
      */
 
-    public MovieScreening(int cinema,int date,int start,int end,String movie) throws FileNotFoundException{
+    public MovieScreening(int cinema,int date,int start,int end,String movie,TypeOfMovie typeOfMovie,String cineplex) throws FileNotFoundException{
         this.Cinema = cinema;
+        this.Cineplex = cineplex;
         this.date = date;
         this.start = start;
         this.end = end;
         this.movie = movie;
-        File f = new File(this.path+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@.txt");
+        this.typeOfMovie = typeOfMovie;
+        File f = new File(this.path+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt");
         if(!f.exists())
             this.seats = Seats.create(cinema);
         else
@@ -98,7 +105,7 @@ public class MovieScreening {
      * @param SeatID The seat that will be booked by the guest
      */
     public void updateVacancy(int SeatID) throws IOException{
-        File f = new File(this.path+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@.txt");
+        File f = new File(this.path+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt");
         Scanner sc = new Scanner(f);
         StringBuffer buffer = new StringBuffer();
         String s = sc.nextLine();

@@ -8,7 +8,7 @@ public class test {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		Cinema c = new Cinema(1);
+		Cinema c = new Cinema(1,"gg");
 		/*Scanner sc = new Scanner(System.in);
 		System.out.println("Enter name of movie");
 		String s = sc.next();
@@ -16,12 +16,12 @@ public class test {
 		int i = sc.nextInt();
 		System.out.println("Enter date");
 		int d = sc.nextInt();
-		Movie movie = new Movie(s,sc);
+		Movie movie = new Movie(s,sc);*/
 		//Ticket ticket = new Ticket(s, TypeOfMovie.DIGITAL, ClassOfCinema.ATMOS, s, s, Day.FRIDAY, null,AgeGroup.ADULT, "1 A");
-		c.AddMovie(movie, i,d);*/
-		/*c.listMovie();
+		//c.AddMovie(movie, i,d,TypeOfMovie.valueOf("D3"));
+		c.listMovie();
 		c.listVacancy(0);
-		c.updateVacancy( 0,"B5");*/
+		c.updateVacancy( 0,"B4");
 		//c.listMovie();
 		//c.delete(500000000,10000);
 		//c.listMovie();

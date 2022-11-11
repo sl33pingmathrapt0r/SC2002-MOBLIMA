@@ -1,4 +1,4 @@
-package src.ticket;
+package ticket;
 
 public class Ticket {
 
