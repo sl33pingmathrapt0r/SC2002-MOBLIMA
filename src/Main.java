@@ -12,8 +12,8 @@ public class Main {
         Accounts.load();
         // Accounts.store();
         ArrayList<Cineplex> cineplex;
-        String cinemaCode="AA";
-        StringBuilder strBuilder = new StringBuilder(cinemaCode);
+        String cineplexName="AA";
+        StringBuilder strBuilder = new StringBuilder(cineplexName);
         for(int i=0;i<MAX_CINEPLEX;i++){
             cineplex.add(new Cineplex(strBuilder.toString(),3));
             char digit = strBuilder.charAt(1);
@@ -21,6 +21,7 @@ public class Main {
             strBuilder.setCharAt(1,digit);
         }
         // LOGIN SECTION
+        while(true){
         String username, pw, strInput;
         boolean admin;
         int accLocation;
@@ -54,12 +55,11 @@ public class Main {
         }
 
         User currentUser = Accounts.get(admin, accLocation);
+        int flag=0;
         do {
             currentUser.banner();
             int max;
-            string possibleBadChoice;
             int choice;
-            //InputHandling.getInt(String message)
             if (currentUser.isAdmin) {
                 max=4;
                 choice=InputHandling.getInt("Enter a digit between 1 and ",max);
@@ -107,15 +107,16 @@ public class Main {
                         currentUser.configureSystemSettings();
                         break;
                     case 4:
-                        System.out.println("Program Terminating");
-                        System.exit(0);
+                        System.out.println("Logging Out");
+                        flag=1;
+                        break;
                     default:
                         System.out.println("Invalid option");
                 }
             }
             else {
                 max=7;
-                choice=InputHandling.getInt("Enter a digit between 1 and ",max);
+                choice=InputHandling.getInt("Enter a digit between 1 and ","Invalid option",0,max);
                 switch(choice){
                     //Search List Movie
                     case 1:
@@ -130,7 +131,18 @@ public class Main {
                     //Check seat availability and selection of seat/s.
                     //rmb to print legend
                     case 3:
-
+                        //definitely need fix smth here way too nested
+                        Cineplex selectedCineplex = currentUser.selectCineplex(cineplex);
+                        selectedCineplex.ListAllMovies();
+                        int movieIndex=InputHandler.getInt("Select Movie Index","Invalid movie index",0,selectedCineplex.getMovieCount);
+                        String movieTitle=selectedCineplex.SearchMovies(movieIndex);
+                        int startTime = InputHandler.getInt("Enter Start Time");
+                        int date = InputHandler.getInt("Enter Date");
+                        int cinemaCode = selectedCineplex.CinemaFinder(movieTitle,startTime,date);
+                        int screeningIndex=selectedCineplex.getCinema().get(cinemaCode-1).search(movieTitle,startTime,date);
+                        selectedCineplex.getCinema().get(cinemaCode-1).listVacancy(screeningIndex);
+                        System.out.println("O/X Single Seat Available/ Taken");
+                        System.out.println("OOO/XXX Couple Seat Available/ Taken");
                         break;
 
                     //Book and purchase ticket
@@ -149,24 +161,21 @@ public class Main {
                             System.out.println(cineplex.get(i));
                         }
                         int cineplexIndex;
-                        do{
-                            cineplexIndex= InputHandler.getInt("Choose Cineplex to list from");
-                            if(cineplexIndex<0 || cineplexIndex>=3){
-                                System.out.println("Invalid option");
-                            }
-                        }while(cineplexIndex>=0 && cineplexIndex<3);
+                        cineplexIndex= InputHandler.getInt("Choose Cineplex to list from","Invalid Option",0,3);
                         currentUser.listTop5Movies(cineplex.get(cineplexIndex));
                         break;
                     
                     //exit
                     case 7:
-                        System.out.println("Program Terminating");
-                        System.exit(0);
+                        System.out.println("Logging out");
+                        flag=1;
+                        break;
                     default:
                         System.out.println("Invalid option");
                 }
                 
             }
-        } while (true);
+        } while (flag!=1);
     }
+}
 }
