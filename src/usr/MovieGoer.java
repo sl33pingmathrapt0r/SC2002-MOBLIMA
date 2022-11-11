@@ -1,5 +1,6 @@
 package src.usr;
 
+
 import java.util.*;
 // import java.text.SimpleDateFormat;
 // import ticket.*;
@@ -29,7 +30,7 @@ public class MovieGoer extends User {
         System.out.println("4: Book and purchase ticket");
         System.out.println("5: View booking history");
         System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
-        System.out.println("7: Log out");
+        System.out.println("7: Exit");
     }
 
     public String getUser() {
@@ -271,5 +272,6 @@ public class MovieGoer extends User {
     public void addReview(String tixId, String review, String rating) {
         reviews.put(tixId, review);
         ratings.put(tixId, Integer.valueOf(rating));
+        
     }
 }
