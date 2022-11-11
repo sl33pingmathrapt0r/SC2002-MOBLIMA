@@ -16,35 +16,35 @@ public class MovieScreening {
     /*
      * Cinema hall that the screening will take place at.
      */
-    int Cinema;
+    public int Cinema;
     /*
      * Date of the movie screening.
      */
-    int date;
+    public int date;
     /*
      * Starting time of the movie screening.
      */
-    int start;
+    public int start;
     /*
      * Ending time of the movie screening.
      */
-    int end;
+    public int end;
     /*
      * Title of the movie that will be screened.
      */
-    String movie;
+    public String movie;
     /*
      * An array of seats for this particular movie screening
      */
-    Seats seats[];
+    public Seats seats[];
     /*
      * Shows whether or not the screening is over
      */
-    boolean showing=true;
+    public boolean showing=true;
     /*
      * The path to the text file containing all information regarding the occupancy of this movie screening
      */
-    String path = System.getProperty("user.dir") + "\\src\\Cinema\\";
+    public String path = System.getProperty("user.dir") + "\\src\\Cinema\\";
 
     /*
      * Loads an instance of a movie screening.
