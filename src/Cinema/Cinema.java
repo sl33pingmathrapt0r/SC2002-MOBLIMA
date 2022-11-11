@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 /*
@@ -19,11 +18,14 @@ public class Cinema {
 	 * Name of the Cinema hall that will be used to screen movies
 	 */
 	int name;
-
+	/*
+	 * Name of Cineplex which the cinema belongs to
+	 */
+	String Cineplex;
 	/*
 	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
 	 */
-	String path = System.getProperty("user.dir") + "\\src\\Cinema\\"; //CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\"+this.Cineplex+"\\"+this.name+"\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
@@ -38,7 +40,7 @@ public class Cinema {
 	public Cinema(int s) throws FileNotFoundException{
 		this.name = s;
 		//boolean b;
-		File f = new File(this.path+this.name);
+		File f = new File(this.path);
 		if (!f.exists())
 			f.mkdir();
 		else{
@@ -65,12 +67,12 @@ public class Cinema {
 	public void AddMovie(Movie movie, int startTime, int date) throws IOException {
 		String s = movie.getTitle();
 		int e = calculateEndTime(startTime,movie);
-		File g = new File(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt");
+		File g = new File(this.path+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return;
 		}
-		File f = new File(this.path+this.name);
+		File f = new File(this.path);
 		String l[] = f.list();
 		String s1;
 		String s2[];
@@ -94,7 +96,7 @@ public class Cinema {
 		}
 		mlist.add(new MovieScreening(this.name, date, startTime, e, s));
 		g.createNewFile();
-		FileWriter w = new FileWriter(this.path+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt",true);
+		FileWriter w = new FileWriter(this.path+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -269,7 +271,7 @@ public class Cinema {
 	}
 
 	public void delete(int date,int time){
-		String _path = this.path+this.name+"\\";
+		String _path = this.path;
 		File f = new File(_path);
 		String l[] = f.list();
 		for(int i=0;i<l.length;i++){
@@ -291,7 +293,7 @@ public class Cinema {
 		//int e = calculateEndTime(startTime,movie);
 		FileInputStream fis = new FileInputStream(f);
 		fis.close();
-		File g = new File(this.path+this.name+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
+		File g = new File(this.path+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
 		if(f.exists()){
 			System.out.println("zam");
 			//Files.move(f.toPath(),g.toPath());
