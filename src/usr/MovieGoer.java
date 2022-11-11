@@ -113,7 +113,7 @@ public class MovieGoer extends User {
     //         return false;
     //     } 
     //     else {
-    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyMMddHHmm").format(new Date());
+    //         transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
     //         boolean weekday= day==MONDAY || day==TUESDAY || day==WEDNESDAY || day==THURSDAY;
     //         int tixNo= 1;
     //         String tixId;
@@ -266,5 +266,10 @@ public class MovieGoer extends User {
         // ratings.replace(tickets.get(intInput-1), Integer.valueOf(review.substring(0,1)));
         
         return;
+    }
+
+    public void addReview(String tixId, String review, String rating) {
+        reviews.put(tixId, review);
+        ratings.put(tixId, Integer.valueOf(rating));
     }
 }
