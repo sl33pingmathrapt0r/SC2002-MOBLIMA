@@ -19,31 +19,33 @@ public class MovieScreening {
     /*
      * Cinema hall that the screening will take place at.
      */
+
     int Cinema;
     String Cineplex;
     /*
      * Date of the movie screening.
      */
-    int date;
+    public int date;
     /*
      * Starting time of the movie screening.
      */
-    int start;
+    public int start;
     /*
      * Ending time of the movie screening.
      */
-    int end;
+    public int end;
     /*
      * Title of the movie that will be screened.
      */
-    String movie;
+    public String movie;
     /*
      * An array of seats for this particular movie screening
      */
-    Seats seats[];
+    public Seats seats[];
     /*
      * Shows whether or not the screening is over
      */
+
     boolean showing=true;
     TypeOfMovie typeOfMovie;
     /*

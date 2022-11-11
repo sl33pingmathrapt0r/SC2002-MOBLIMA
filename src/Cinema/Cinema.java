@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,18 +30,20 @@ public class Cinema {
 	/*
 	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
 	 */
+
 	String path = System.getProperty("user.dir") + "\\src\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
 	 */
-	List<MovieScreening> mlist = new ArrayList<>();
+	public List<MovieScreening> mlist = new ArrayList<>();
 
 	/*
 	 * Creates a cinema with the given name.
 	 * Loads all relevant data for this cinema hall such as movie screenings and occupancy
 	 * @param s the unique identifier for this cinema hall
 	 */
+
 	public Cinema(int s,String cineplex) throws FileNotFoundException{
 		this.name = s;
 		this.Cineplex = cineplex;
@@ -69,6 +72,14 @@ public class Cinema {
 		//File h = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\gg\\1\\3@200@211@ca@D3@.txt");
 		//h.delete();
 	}
+
+	public boolean deleteSelect(MovieScreening movieScreening){
+		File f = new File(movieScreening.path);
+		if(f.exists())
+		  return f.delete();
+		else
+		  return false;
+	  }
 	
 	/*
 	 * Adds a screening of a movie to this cinema hall.
@@ -79,12 +90,16 @@ public class Cinema {
 	public void AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
 		String s = movie.getTitle();
 		int e = calculateEndTime(startTime,movie);
+
 		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt");
+
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return;
 		}
+
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
+
 		String l[] = f.list();
 		String s1;
 		String s2[];
@@ -110,6 +125,7 @@ public class Cinema {
 		}
 		mlist.add(new MovieScreening(this.name, date, startTime, e, s,typeOfMovie,this.Cineplex));
 		g.createNewFile();
+
 		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -138,7 +154,7 @@ public class Cinema {
 		}*/
 		for (int i=0;i<mlist.size();i++){
 			if(mlist.get(i).showing == true)
-				System.out.println(mlist.get(i).movie+ " showing at " + mlist.get(i).start );
+				System.out.println(i+1+") "+mlist.get(i).movie+ " showing at " + mlist.get(i).start );
 		}
 	}
 	
@@ -293,6 +309,7 @@ public class Cinema {
 	}
 
 	public void delete(int date,int time){
+
 		String path = this.path+this.Cineplex+"\\"+this.name+"\\";
 		File f = new File(path);
 		File g = new File(path);
@@ -316,6 +333,7 @@ public class Cinema {
 	public void rename(String movie, int startTime, int date,File f) throws IOException{
 		//String s = movie.getTitle();
 		//int e = calculateEndTime(startTime,movie);
+
 		File g = new File(this.path+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
 		if(f.exists()){
 			System.out.println("zam");
