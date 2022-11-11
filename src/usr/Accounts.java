@@ -1,6 +1,9 @@
 package src.usr;
 
 import java.util.*;
+
+import movList.Movie;
+
 import java.io.*;
 
 public class Accounts{
@@ -18,8 +21,8 @@ public class Accounts{
     final private static String ADMIN_KEY_PATH= ACC_DIR + "adminSecret.txt";
 
 
-    private static ArrayList<User> goerAcc= new ArrayList<User>();
-    private static ArrayList<User> adminAcc= new ArrayList<User>();
+    private static ArrayList<MovieGoer> goerAcc= new ArrayList<MovieGoer>();
+    private static ArrayList<Admin> adminAcc= new ArrayList<Admin>();
     private static Scanner scan= new Scanner(System.in);
 
     /**
@@ -107,7 +110,7 @@ public class Accounts{
         }
     }
 
-    public static void store() {
+    public static void adminStore() {
         File adminDir= new File(ADMIN_PATH);
         if (!adminDir.exists()) adminDir.mkdir();
         try {
@@ -124,11 +127,13 @@ public class Accounts{
         } catch (Exception e) {
             System.out.println("Admin account files could not be retrieved.");
         }
+    }
 
+    public static void goerStore() {
         File goerDir= new File(GOER_PATH);
         if (!goerDir.exists()) goerDir.mkdir();
         try {
-            for (User acc : goerAcc) {
+            for (MovieGoer acc : goerAcc) {
                 File goerFile= new File(GOER_PATH + acc.getUser() + ".txt");
                 if (!goerFile.exists()) goerFile.createNewFile();
                 BufferedWriter goerFileInfo= new BufferedWriter(new FileWriter(goerFile));
@@ -154,9 +159,17 @@ public class Accounts{
                 //             tix.getAgeGroup() +","+
                 //             tix.getSeatID() +","+
                 //             tix.getDate()
-                //         );
+                //             );
                 //     }
                 // }
+
+                for (Map.Entry review : acc.getReviews().entrySet()){
+                    writer.println(review.getKey());
+                    writer.println(
+                        acc.getReviews().get(review.getKey()) +","+
+                        acc.getRatings().get(review.getKey())
+                        );
+                }
 
                 writer.close();
             }
@@ -178,14 +191,14 @@ public class Accounts{
         }
     }
     
-    private static void add(User user) {
+    private static void add(Admin user) {
         // Add account to the appropriate storage
-        if (user.isAdmin()) {
-            adminAcc.add(user);
-        }
-        else {
-            goerAcc.add(user);
-        }
+        adminAcc.add(user);
+    }
+    
+    private static void add(MovieGoer user) {
+        // Add account to the appropriate storage
+        goerAcc.add(user);
     }
 
     public static int isValid(boolean admin, String username, String pw) {
@@ -222,7 +235,6 @@ public class Accounts{
          */
         boolean admin;
         String username, pw, name, email, hp, strInput;
-        User account;
 
         do {
             System.out.print("Admin? Please input Y/N: ");
@@ -261,7 +273,8 @@ public class Accounts{
         } while ( !pw.equals(scan.nextLine()) );
         
         if (admin) {
-            account= new Admin(username, pw);
+            Admin account= new Admin(username, pw);
+            add(account);
         } 
         else {
             System.out.print("Enter name (as per NRIC):\t");
@@ -270,10 +283,9 @@ public class Accounts{
             hp= scan.nextLine();
             System.out.print("Enter your email address:\t");
             email= scan.nextLine();
-            account= new MovieGoer(username, pw, name, hp, email);
+            MovieGoer account= new MovieGoer(username, pw, name, hp, email);
+            add(account);
         }
-        
-        add(account);
     }
 
     // testing functions below
