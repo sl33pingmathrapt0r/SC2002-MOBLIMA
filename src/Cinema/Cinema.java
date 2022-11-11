@@ -73,13 +73,6 @@ public class Cinema {
 		//h.delete();
 	}
 
-	public boolean deleteSelect(MovieScreening movieScreening){
-		File f = new File(movieScreening.path);
-		if(f.exists())
-		  return f.delete();
-		else
-		  return false;
-	  }
 	
 	/*
 	 * Adds a screening of a movie to this cinema hall.

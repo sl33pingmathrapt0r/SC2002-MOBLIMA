@@ -100,9 +100,7 @@ public class Screenings {
         }
     }
 
-    public ArrayList<Integer> getListofTimings() {
-        return listofTimings;
+    public int getListingCount() {
+        return ListingCount;
     }
-
-
 }

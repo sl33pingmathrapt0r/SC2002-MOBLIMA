@@ -85,17 +85,18 @@ public class Cineplex {
         return listofMovies;
     }
 
-    public boolean addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
+    public String getCineplexName() {
+        return cineplex;
+    }
+
+    public void addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
         boolean b=false;
         Movie mov= MovieList.getMovieByTitle(MovieName);
         if(mov.getEndDate().before(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
             b=cinemas.get(cinema-1).AddMovie(mov,startTime,date,typeOfMovie);
-            File g = new File(path+"\\MovieList\\"+MovieName+".txt");
-            if(!g.exists()) {
-                listofMovies.add(MovieName);
-                ScreeningTimes.add(new Screenings(MovieName));
-                MovieList.incMovieCounter(MovieName);
-                MovieCount++;
+            if(!b){
+                System.out.println("Movie Screening invalid to add.");
+                return;
             }
             int index=searchMovies(MovieName);
             ScreeningTimes.get(cinema).AddTiming(startTime, date);
@@ -103,11 +104,10 @@ public class Cineplex {
         else{
             System.out.println("Screening cannot be added after last date of showing.");
             return;
-        }
-            
+        }      
     }
 
-    public void addCineplexList(String MovieName){
+    public void addCineplexList(String MovieName)throws Exception{
         if(searchMovies(MovieName)==-1){
             listofMovies.add(MovieName);
             ScreeningTimes.add(new Screenings(MovieName));
@@ -158,7 +158,7 @@ public class Cineplex {
 
     public ArrayList<Integer> listOfScreeningByMovie(String MovieName){
         int index=searchMovies(MovieName);
-        return ScreeningTimes.get(index).getListofTimings();
+        return ScreeningTimes.get(index).listofTimings;
     }
 
     public void removeMovieCineplex(String MovieName)throws Exception{
@@ -267,6 +267,17 @@ public class Cineplex {
         return choice;
     }
 
-    public 
-
+    public void updateCineplex()throws Exception{
+        for(int i=0;i<MovieCount;i++){
+            String movie = listofMovies.get(i);
+            FileWriter reset = new FileWriter(path+"\\MovieList\\"+movie+".txt",false);
+            reset.append("");
+            reset.close();
+            FileWriter w = new FileWriter(path+"\\MovieList\\"+movie+".txt",true);
+            for(int j=0;j<ScreeningTimes.get(i).getListingCount();j++){
+                w.append(String.valueOf(ScreeningTimes.get(i).listofTimings.get(j))+"/n");
+            }
+            w.close();
+        }
+    }
 }
