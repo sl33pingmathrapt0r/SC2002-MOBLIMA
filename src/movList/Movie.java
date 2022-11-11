@@ -340,7 +340,7 @@ public class Movie {
 			fwriter.close();
 		}
         catch (IOException e) {
-            System.out.print(e.getMessage());
+            System.out.print(e.getStackTrace());
         }
 	}
 

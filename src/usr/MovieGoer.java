@@ -1,5 +1,11 @@
 package usr;
 
+import usr.*;
+import movList.*;
+import Cinema.*;
+import Cineplex.*;
+import ticket.*;
+
 
 import java.util.*;
 // import java.text.SimpleDateFormat;
@@ -15,6 +21,7 @@ public class MovieGoer extends User {
     private Map<String, String> reviews= new HashMap<String, String>();
     private Map<String, Integer> ratings= new HashMap<String, Integer>();
 
+    public MovieGoer(){}
     public MovieGoer(String username, String pw, String name, String hp, String email) {
         this.username = username;
         this.pw = pw;
@@ -239,9 +246,14 @@ public class MovieGoer extends User {
     //     movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
     // }
 
-    // public void listTop5Movies(Cineplex cineplex) {
-    //     cineplex.listTop5();
-    // }
+    public void listTop5Movies(Cineplex cineplex) {
+        try {
+            cineplex.listTop5();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public void newReview(String movieName) {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER

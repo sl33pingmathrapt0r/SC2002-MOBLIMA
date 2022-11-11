@@ -6,14 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import ticket.*;
+
 /*
    An instance of a movie screening.
    Typically created within a cinema hall
  */
 
-enum TypeOfMovie{
-	D3,DIGITAL
-}
+
 
 public class MovieScreening {
     /*
@@ -64,14 +64,14 @@ public class MovieScreening {
      * @param movie The movie title that will be screened
      */
 
-    public MovieScreening(int cinema,int date,int start,int end,String movie,TypeOfMovie typeOfMovie,String cineplex) throws FileNotFoundException{
+    public MovieScreening(int cinema,int date,int start,int end,String movie,ticket.TypeOfMovie typeOfMovie2,String cineplex) throws FileNotFoundException{
         this.Cinema = cinema;
         this.Cineplex = cineplex;
         this.date = date;
         this.start = start;
         this.end = end;
         this.movie = movie;
-        this.typeOfMovie = typeOfMovie;
+        this.typeOfMovie = typeOfMovie2;
         this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt";
         File f = new File(path);
         if(!f.exists())

@@ -181,7 +181,7 @@ public class Accounts{
         }
     }
     
-    private static void add(User user) {
+    public static void add(User user) {
         // Add account to the appropriate storage
         if (user.isAdmin()) {
             adminAcc.add(user);

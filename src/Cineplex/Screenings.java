@@ -9,14 +9,14 @@ import java.util.Scanner;
 public class Screenings {
     public ArrayList<Integer> listofTimings = new ArrayList<Integer>();
     public String MovieName;
-    final private static String route = Path.of("").toAbsolutePath().toString();
+    final private static String route = Path.of("").toAbsolutePath().toString() + "\\src\\Cineplex\\";
     private final String path;
     private int ListingCount=0;
 
-    public Screenings(String MovieName) throws Exception{
+    public Screenings(String MovieName,String cineplex) throws Exception{
         try{    
             this.MovieName=MovieName;
-            path=route+"\\"+MovieName+".txt";
+            path=route+cineplex+"\\MovieList\\"+MovieName+".txt";
             File MovFile = new File(path);
             Scanner sc= new Scanner(MovFile);
             while(sc.hasNextLine()){

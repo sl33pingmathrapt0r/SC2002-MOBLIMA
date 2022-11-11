@@ -59,25 +59,6 @@ public class Ticket {
 		ticketCount++;
 	}
 
-	//overloading constructor class to take in lesser arguments
-	public Ticket(User currentUser, Movie movie, Cinema cinema, String ticketID, ClassOfCinema classOfCinema, Day dayOfWeek, AgeGroup ageGroup, 
-			int timeOfMovie, boolean isBlockBuster, boolean isPreview) {
-		this.clientName = currentUser.getName();
-		this.clientContact = currentUser.getEmail();
-		this.movieTitle = movie.getTitle();
-		this.seatID = cinema.getSeatID;
-		this.ticketID = ticketID;
-		this.typeOfMovie = movie.getTypeOfMovie();
-		this.classOfCinema = classOfCinema;
-		this.dayOfWeek = dayOfWeek;
-		this.ageGroup = ageGroup;
-		this.seatType = seatType;
-		this.timeOfMovie = timeOfMovie;
-		this.isBlockBuster = isBlockBuster;
-		this.isPreview = isPreview;
-		this.price=Ticket.calculatePrice(this);
-		ticketCount++;
-	}
 	/**
 	 * Functions to calculate price of ticket based on class of cinema and type of
 	 * movie

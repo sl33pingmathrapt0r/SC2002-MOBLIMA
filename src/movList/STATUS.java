@@ -1,6 +1,6 @@
 package movList;
 
-enum STATUS {
+public enum STATUS {
     COMING_SOON,
     PREVIEW,
     NOW_SHOWING,

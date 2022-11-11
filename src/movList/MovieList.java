@@ -262,6 +262,13 @@ public class MovieList {
 		mov.setNowShowing();
 		updateMovieList(mov);
 	}
+
+	public static void setStatus(String title, STATUS newStatus) {
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.setStatus(newStatus);
+		updateMovieList(mov);
+	}
 	
 	/**
 	 * Check if movie of given title exists

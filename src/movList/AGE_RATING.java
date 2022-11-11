@@ -1,6 +1,6 @@
 package movList;
 
-enum AGE_RATING {
+public enum AGE_RATING {
     G,
     PG,
     PG_13,

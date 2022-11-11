@@ -1,5 +1,7 @@
 package Cinema;
 import movList.*;
+import ticket.TypeOfMovie;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -24,12 +26,12 @@ public class Cinema {
 	/*
 	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
 	 */
-	String path = System.getProperty("user.dir") + "\\src\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\Cineplex/"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
 	 */
-	List<MovieScreening> mlist = new ArrayList<>();
+	private List<MovieScreening> mlist = new ArrayList<>();
 
 	/*
 	 * Creates a cinema with the given name.
@@ -70,7 +72,7 @@ public class Cinema {
 	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
 	 * @param date A 6 digit integer in the format YYMMDD to record the date of the movie screening
 	 */
-	public boolean AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
+	public boolean AddMovie(Movie movie, int startTime, int date,ticket.TypeOfMovie typeOfMovie) throws IOException {
 		String s = movie.getTitle();
 		int e = calculateEndTime(startTime,movie);
 		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt");
@@ -80,6 +82,7 @@ public class Cinema {
 		}
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		String l[] = f.list();
+		if(l==null) l = new String[0];
 		String s1;
 		String s2[];
 		for (int i=0;i<l.length;i++) {
@@ -142,6 +145,12 @@ public class Cinema {
 		}
 	}
 	
+	
+
+	public List<MovieScreening> getMlist() {
+		return mlist;
+	}
+
 	/*
 	 * Lists the vacancy of a specific movie screening for this cinema
 	 * @param index The index to be passed into the arrayList to iddentify which movie screening to list its vacancy
