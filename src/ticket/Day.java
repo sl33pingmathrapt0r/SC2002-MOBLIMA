@@ -1,4 +1,4 @@
-package src.ticket;
+package ticket;
 
 enum TypeOfMovie{
 	D3,DIGITAL
