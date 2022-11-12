@@ -2,7 +2,7 @@ package usr;
 
 import movList.*;
 import cinema.*;
-import cineplex.*;
+import Cineplex.*;
 import ticket.*;
 
 import java.util.*;

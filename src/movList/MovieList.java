@@ -161,7 +161,8 @@ public class MovieList {
 			System.out.println("2. Synopsis ");
 			System.out.println("3. Duration ");
 			System.out.println("4. Cast ");
-			System.out.println("5. Exit ");
+			System.out.println("5. Change end date ");
+			System.out.println("6. Exit ");
 
 			while(true){
 				n = inputHandling.getInt("");
@@ -194,7 +195,7 @@ public class MovieList {
 					System.out.println("Exiting... \n");
 					break;
 			}
-		} while(n!=5);
+		} while(n!=6);
 		updateMovieList(mov);
 	}
 
@@ -316,5 +317,11 @@ public class MovieList {
 	 */
 	public static String getCwd() {
 		return cwd;
+	}
+
+	public static void setEndDate(String title){
+		Movie mov = getMovieByTitle(title);
+		if(mov==null) return;
+		mov.setEndDate();
 	}
 }

@@ -134,4 +134,8 @@ public class Seats {
     public boolean getVacancy(){
         return this.taken;
     }
+
+    public SeatType getSeatType() {
+        return seatType;
+    }
 }

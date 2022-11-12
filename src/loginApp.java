@@ -1,10 +1,8 @@
-// package src;
 
-import adminApp;
-import goerApp;
+
 import java.util.*;
 import movList.inputHandling;
-import src.usr.MovieGoer;
+import usr.MovieGoer;
 import usr.*;
 
 public class loginApp {
@@ -20,7 +18,7 @@ public class loginApp {
         while (true) {
             System.out.println(
                 "Welcome to MOBLIMA\n\n" +
-                "1. Register new acoount\n" +
+                "1. Register new account\n" +
                 "2. Already a user? Login\n" +
                 "3. Exit"
                 );
@@ -69,6 +67,7 @@ public class loginApp {
                     System.out.println("Too many tries. Exiting account login...");
                     continue;
                 }
+                System.out.println();
 
                 if (admin) {
                     Admin user= Accounts.getAdminAcc(accLocation);
