@@ -64,6 +64,14 @@ public class MovieScreening {
      * @param movie The movie title that will be screened
      */
 
+    public String getMovie() {
+        return movie;
+    }
+
+    public void setMovie(String movie) {
+        this.movie = movie;
+    }
+
     public MovieScreening(int cinema,int date,int start,int end,String movie,ticket.TypeOfMovie typeOfMovie2,String cineplex) throws FileNotFoundException{
         this.Cinema = cinema;
         this.Cineplex = cineplex;

@@ -1,7 +1,5 @@
 package Cinema;
 import movList.*;
-import ticket.TypeOfMovie;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -26,20 +24,20 @@ public class Cinema {
 	/*
 	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
 	 */
-	String path = System.getProperty("user.dir") + "\\src\\Cineplex/"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
 	 */
-	private List<MovieScreening> mlist = new ArrayList<>();
+	ArrayList<MovieScreening> mlist = new ArrayList<>();
 
 	/*
 	 * Creates a cinema with the given name.
 	 * Loads all relevant data for this cinema hall such as movie screenings and occupancy
 	 * @param s the unique identifier for this cinema hall
 	 */
-	public Cinema(int s,String cineplex) throws FileNotFoundException{
-		this.name = s;
+	public Cinema(int cinemaName,String cineplex) throws FileNotFoundException{
+		this.name = cinemaName;
 		this.Cineplex = cineplex;
 		boolean b;
 		//Path path = Paths.get(this.path+this.Cineplex+"\\"+this.name);
@@ -59,7 +57,7 @@ public class Cinema {
 				for (int k=0;k<3;k++){
 					temp[k] = Integer.valueOf(s2[k]);
 				}
-				mlist.add(new MovieScreening(s, temp[0], temp[1], temp[2], s2[3],TypeOfMovie.valueOf(s2[4]),this.Cineplex));
+				mlist.add(new MovieScreening(cinemaName, temp[0], temp[1], temp[2], s2[3],TypeOfMovie.valueOf(s2[4]),this.Cineplex));
 			}
 		}
 		//File h = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\gg\\1\\3@200@211@ca@D3@.txt");
@@ -72,17 +70,16 @@ public class Cinema {
 	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
 	 * @param date A 6 digit integer in the format YYMMDD to record the date of the movie screening
 	 */
-	public boolean AddMovie(Movie movie, int startTime, int date,ticket.TypeOfMovie typeOfMovie) throws IOException {
-		String s = movie.getTitle();
-		int e = calculateEndTime(startTime,movie);
-		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt");
+	public boolean AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
+		String moveTitle = movie.getTitle();
+		int endTime = calculateEndTime(startTime,movie);
+		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+endTime+"@"+moveTitle+"@"+typeOfMovie+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return false;
 		}
-		File f = new File(this.path+this.Cineplex+"\\"+this.name);
+		/*File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		String l[] = f.list();
-		if(l==null) l = new String[0];
 		String s1;
 		String s2[];
 		for (int i=0;i<l.length;i++) {
@@ -104,22 +101,19 @@ public class Cinema {
 				else 
 					break;
 			}
-		}
-		mlist.add(new MovieScreening(this.name, date, startTime, e, s,typeOfMovie,this.Cineplex));
+		}*/
+		if(checkVacant(date, startTime, movie) == false)
+			return false;
+		mlist.add(new MovieScreening(this.name, date, startTime, endTime, moveTitle,typeOfMovie,this.Cineplex));
 		g.createNewFile();
-		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+e+"@"+s+"@"+typeOfMovie+"@.txt",true);
+		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+endTime+"@"+moveTitle+"@"+typeOfMovie+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n");*/
-		int seatcount;
-		if(this.name == 3)
-			seatcount = 20;
-		else
-			seatcount = 80;
-		for (int i=0;i<seatcount;i++){
-			w.append("A \n");
+		for (int i=0;i<80;i++){
+			w.append("AAA \n");
 		}
 		w.flush();
 		w.close();
@@ -145,12 +139,6 @@ public class Cinema {
 		}
 	}
 	
-	
-
-	public List<MovieScreening> getMlist() {
-		return mlist;
-	}
-
 	/*
 	 * Lists the vacancy of a specific movie screening for this cinema
 	 * @param index The index to be passed into the arrayList to iddentify which movie screening to list its vacancy
@@ -197,13 +185,34 @@ public class Cinema {
 		}*/
 	}
 
+	public int seatConversion(String SeatID){
+		int del = SeatID.charAt(0)-65;
+		int var;
+		if(this.name !=3){
+			if(del<6){
+				var = del*10+Integer.valueOf(SeatID.charAt(1))-48;
+			}
+			else{
+				var = 60;
+				del -=6;
+				var +=del*5;
+				var +=Integer.valueOf(SeatID.charAt(1))-48;
+			}
+			return var;
+		}
+		else{
+			var = del*5 + Integer.valueOf(SeatID.charAt(1))-48;
+			return var;
+		}
+	}
+
 	/*
 	 * Converts the string format of the SeatID into an integer
 	 * Checks whether or not the seat is already taken
 	 * @param index The index of the movie screening in the arrayList to be updated
 	 * @param SeatID The seatID that the guest would wish to book
 	 */
-	public void updateVacancy(int index, String SeatID) throws IOException{
+	public boolean updateVacancy(int index, String SeatID) throws IOException{
 		/*String m = movie.getTitle();
 		File f = new File(this.path+this.name);
 		String l[] = f.list();
@@ -248,24 +257,31 @@ public class Cinema {
 		bw.flush();
 		bw.close();
 		sc.close();*/
-		int del = SeatID.charAt(0)-65;
+		/*int del = SeatID.charAt(0)-65;
 		int var;
 		if(del<6){
 			var = del*10+Integer.valueOf(SeatID.charAt(1))-48;
 		}
 		else{
 			var = 60;
-			del -=5;
+			del -=6;
 			var +=del*5;
 			var +=Integer.valueOf(SeatID.charAt(1))-48;
+		} */
+		int var = seatConversion(SeatID);
+		if(var >19 && this.name ==3){
+			System.out.println("Invalid seat");
+			return false;
 		}
+			
 		if(mlist.get(index).seats[var].taken){
 			System.out.println("Seat already taken");
-			return;
+			return false;
 		}
 		mlist.get(index).updateVacancy(var);
+		mlist.get(index).seats[var].taken = true;
 		System.out.println("Successfully updated");
-		return;
+		return true;
 	}
 
 	/*
@@ -361,4 +377,49 @@ public class Cinema {
 		update.end = afterEndTime;
 		f.renameTo(g);
 	}
+
+	public boolean checkVacant(int date,int startTime, Movie movie){
+		System.out.println("test");
+		int endTime = calculateEndTime(startTime, movie);
+		File f = new File(this.path+this.Cineplex+"\\"+this.name);
+		String l[] = f.list();
+		String s1;
+		String s2[];
+		for (int i=0;i<l.length;i++) {
+			if(l.length==0)
+				break;
+			s1 = l[i];
+			s2 = s1.split("@",5);
+			if(Integer.valueOf(s2[0]) != date)
+				continue;
+			if (Integer.valueOf(s2[1]) >= endTime) {
+				if(i==0)
+					break;
+				s1 = l[i-1];
+				s2 = s1.split("@",5);
+				if (Integer.valueOf(s2[2]) > startTime) {
+					System.out.println("Timing clash, failed to add movie");
+					return false;
+				}
+				else 
+					continue;
+			}
+			if (Integer.valueOf(s2[2]) > startTime) {
+				System.out.println("Timing clash, failed to add movie");
+				return false;
+			}	
+		}
+		return true;
+	}
+
+	public ArrayList<MovieScreening> getMlist() {
+		return mlist;
+	}
+
+	public boolean checkSeatVacant(int movieID, String seatID) {
+		return mlist.get(movieID).seats[seatConversion(seatID)].getVacancy();
+	}
+
+		
 }
+
