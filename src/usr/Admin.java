@@ -34,7 +34,7 @@ public class Admin extends User {
                 e.printStackTrace();
             }
         MovieList.updateFiles();
-        Accounts.store();
+        Accounts.adminStore();
     }
     
     public Admin(){}
