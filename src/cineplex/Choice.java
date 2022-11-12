@@ -1,4 +1,4 @@
-package cineplex;
+package Cineplex;
 
 enum Choice {
     RATINGTOP,

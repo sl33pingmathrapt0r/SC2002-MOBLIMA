@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
-
 import ticket.*;
 
 /*
@@ -19,39 +21,32 @@ public class MovieScreening {
     /*
      * Cinema hall that the screening will take place at.
      */
-
     int Cinema;
     String Cineplex;
     /*
      * Date of the movie screening.
      */
-    public int date;
-    /*
-     * Starting time of the movie screening.
-     */
-    public int start;
-    /*
-     * Ending time of the movie screening.
-     */
-    public int end;
+    Date startDate;
+    Date endDate;
+
     /*
      * Title of the movie that will be screened.
      */
-    public String movie;
+    String movie;
     /*
      * An array of seats for this particular movie screening
      */
-    public Seats seats[];
+    Seats seats[];
     /*
      * Shows whether or not the screening is over
      */
-
     boolean showing=true;
     TypeOfMovie typeOfMovie;
     /*
      * The path to the text file containing all information regarding the occupancy of this movie screening
      */
     String path = System.getProperty("user.dir");
+    DateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
 
     /*
      * Loads an instance of a movie screening.
@@ -64,23 +59,25 @@ public class MovieScreening {
      * @param movie The movie title that will be screened
      */
 
-    public MovieScreening(int cinema,int date,int start,int end,String movie,ticket.TypeOfMovie typeOfMovie,String cineplex) throws FileNotFoundException{
+    public MovieScreening(int cinema,Date startDate,Date endDate,String movie,TypeOfMovie typeOfMovie,String cineplex) throws FileNotFoundException{
         this.Cinema = cinema;
         this.Cineplex = cineplex;
-        this.date = date;
-        this.start = start;
-        this.end = end;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.movie = movie;
         this.typeOfMovie = typeOfMovie;
-        this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+date+"@"+start+"@"+end+"@"+movie+"@"+this.typeOfMovie+"@.txt";
+        String startString = df.format(startDate);
+        String endString = df.format(endDate);
+        this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+startString+"@"+endString+"@"+movie+"@"+this.typeOfMovie+"@.txt";
         File f = new File(path);
         if(!f.exists())
-            if(this.Cinema == 3)
+            this.seats = Seats.create(cinema);
+            /*if(this.Cinema == 3)
                 this.seats = Seats.createP(cinema);
             else
                 this.seats = Seats.create(cinema);
         else if(this.Cinema == 3)
-            this.seats = Seats.createP(cinema, f);
+            this.seats = Seats.createP(cinema, f);*/
         else
             this.seats = Seats.create(cinema,f);
     }
@@ -89,32 +86,66 @@ public class MovieScreening {
      * Lists the vacancy available for this movie screening
      */
     public void listVacancy(){
+        int alphabet = 0;
         if (Cinema != 3){
+            System.out.print("   0 1 2 3 4 5 6 7 8 9");
             for(int i=0;i<60;i++){
+                if(i%10 == 0){
+                    System.out.print("\n"+(char)(alphabet+65)+ "| ");
+                    alphabet++;
+                }
                 if(seats[i].getVacancy() == false)
                     System.out.print("O ");
                 else
                     System.out.print("X ");
-                if(i-i/10*10 == 9)
-                    System.out.print("\n");
             }
-            for (int i=60;i<seats.length;i++){
+            System.out.print("\n   0   1   2   3   4");
+            for (int i=60;i<70;i++){
+                if(i%10 == 0 || i%10 == 5){
+                    System.out.print("\n"+(char)(alphabet+65)+ "| ");
+                    alphabet++;
+                }
                 if(seats[i].getVacancy() == false)
-                    System.out.print("OOO ");
+                    System.out.print("CCC ");
                 else
                 System.out.print("XXX ");
-                if(i-i/10*10 == 9 || i-i/10*10==4)
-                    System.out.print("\n");
+            }
+            for (int i=70;i<75;i++){
+                if(i%10 == 0 || i%10 == 5){
+                    System.out.print("\n"+(char)(alphabet+65)+ "| ");
+                    alphabet++;
+                }
+                if(seats[i].getVacancy() == false)
+                    System.out.print("UUU ");
+                else
+                System.out.print("XXX ");
+            }
+            for (int i=75;i<80;i++){
+                if(i%10 == 0 || i%10 == 5){
+                    System.out.print("\n"+(char)(alphabet+65)+ "| ");
+                    alphabet++;
+                }
+                if(seats[i].getVacancy() == false)
+                    System.out.print("EEE ");
+                else
+                System.out.print("XXX ");
             }
         }
         else{
+            System.out.print("   0 1 2 3 4");
             for(int i=0;i<20;i++){
-                if(seats[i].getVacancy() == false)
-                    System.out.print("O ");
+                if(i%10 == 0 || i%10 == 5){
+                    System.out.print("\n"+(char)(alphabet+65)+ "| ");
+                    alphabet++;
+                }
+                if(seats[i].getVacancy() == false){
+                    if (i<15)
+                        System.out.print("O ");
+                    else
+                        System.out.print("E ");
+                }
                 else
                     System.out.print("X ");
-                if(i-i/10*10 == 9 || i-i/10*10 == 4)
-                    System.out.print("\n");
             }
         }
     }
@@ -125,6 +156,7 @@ public class MovieScreening {
      * @param SeatID The seat that will be booked by the guest
      */
     public void updateVacancy(int SeatID) throws IOException{
+        System.out.println("updating");
         File f = new File(this.path);
         Scanner sc = new Scanner(f);
         StringBuffer buffer = new StringBuffer();
@@ -132,11 +164,11 @@ public class MovieScreening {
         int k =0;
         while(sc.hasNextLine()){
             if (k == SeatID)
-                buffer.append("X "+System.lineSeparator());
+                buffer.append("XXX "+System.lineSeparator());
             else if (s.charAt(0) != 'A')
-                buffer.append("X "+System.lineSeparator());
+                buffer.append("XXX "+System.lineSeparator());
             else
-                buffer.append("A "+System.lineSeparator());
+                buffer.append("AAA "+System.lineSeparator());
             if(sc.hasNextLine())
                 s = sc.nextLine();
             k++;
@@ -144,8 +176,49 @@ public class MovieScreening {
         FileWriter wr = new FileWriter(f);
         BufferedWriter bw = new BufferedWriter(wr);
         bw.write(buffer.toString());
-        bw.flush();
 		bw.close();
 		sc.close();
     }
+
+    public int getCinema() {
+        return Cinema;
+    }
+
+    public String getCineplex() {
+        return Cineplex;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public String getMovie() {
+        return movie;
+    }
+
+    public Seats[] getSeats() {
+        return seats;
+    }
+
+    public boolean isShowing() {
+        return showing;
+    }
+
+    public TypeOfMovie getTypeOfMovie() {
+        return typeOfMovie;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public DateFormat getDf() {
+        return df;
+    }
+
+    
 }
