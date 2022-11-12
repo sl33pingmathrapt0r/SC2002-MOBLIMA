@@ -1,7 +1,14 @@
-package src.usr;
+package usr;
 
-import java.util.*;
+import usr.*;
+import movList.*;
+import Cinema.*;
+import Cineplex.*;
+import ticket.*;
+
 import java.text.SimpleDateFormat;
+import java.util.*;
+// import java.text.SimpleDateFormat;
 // import ticket.*;
 
 public class MovieGoer extends User {
@@ -23,17 +30,13 @@ public class MovieGoer extends User {
         this.email = email;
     }
 
-    public void logout() {
-        Accounts.goerStore();
-    }
-
     public void banner() {
         System.out.println("1: Search/List movie");
-        System.out.println("2: View movie details – including reviews and ratings");
+        System.out.println("2: View movie details - including reviews and ratings");
         System.out.println("3: Check seat availability and selection of seat/s.");
         System.out.println("4: Book and purchase ticket");
         System.out.println("5: View booking history");
-        System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
+        System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers' ratings");
         System.out.println("7: Exit");
     }
 
@@ -53,9 +56,9 @@ public class MovieGoer extends User {
         return email;
     }
 
-    Map<String, ArrayList<Ticket>> getBookingHistory() {
-        return bookingHistory;
-    }
+    // Map<String, ArrayList<Ticket>> getBookingHistory() {
+    //     return bookingHistory;
+    // }
 
     Map<String, String> getReviews() {
         return reviews;
@@ -63,10 +66,6 @@ public class MovieGoer extends User {
 
     Map<String, Integer> getRatings() {
         return ratings;
-    }
-
-    Set<String> getMoviesWatched() {
-        return movieTickets.keySet();
     }
 
     String getPW() {
@@ -77,26 +76,119 @@ public class MovieGoer extends User {
         return (this.pw.equals(pw)) ? true : false;
     }
 
-    // public void viewMovieDetails(Movie movie) {
-    // /*
-    // * prints details of movies offered by CINEPLEX, not
-    // * cinema, i.e. without showtimes, screening hall,
-    // * seat number.
-    // */
-    // movie.print();
-    // }
+    public void viewMovieDetails(String title) {
+        Movie mov = MovieList.getMovieByTitle(title);
+        System.out.println(mov.getTitle());
+        System.out.println("Duration: " + mov.getDuration());
+        System.out.println("Director: " + mov.getDirector());
+        System.out.println("Synopsis: \n" + mov.getSynopsis());
+        System.out.print("Cast: ");
+        for(String member : mov.getCast()) System.out.println(member + "; ");
+        System.out.println("Age rating: " + mov.getAgeRating());
+        System.out.printf("Overall rating: %.1f/5 \n", mov.getTotalRating());
+        System.out.println("Reviews: ");
+        ArrayList<Integer> ratings = mov.getPastRatings();
+        ArrayList<String> reviews = mov.getReviews();
+        for(int i=0; i<ratings.size(); i++) System.out.printf("%d/5 - %s\n", ratings.get(i), reviews.get(i));
+        System.out.println();
+    }
 
-    // NO LONGER NEEDED, TO IMPLEMENT DIRECTLY INTO MAIN
-    // public void selectSeat(ArrayList<String> seats) {
+    public boolean bookTicket(Cineplex cineplex) {
+        while(true){
+            ArrayList<String> movieList = cineplex.getListOfMovies();
+            System.out.println("Select movie to watch: ");
+            for(int i=0; i<movieList.size(); i++) System.out.printf("%d. %s\n", i+1, movieList.get(i));
+            System.out.printf("%d. Exit", movieList.size()+1);
+            int choice = inputHandling.getInt("", "Invalid input", 1, movieList.size()+1);
+            if(choice==movieList.size()+1) return false;
+            String title = movieList.get(choice);
+            System.out.println();
 
-    //     /* 
-    //      * choose a seat from CINEMA, w.r.t movie, 
-    //      * showtime, and no single-seat gaps. 
-    //      * Requires Cinema to check for validity (correct 
-    //      * gap, available). 
-    //      * Stores selected Seats temporarily before booking
-    //      */
-    // }
+            int exit = cineplex.listShowtimeByMovie(title);
+            choice = inputHandling.getInt("Select showtime", "Invalid input: ", 1, exit);
+            Date showtime = cineplex.choiceOfListing(choice, title);
+            if(showtime==null) continue;
+
+            int cinemaID = cineplex.cinemaFinder(title, showtime);
+            Cinema cinema = cineplex.getCinemas().get(cinemaID);
+            int movieID = cinema.search(title, showtime);
+            if(movieID==-1){
+                System.out.println("Error occured");
+                return false;
+            }
+            try{cinema.listVacancy(movieID);}
+            catch(Exception e){
+                System.out.println("Error occured");
+                return false;
+            }
+
+            ArrayList<String> bookedSeatID = new ArrayList<String>();
+            ArrayList<AgeGroup> bookedAgeGroup = new ArrayList<AgeGroup>(); 
+            while(true){
+                cineplex.listVacancy(cinemaID, movieID);
+                String seatID;
+                System.out.println("Select vacant seat");
+                while(true){
+                    seatID = inputHandling.getSeat(cinemaID);
+                    if(seatID==null) break;
+                    if(!cineplex.checkSeatVacant(cinemaID, movieID, seatID)){
+                        System.out.println("Seat occupied");
+                        continue;
+                    }
+                    boolean flag = false;
+                    for(String bookedSeats : bookedSeatID){
+                        if(bookedSeats.equals(seatID)){
+                            System.out.println("Seat occupied");
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(flag) continue;
+                    break;
+                }
+                if(seatID==null) break;
+                bookedSeatID.add(seatID);
+
+                AgeGroup age;
+                System.out.println("Select ticket type: ");
+                System.out.println("1. STUDENT");
+                System.out.println("2. ADULT");
+                System.out.println("3. SENIOR");
+                System.out.println("4. Exit");
+                int c = inputHandling.getInt("", "Invalid input: ", 1, 3);
+                boolean flag = false;
+                switch(c){
+                    case 1: age = AgeGroup.STUDENT; break;
+                    case 2: age = AgeGroup.ADULT; break;
+                    case 3: age = AgeGroup.SENIOR; break;
+                    case 4: flag = true; break;
+                }
+                if(flag) break;
+
+                Ticket.calculatePrice(cinema.getClassOfCinema(), null, age, null, null, movieID, flag, flag)
+            }
+
+
+        }
+    }
+
+    public Screenings selectScreening(Cineplex cineplex) {
+        ArrayList<String> movieList = cineplex.getListOfMovies();
+        System.out.println("Select movie to watch: ");
+        for(int i=0; i<movieList.size(); i++) System.out.printf("%d. %s\n", i+1, movieList.get(i));
+        System.out.println("%d. Exit");
+    }
+
+    public Set<String[]> selectSeat(Set<String[]> selectedSeats, Cineplex cineplex, String title) {
+        /* 
+         * choose a seat from CINEMA, w.r.t movie, 
+         * showtime, and no single-seat gaps. 
+         * Requires Cinema to check for validity (correct 
+         * gap, available). 
+         * Stores selected Seats temporarily before booking
+         */
+        int cinemaID = cineplex.cinemaFinder(title, ) 
+    }
     
     public boolean bookTicket(
         String movieName, 
@@ -104,9 +196,8 @@ public class MovieGoer extends User {
         TypeOfMovie movieType, 
         int[] time, 
         Day day, 
-        Set<String> seatInfo, 
+        Set<String[]> seatInfo, 
         Cinema cinema
-        // Cineplex object, movieName, Date showtime
         ) {
 
         if (seatInfo.isEmpty()) {
@@ -116,7 +207,7 @@ public class MovieGoer extends User {
 
         String transactionId, strInput;
         boolean exit;
-        AgeGroup age= ADULT;
+        AgeGroup age= AgeGroup.ADULT;
         double price= 0;
         int intInput;
         ArrayList<Ticket> toBook= new ArrayList<Ticket>();
@@ -205,29 +296,30 @@ public class MovieGoer extends User {
     }
 
     public void viewBookingHistory() {
-        System.out.println("Bookings by " + name);
-        int i= 0;
-        for (Map.Entry transaction : bookingHistory.entrySet()) {
-            System.out.println("i: "transaction.getKey());
-            for (Ticket tix : bookingHistory.get(transaction.getKey()))
-                printTicket(tix);
-            i++;
-        }
+    System.out.println("Bookings by " + name);
+    int i= 0;
+    for (Map.Entry transaction : bookingHistory.entrySet()) {
+    System.out.println("i: "transaction.getKey());
+    for (Ticket tix : bookingHistory.get(transaction.getKey())) {
+    printTicket(tix);
+    }
+    i++;
+    }
     }
 
     private void printTicket(Ticket tix) {
-        System.out.println(
-            "\t" + tix.getCinema() + "\n" +
-            "\t" + tix.getMovie() + "\n" +
-            "\t" + tix.getDate() + "\n" +
-            "\t" + tix.getTime() + "\n" +
-            "\t" + tix.getSeat() + "\n"
-            );
-        if (tix.clientType==STUDENT) System.out.println("\tFree 12oz Coke\n");
-        if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
+    System.out.println(
+    "\t" + tix.getCinema() + "\n" +
+    "\t" + tix.getMovie() + "\n" +
+    "\t" + tix.getDate() + "\n" +
+    "\t" + tix.getTime() + "\n" +
+    "\t" + tix.getSeat() + "\n"
+    );
+    if (tix.clientType==STUDENT) System.out.println("\tFree 12oz Coke\n");
+    if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
     }
 
-    void loadBookingHistory(String[] bookingDetails) {
+    void addBookingHistory(String[] bookingDetails) {
         Ticket tix= new Ticket(
             bookingDetails[0],
             TypeOfMovie.valueOf(bookingDetails[1]),
@@ -238,20 +330,23 @@ public class MovieGoer extends User {
             Integer.valueOf(bookingDetails[4]),
             AgeGroup.valueOf(bookingDetails[5]),
             bookingDetails[6],
-            Integer.valueOf(bookingDetails[7]),
+            Integer.valueOf(bookingDetails[7]), 
             bookingDetails[8]
-            );
-        bookingHistory.add(tix);
-
+        );
         if (!movieTickets.containsKey(bookingDetails[0])) 
             movieTickets.put(bookingDetails[0], new ArrayList<String>());
+        
         movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
     }
 
-    // public void listTop5Movies(Cineplex cineplex) {
-    //     cineplex.listTop5();
-    // }
-
+    public void listTop5Movies(Cineplex cineplex) {
+        try {
+            cineplex.listTop5();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public void newReview(String movieName) {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
@@ -290,7 +385,7 @@ public class MovieGoer extends User {
         return;
     }
 
-    public void loadReview(String tixId, String review, String rating) {
+    public void addReview(String tixId, String review, String rating) {
         reviews.put(tixId, review);
         ratings.put(tixId, Integer.valueOf(rating));
         

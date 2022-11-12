@@ -1,7 +1,7 @@
 package usr;
 
 import movList.*;
-import cinema.*;
+import Cinema.*;
 import Cineplex.*;
 import ticket.*;
 
@@ -21,6 +21,7 @@ public abstract class User {
     // private static Scanner scan= new Scanner(System.in);
 
     public abstract void banner();
+    
     public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
         for(int i=0;i<cineplex.size();i++){
             System.out.println(String.valueOf(i+1)+": "+cineplex.get(i).getCineplexName());
