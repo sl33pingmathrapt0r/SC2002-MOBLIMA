@@ -69,33 +69,35 @@ public class Ticket {
 
 	/**
 	 * To check if a movie is a blockbuster
+	 * it is not implemented within TypeOfMovie as a movie 
+	 * can be both a block buster and 3D at the same time
 	 */
 	private boolean isBlockBuster;
 
 	/**
-	 * To check if a moview is a preview screening
+	 * To check if a movie is a preview screening
 	 */
 	private boolean isPreview;
 
 	/**
-	 * how many tickets being transacted in the current application
+	 * How many tickets have been transacted in the current application
 	 */
 	private static Integer ticketCount=0;
 
 	/**
 	 * Constructor Class for Ticket
-	 * @param clientName
-	 * @param clientContact
-	 * @param movieTitle
-	 * @param seatID
-	 * @param transactionID
-	 * @param typeOfMovie
-	 * @param classOfCinema
-	 * @param date
-	 * @param ageGroup
-	 * @param seatType
-	 * @param isBlockBuster
-	 * @param isPreview
+	 * @param clientName user name
+	 * @param clientContact user contact details
+	 * @param movieTitle title of the movie being screened
+	 * @param seatID where the seat is at 
+	 * @param transactionID a unique ID corresponding to the transaction when booking ticket
+	 * @param typeOfMovie 3D and Digital
+	 * @param classOfCinema Regular/ Atmos/ Platinum
+	 * @param date a Date object containing time
+	 * @param ageGroup	Student/ Adult/ Senior
+	 * @param seatType Normal/ Couple/ Elite/ Ultim
+	 * @param isBlockBuster boolean to check if a movie is a block buster
+	 * @param isPreview boolean to check if a movie is preview screening
 	 */
 	public Ticket(String clientName, String clientContact, String movieTitle, String seatID, String transactionID,
 			TypeOfMovie typeOfMovie, ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,
@@ -119,7 +121,7 @@ public class Ticket {
 
 	/**
 	 * Class method to calculate price of a ticket without creating the object yet
-	 * @param classOfCinema, Regular/ Atmos/ Platinum
+	 * @param classOfCinema Regular/ Atmos/ Platinum
 	 * @param typeOfMovie 3D and Digital
 	 * @param ageGroup	Student/ Adult/ Senior
 	 * @param seatType Normal/ Couple/ Elite/ Ultima
@@ -172,12 +174,16 @@ public class Ticket {
 		Day dayOfWeek = Day.values()[day];
 		int timeOfMovie=calendar.get(Calendar.HOUR_OF_DAY)*100+calendar.get(Calendar.MINUTE);
 		double price;
+		//check if date is a public holiday
+		if(PriceTable.isPH(date)){
+			price=PriceTable.checkPrice(classOfCinema, Day.PH, AgeGroup.ADULT,seatType, typeOfMovie);
+		}
 		//weekdays after 6 no student/ senior promo 
-		if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
+		else if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
 			price=PriceTable.checkPrice(classOfCinema, dayOfWeek, AgeGroup.ADULT,seatType, typeOfMovie);
 		}
-		if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
+		else if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
 			price=PriceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup,seatType, typeOfMovie);
 		}
 		else{
