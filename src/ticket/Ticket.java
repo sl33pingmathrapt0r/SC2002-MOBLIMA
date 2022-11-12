@@ -1,5 +1,7 @@
 package ticket;
 
+import movList.MovieList;
+
 public class Ticket {
 
 	private String clientName;
@@ -57,6 +59,7 @@ public class Ticket {
 		this.isPreview = isPreview;
 		this.price=Ticket.calculatePrice(this);
 		ticketCount++;
+		MovieList.incTicketSales(movieTitle);
 	}
 
 	/**

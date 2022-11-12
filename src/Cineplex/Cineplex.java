@@ -296,4 +296,27 @@ public class Cineplex {
             w.close();
         }
     }
+
+    public void listVacancy(int Cinema,int index){
+        try {
+            cinemas.get(Cinema-1).listVacancy(index);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkVacancy(int Cinema, int index, String SeatID){
+        return cinemas.get(Cinema-1).checkSeatVacant(index,SeatID);
+    }
+
+    public boolean updateVacancy(int Cinema, int index, String SeatID){
+        try {
+            return cinemas.get(Cinema-1).updateVacancy(index,SeatID);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
