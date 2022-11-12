@@ -1,4 +1,4 @@
-package Cinema;
+package cinema;
 import movList.*;
 import ticket.TypeOfMovie;
 

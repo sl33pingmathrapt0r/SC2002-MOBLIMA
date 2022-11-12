@@ -1,9 +1,9 @@
-package Cinema;
+package cinema;
 
 import usr.*;
 import movList.*;
-import Cinema.*;
-import Cineplex.*;
+import cinema.*;
+import cineplex.*;
 import ticket.*;
 
 import java.io.File;
