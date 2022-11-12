@@ -174,12 +174,16 @@ public class Ticket {
 		Day dayOfWeek = Day.values()[day];
 		int timeOfMovie=calendar.get(Calendar.HOUR_OF_DAY)*100+calendar.get(Calendar.MINUTE);
 		double price;
+		//check if date is a public holiday
+		if(PriceTable.isPH(date)){
+			price=PriceTable.checkPrice(classOfCinema, Day.PH, AgeGroup.ADULT,seatType, typeOfMovie);
+		}
 		//weekdays after 6 no student/ senior promo 
-		if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
+		else if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
 			price=PriceTable.checkPrice(classOfCinema, dayOfWeek, AgeGroup.ADULT,seatType, typeOfMovie);
 		}
-		if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
+		else if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
 			price=PriceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup,seatType, typeOfMovie);
 		}
 		else{
