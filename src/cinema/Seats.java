@@ -3,7 +3,8 @@ package cinema;
 import usr.*;
 import movList.*;
 import cinema.*;
-import Cineplex.*;
+
+import cineplex.*; 
 import ticket.*;
 
 import java.io.File;

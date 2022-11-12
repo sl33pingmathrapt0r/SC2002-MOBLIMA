@@ -1,4 +1,4 @@
-package Cineplex;
+package cineplex;
 
 import java.io.File;
 import java.nio.file.Path;

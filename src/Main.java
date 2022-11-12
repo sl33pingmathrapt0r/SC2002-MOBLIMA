@@ -14,11 +14,11 @@ public class Main {
 
     public static void main(String[] args) {
         // APPLICATION STARTUP
-        Accounts.load();
-        // Accounts.store();
-        ArrayList<Cineplex> cineplex=new ArrayList<Cineplex>();
-        Date globalClock = new Date();
-        String cineplexName = "AA";
+
+        src.usr.Accounts.load();
+        ArrayList<Cineplex> cineplex;
+        Date globalClock= new Date();
+        String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
         MovieList.initMovList();
         for (int i = 0; i < MAX_CINEPLEX; i++) {
@@ -145,7 +145,7 @@ public class Main {
                             System.out.println("2: Update cinema showtimes");
                             System.out.println("3: Add movie to cineplex");
                             System.out.println("4: Remove cinema showtimes");
-                            option = inputHandling.getInt("Enter a digit between 1 and 3: ","Invalid Option",1,3);
+                            option = inputHandling.getInt("Enter a digit between 1 and 4: ","Invalid Option",1,4);
                             if (option == 1) {
                                 Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
                                 adminUser.createCinemaShowtimes(selectedCineplex);
