@@ -41,10 +41,12 @@ public class Admin extends User {
 
 
     public void banner() {
-        System.out.println("1: Create/Update/Remove movie listing");
-        System.out.println("2: Create/Update/Remove cinema showtimes and the movies to be shown");
-        System.out.println("3: Configure system settings");
-        System.out.println("4: Logout");
+        System.out.println(
+            "1: Create/Update/Remove movie listing\n" +
+            "2: Create/Update/Remove cinema showtimes and the movies to be shown\n" +
+            "3: Configure system settings\n" +
+            "4: Logout"
+            );
     }
 
     // public Cinema selectCinema(Cineplex cineplex) {

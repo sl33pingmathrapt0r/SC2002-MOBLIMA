@@ -34,6 +34,34 @@ public abstract class User {
         int choice=inputHandling.getInt("Enter Cineplex index: ","Invalid Index",1,cineplex.size()+1);
         return cineplex.get(choice-1);
     }
+
+    public String selectMovie() {
+        ArrayList<Movie> movList = MovieList.getMovieList();
+        int i = 1;
+        System.out.println("Select movie: ");
+        for(Movie mov : movList) System.out.printf("%d. %s \n", i++, mov.getTitle());
+        int idx = inputHandling.getInt("", "Invalid input", 1, i-1);
+        if(idx==i-1) return null;
+        return movList.get(i).getTitle();
+    }
+
+    public String selectMovie(Cineplex cineplex) {
+        ArrayList<String> movList= cineplex.getListOfMovies();
+        int i=1;
+        System.out.println("Select movie: ");
+        for(String mov : movList) System.out.printf("%d. %s \n", i++, mov);
+        int idx = inputHandling.getInt("", "Invalid input", 1, i-1);
+        if(idx==i-1) return null;
+        return movList.get(i);
+    }
+
+    public void listTop5Movies(Cineplex cineplex) {
+        try {
+            cineplex.listTop5(isAdmin);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
     /*
      * Search/ List Movie
      * View Movie details
