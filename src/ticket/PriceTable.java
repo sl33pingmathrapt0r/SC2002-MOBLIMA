@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class PriceTable {
+public class PriceTable implements StaticFileHandler {
 
     private static Path currentRelativePath = Paths.get("");
     private static  String absolutePath = currentRelativePath.toAbsolutePath().toString();
@@ -20,13 +20,9 @@ public class PriceTable {
     public PriceTable() {
 
          regularPriceTable = new Hashtable<>();
-         fileToTable( regularPriceTable,  rPT);
-
          platinumPriceTable = new Hashtable<>();
-         fileToTable( platinumPriceTable,  pPT);
-
          atmosPriceTable = new Hashtable<>();
-         fileToTable( atmosPriceTable,  aPT);
+         readFile();
     }
 
     /**
@@ -132,7 +128,7 @@ public class PriceTable {
             return true;
             
         } catch (Exception e) {
-            // TODO: handle exception
+            //TODO: handle exception
             e.printStackTrace();
             return false;
         }
@@ -164,11 +160,18 @@ public class PriceTable {
         }
         return price;
     }
-    public static void saveAllPriceTable() {
+    public void writeFile() {
         
         saveTable( regularPriceTable, rPT);
         saveTable( platinumPriceTable,  pPT);
         saveTable( atmosPriceTable,  aPT);
+    }
+
+    @Override
+    public void readFile() {
+        fileToTable( regularPriceTable,  rPT);
+        fileToTable( platinumPriceTable,  pPT);
+        fileToTable( atmosPriceTable,  aPT);
     }
 
 }

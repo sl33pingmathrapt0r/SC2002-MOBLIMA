@@ -1,6 +1,8 @@
 package ticket;
 
 import movList.MovieList;
+import java.util.Date;
+import java.util.Calendar;
 
 public class Ticket {
 
@@ -12,13 +14,12 @@ public class Ticket {
 
 	private TypeOfMovie typeOfMovie;
 	private ClassOfCinema classOfCinema;
-	private Day dayOfWeek;
 	private AgeGroup ageGroup;
 	private SeatType seatType;
+	
+	private Date date;
 
-	private int timeOfMovie; // 4digit int HHMM in a 24H system
 	private double price;
-
 
 	private boolean isBlockBuster;
 	private boolean isPreview;
@@ -26,12 +27,12 @@ public class Ticket {
 	private static Integer ticketCount=0;
 
 	/**
-	 * Constructor class for ticket
+	 * 
 	 * @param clientName
 	 * @param clientContact
 	 * @param movieTitle
 	 * @param seatID
-	 * @param ticketID
+	 * @param transactionID
 	 * @param typeOfMovie
 	 * @param classOfCinema
 	 * @param dayOfWeek
@@ -40,10 +41,10 @@ public class Ticket {
 	 * @param timeOfMovie
 	 * @param isBlockBuster
 	 * @param isPreview
-	*/	
+	 */
 	public Ticket(String clientName, String clientContact, String movieTitle, String seatID, String transactionID,
-			TypeOfMovie typeOfMovie, ClassOfCinema classOfCinema, Day dayOfWeek, AgeGroup ageGroup, SeatType seatType,
-			int timeOfMovie, boolean isBlockBuster, boolean isPreview) {
+			TypeOfMovie typeOfMovie, ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,
+			boolean isBlockBuster, boolean isPreview) {
 		this.clientName = clientName;
 		this.clientContact = clientContact;
 		this.movieTitle = movieTitle;
@@ -51,10 +52,9 @@ public class Ticket {
 		this.ticketID = transactionID+ticketCount.toString();
 		this.typeOfMovie = typeOfMovie;
 		this.classOfCinema = classOfCinema;
-		this.dayOfWeek = dayOfWeek;
+		this.date=date;
 		this.ageGroup = ageGroup;
 		this.seatType = seatType;
-		this.timeOfMovie = timeOfMovie;
 		this.isBlockBuster = isBlockBuster;
 		this.isPreview = isPreview;
 		this.price=Ticket.calculatePrice(this);
@@ -87,7 +87,7 @@ public class Ticket {
 	 * @return corresponding price of ticket
 	 */
 	public static double calculatePrice(ClassOfCinema classOfCinema, TypeOfMovie typeOfMovie, AgeGroup ageGroup, SeatType seatType,
-			Day dayOfWeek, int timeOfMovie,boolean isBlockBuster, boolean isPreview) {
+			Date date,boolean isBlockBuster, boolean isPreview) {
 			
 		/**
 		 * Regular cinema
@@ -124,6 +124,11 @@ public class Ticket {
 		 * 15.50 Blockbuster
 		 * 14 Digital
 		 */
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int day= calendar.get(Calendar.DAY_OF_WEEK);
+		Day dayOfWeek = Day.values()[day];
+		int timeOfMovie=calendar.get(Calendar.HOUR_OF_DAY)*100+calendar.get(Calendar.MINUTE);
 		double price;
 		//weekdays after 6 no student/ senior promo 
 		if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
@@ -145,21 +150,29 @@ public class Ticket {
 	public static double calculatePrice(Ticket ticket) {
 			
 		double price;
-		PriceTable priceTable = new PriceTable();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(ticket.getDate());
+		int day= calendar.get(Calendar.DAY_OF_WEEK);
+		Day dayOfWeek = Day.values()[day];
+		int timeOfMovie=calendar.get(Calendar.HOUR_OF_DAY)*100+calendar.get(Calendar.MINUTE);
 		//weekdays after 6 no student/ senior promo 
-		if((ticket.getAgeGroup()==AgeGroup.STUDENT || ticket.getAgeGroup()==AgeGroup.SENIOR) && ticket.getTimeOfMovie()>1800 &&
-		(ticket.getDayOfWeek()==Day.MONDAY||ticket.getDayOfWeek()==Day.TUESDAY||ticket.getDayOfWeek()==Day.WEDNESDAY||ticket.getDayOfWeek()==Day.THURSDAY)){
-			price=PriceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), AgeGroup.ADULT, ticket.getSeatType(),ticket.getTypeOfMovie());
+		if((ticket.getAgeGroup()==AgeGroup.STUDENT || ticket.getAgeGroup()==AgeGroup.SENIOR) && timeOfMovie>1800 &&
+		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), dayOfWeek, AgeGroup.ADULT, ticket.getSeatType(),ticket.getTypeOfMovie());
 		}
-		if(ticket.getDayOfWeek()==Day.FRIDAY && ticket.getTimeOfMovie()>1800){
+		if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
 			price=PriceTable.checkPrice(ticket.getClassOfCinema(), Day.SATURDAY, ticket.getAgeGroup(), ticket.getSeatType(),ticket.getTypeOfMovie());
 		}
 		else{
-			price=PriceTable.checkPrice(ticket.getClassOfCinema(), ticket.getDayOfWeek(), ticket.getAgeGroup(),ticket.getSeatType(), ticket.getTypeOfMovie());
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), dayOfWeek, ticket.getAgeGroup(),ticket.getSeatType(), ticket.getTypeOfMovie());
 		}
 		if(ticket.isBlockBuster()) price++;
 		if(ticket.isPreview) price++;
 		return price;
+	}
+
+	public Date getDate() {
+		return date;
 	}
 
 	public String getTicketID() {
@@ -196,14 +209,6 @@ public class Ticket {
 
 	public String getClientContact() {
 		return clientContact;
-	}
-
-	public Day getDayOfWeek() {
-		return dayOfWeek;
-	}
-
-	public int getTimeOfMovie() {
-		return timeOfMovie;
 	}
 
 	public AgeGroup getAgeGroup() {
