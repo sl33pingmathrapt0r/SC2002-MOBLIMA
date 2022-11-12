@@ -1,3 +1,11 @@
+/**
+ * Represents the price table for different days of the week, classes of cinema, type of movies etc
+ * Regular, Platinum and Atmos all have nested hashtables 
+ * a bigger hashtable to contain them was avoided for slight improvement in readibility
+ * @author Pock Xuan
+ * @version 1.3
+ * @since 2022-11-13
+ */
 package ticket;
 
 import java.io.*;
@@ -7,26 +15,56 @@ import java.util.*;
 
 public class PriceTable {
 
+
+    /**
+     * The current relative path of the program being run in
+     */
     private static Path currentRelativePath = Paths.get("");
+
+    /**
+     * The absolute path in which is the program being run in
+     */
     private static  String absolutePath = currentRelativePath.toAbsolutePath().toString();
+
+    /**
+     * The file path in which the regular price table is being stored in
+     */
     private static File rPT = new File(absolutePath + "/src/ticket/regularPriceTable");
+
+    /**
+     * The file path in which the platinum price table is being stored in
+     */
     private static File pPT = new File(absolutePath + "/src/ticket/platinumPriceTable");
+
+    /**
+     * The file path in which the atmos price table is being stored in
+     */
     private static File aPT = new File(absolutePath + "/src/ticket/atmosPriceTable");
 
+    /**
+     * The data structure to store the regular price table
+     */
     private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType,Hashtable<TypeOfMovie, Double>>>> regularPriceTable;
+    
+    /**
+     * The data structure to store the platinum price table
+     */
     private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType,Hashtable<TypeOfMovie, Double>>>> platinumPriceTable;
+    
+    /**
+     * The data structure to store the atmos price table
+     */
     private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType,Hashtable<TypeOfMovie, Double>>>> atmosPriceTable;
 
+    /**
+     * Constructor for price table, loads text file into hash tables
+     */
     public PriceTable() {
 
          regularPriceTable = new Hashtable<>();
-         fileToTable( regularPriceTable,  rPT);
-
          platinumPriceTable = new Hashtable<>();
-         fileToTable( platinumPriceTable,  pPT);
-
          atmosPriceTable = new Hashtable<>();
-         fileToTable( atmosPriceTable,  aPT);
+         readFile();
     }
 
     /**
@@ -69,7 +107,6 @@ public class PriceTable {
             }
             fr.close();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -99,7 +136,6 @@ public class PriceTable {
             }
             fw.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -132,7 +168,7 @@ public class PriceTable {
             return true;
             
         } catch (Exception e) {
-            // TODO: handle exception
+
             e.printStackTrace();
             return false;
         }
@@ -164,11 +200,24 @@ public class PriceTable {
         }
         return price;
     }
-    public static void saveAllPriceTable() {
+    
+    /**
+     * Saving any updates to the text files
+     */
+    public static void writeFile() {
         
-        saveTable( regularPriceTable, rPT);
-        saveTable( platinumPriceTable,  pPT);
-        saveTable( atmosPriceTable,  aPT);
+        saveTable(regularPriceTable, rPT);
+        saveTable(platinumPriceTable,  pPT);
+        saveTable(atmosPriceTable,  aPT);
+    }
+
+    /**
+     * Reading text files to create text objects
+     */
+    public static void readFile() {
+        fileToTable(regularPriceTable,  rPT);
+        fileToTable(platinumPriceTable,  pPT);
+        fileToTable(atmosPriceTable,  aPT);
     }
 
 }
