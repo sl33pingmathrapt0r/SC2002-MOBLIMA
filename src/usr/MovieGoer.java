@@ -102,10 +102,7 @@ public class MovieGoer extends User {
         return movielist.get(choice-1);
     }
 
-    public boolean bookTicket(Cineplex cineplex) {
-        String title = getthefuckingmovid(cineplex.getListOfMovies(), "Select movie to watch: ");
-        if(title==null) return false;
-
+    public boolean bookTicket(Cineplex cineplex, String title) {
         int exit = cineplex.listShowtimeByMovie(title);
         int choice = inputHandling.getInt("Select showtime", "Invalid input: ", 1, exit);
         Date showtime = cineplex.choiceOfListing(choice, title);
@@ -218,6 +215,8 @@ public class MovieGoer extends User {
                                     cineplex.getTypeOfSeat(cinemaID, movieID, bookedSeatID.get(i)), 
                                     MovieList.getMovieByTitle(title).isBlockBuster(), 
                                     MovieList.getMovieByTitle(title).getStatus()==STATUS.PREVIEW));
+            ratings.put(tixId, -1);
+            reviews.put(tixId, "");
         }
         System.out.println("Payment successful!");
         System.out.println("Tickets bought by " + name + "."); 
