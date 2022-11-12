@@ -1,15 +1,25 @@
 package Cinema;
 import movList.*;
+import ticket.ClassOfCinema;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 /*
    Reperesents a Cinema hall  within a specific Cineplex. 
    Can be used to screen movies.
  */
+enum TypeOfMovie{
+	D3,DIGITAL
+}
 
 public class Cinema {
 
@@ -29,39 +39,40 @@ public class Cinema {
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
 	 */
-	ArrayList<MovieScreening> mlist = new ArrayList<>();
+	List<MovieScreening> mlist = new ArrayList<>();
+	DateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
+	
+	ClassOfCinema type;
 
 	/*
 	 * Creates a cinema with the given name.
 	 * Loads all relevant data for this cinema hall such as movie screenings and occupancy
 	 * @param s the unique identifier for this cinema hall
 	 */
-	public Cinema(int cinemaName,String cineplex) throws FileNotFoundException{
+	public Cinema(int cinemaName,String cineplex,int cinemaID) throws FileNotFoundException, ParseException{
 		this.name = cinemaName;
 		this.Cineplex = cineplex;
-		boolean b;
-		//Path path = Paths.get(this.path+this.Cineplex+"\\"+this.name);
-		//Stream<Path> stream = Files.list(path);
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		if (!f.exists()){
 			System.out.println("creating file");
-			b=f.mkdirs();
+			f.mkdirs();
 		}
 		else{
 			String l[] = f.list();
 			String s2[];
-			int temp[] = {0,0,0};
 			for (int i=0;i<l.length;i++){
 				System.out.println(l[i]);
-				s2 = l[i].split("@",6);
-				for (int k=0;k<3;k++){
-					temp[k] = Integer.valueOf(s2[k]);
-				}
-				mlist.add(new MovieScreening(cinemaName, temp[0], temp[1], temp[2], s2[3],TypeOfMovie.valueOf(s2[4]),this.Cineplex));
+				s2 = l[i].split("@",5);
+				Date startDate = new SimpleDateFormat("yyyyMMddHHmm").parse(s2[0]);
+				Date endDate = new SimpleDateFormat("yyyyMMddHHmm").parse(s2[1]);
+				mlist.add(new MovieScreening(cinemaName, startDate, endDate, s2[2],TypeOfMovie.valueOf(s2[3]),this.Cineplex));
 			}
 		}
-		//File h = new File("C:\\Users\\yeozo\\OneDrive\\Documents\\GitHub\\SC2002-MOBLIMA\\src\\gg\\1\\3@200@211@ca@D3@.txt");
-		//h.delete();
+		switch(cinemaID){
+			case 0: type = ClassOfCinema.REGULAR; break;
+			case 1: type = ClassOfCinema.ATMOS; break;
+			case 2: type = ClassOfCinema.PLATINUM; break;
+		}
 	}
 	
 	/*
@@ -70,43 +81,21 @@ public class Cinema {
 	 * @param startTime A 4 digit integer to take in the starting time of the movie in a 24-hour clock format
 	 * @param date A 6 digit integer in the format YYMMDD to record the date of the movie screening
 	 */
-	public boolean AddMovie(Movie movie, int startTime, int date,TypeOfMovie typeOfMovie) throws IOException {
-		String moveTitle = movie.getTitle();
-		int endTime = calculateEndTime(startTime,movie);
-		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+endTime+"@"+moveTitle+"@"+typeOfMovie+"@.txt");
+	public boolean AddMovie(String movie, Date startDate,TypeOfMovie typeOfMovie) throws IOException, ParseException {
+		Date endDate = calculateEndDate(startDate, movie);
+		String start = df.format(startDate);
+		String end = df.format(endDate);
+		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+start+"@"+end+"@"+movie+"@"+typeOfMovie+"@.txt");
 		if (g.exists()) {
 			System.out.println("Movie with similar showtime already exists");
 			return false;
 		}
-		/*File f = new File(this.path+this.Cineplex+"\\"+this.name);
-		String l[] = f.list();
-		String s1;
-		String s2[];
-		for (int i=0;i<l.length;i++) {
-			if(l.length==0)
-				break;
-			s1 = l[i];
-			s2 = s1.split("@",5);
-			if(Integer.valueOf(s2[0]) != date)
-				continue;
-			if (Integer.valueOf(s2[1]) >= e || i == l.length-1) {
-				if(i==0)
-					break;
-				s1 = l[i-1];
-				s2 = s1.split("@",5);
-				if (Integer.valueOf(s2[2]) > startTime) {
-					System.out.println("Timing clash, failed to add movie");
-					return false;
-				}
-				else 
-					break;
-			}
-		}*/
-		if(checkVacant(date, startTime, movie) == false)
+		System.out.println(this.path+this.Cineplex+"\\"+this.name+"\\"+start+"@"+end+"@"+movie+"@"+typeOfMovie+"@.txt");
+		if(checkVacant(movie,startDate) == false)
 			return false;
-		mlist.add(new MovieScreening(this.name, date, startTime, endTime, moveTitle,typeOfMovie,this.Cineplex));
+		mlist.add(new MovieScreening(this.name, startDate, endDate, movie,typeOfMovie,this.Cineplex));
 		g.createNewFile();
-		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+date+"@"+startTime+"@"+endTime+"@"+moveTitle+"@"+typeOfMovie+"@.txt",true);
+		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+start+"@"+end+"@"+movie+"@"+typeOfMovie+"@.txt",true);
 		/*w.append("O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
 				+ "O O O O O O O O O O\n"
@@ -135,7 +124,7 @@ public class Cinema {
 		}*/
 		for (int i=0;i<mlist.size();i++){
 			if(mlist.get(i).showing == true)
-				System.out.println(mlist.get(i).movie+ " showing at " + mlist.get(i).start );
+				System.out.println(mlist.get(i).movie+ " showing at " + mlist.get(i).startDate );
 		}
 	}
 	
@@ -212,7 +201,7 @@ public class Cinema {
 	 * @param index The index of the movie screening in the arrayList to be updated
 	 * @param SeatID The seatID that the guest would wish to book
 	 */
-	public boolean updateVacancy(int index, String SeatID) throws IOException{
+	public void updateVacancy(int index, String SeatID) throws IOException{
 		/*String m = movie.getTitle();
 		File f = new File(this.path+this.name);
 		String l[] = f.list();
@@ -271,17 +260,17 @@ public class Cinema {
 		int var = seatConversion(SeatID);
 		if(var >19 && this.name ==3){
 			System.out.println("Invalid seat");
-			return false;
+			return;
 		}
 			
 		if(mlist.get(index).seats[var].taken){
 			System.out.println("Seat already taken");
-			return false;
+			return;
 		}
 		mlist.get(index).updateVacancy(var);
 		mlist.get(index).seats[var].taken = true;
 		System.out.println("Successfully updated");
-		return true;
+		return;
 	}
 
 	/*
@@ -296,68 +285,40 @@ public class Cinema {
 	 * @param startTime The starting time of a movie screening.
 	 * @param movie The movie object which would be screened.
 	 */
-	public int calculateEndTime(int startTime,Movie movie){
-		int i = movie.getDuration();
-		int hour = i/60;
-		int min = i-(hour)*60;
-		startTime = startTime + min;
-		if(startTime-(startTime/100)*100 >60)
-			startTime = startTime+40;
-		startTime = startTime + hour*100;
-		if(startTime>2500)
-			startTime = startTime -2400;
-		return startTime;	
+
+	public Date calculateEndDate(Date startDate, String movie){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		cal.add(Calendar.MINUTE,MovieList.getMovieByTitle(movie).getDuration());
+		Date end = cal.getTime();
+		return end;
 	}
 
-	public boolean deleteSelect(MovieScreening movieScreening){
-		File f = new File(movieScreening.path);
-		if(f.exists())
-			return f.delete();
-		else
-			return false;
-	}
-
-	public void delete(int date,int time){
+	public void delete(Date currentDate){
 		String path = this.path+this.Cineplex+"\\"+this.name+"\\";
 		File f = new File(path);
 		File g = new File(path);
 		String l[] = f.list();
-		for(int i=l.length-1;i>=0;i--){
-			String k[] = l[i].split("@",5);
-			int x = Integer.valueOf(k[0]);
-			int y = Integer.valueOf(k[1]);
-			if(date > x){
+		for(int i=mlist.size()-1;i>=0;i--){
+			if(mlist.get(i).startDate.compareTo(currentDate) < 0){
 				g = new File(this.mlist.get(i).path);
 				g.delete();
 				System.out.println("delete");
 				this.mlist.remove(i);
 			}
-			if (date == x){
-				if(time > y){
-					g = new File(this.mlist.get(i).path);
-					g.delete();
-					this.mlist.remove(i);
-				}
-			}
 		}
 	}
 
-	public void rename(String movie, int startTime, int date,File f) throws IOException{
-		//String s = movie.getTitle();
-		//int e = calculateEndTime(startTime,movie);
-		File g = new File(this.path+"\\"+date+"@"+startTime+"@1asdaasj"+"@"+movie+"@.txt");
-		if(f.exists()){
-			System.out.println("zam");
-			//Files.move(f.toPath(),g.toPath());
-			f.renameTo(g);
-		}
+	public void deletSelect(int i){
+		File f = new File(this.mlist.get(i).path);
+		f.delete();
+		this.mlist.remove(i);
 	}
 
-	public int search(String movie,int startTime, int date){
+	public int search(String movie,Date startDate){
 		for(int i=0;i<this.mlist.size();i++){
 			MovieScreening movieScreening = this.mlist.get(i);
-			System.out.println(movieScreening.movie+movieScreening.start+movieScreening.date + movie+startTime+date);
-			if(movieScreening.date == date && movieScreening.start == startTime && movieScreening.movie.equals(movie)){
+			if(startDate.compareTo(movieScreening.startDate) == 0 && movieScreening.movie.equals(movie)){
 				System.out.println("found");
 				return i;
 			}
@@ -365,61 +326,51 @@ public class Cinema {
 		return -1;
 	}
 
-	public void updateScreening(Movie movie, int prevStartTime,int afterStartTime,int prevDate,int afterDate){
-		int index = search(movie.getTitle(),prevStartTime,prevDate);
-		int afterEndTime = calculateEndTime(afterStartTime, movie);
-		System.out.println(index);
-		MovieScreening update = this.mlist.get(0);
+	public boolean updateScreening(String movie, Date oldDate, Date newDate) throws ParseException{
+		int index = search(movie,oldDate);
+		Date newEnd = calculateEndDate(newDate, movie);
+		String newStartString = df.format(newDate);
+		String newEndString = df.format(newEnd);
+		MovieScreening update = this.mlist.get(index);
+		if(checkVacant(movie, newDate) == false)
+			return false;
 		File f = new File(update.path);
-		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+afterDate+"@"+afterStartTime+"@"+afterEndTime+"@"+movie.getTitle()+"@"+update.typeOfMovie+"@.txt");
-		update.date = afterDate;
-		update.start = afterStartTime;
-		update.end = afterEndTime;
+		File g = new File(this.path+this.Cineplex+"\\"+this.name+"\\"+newStartString+"@"+newEndString+"@"+movie+"@"+update.typeOfMovie+"@.txt");
+		update.startDate = newDate;
+		update.endDate = newEnd;
 		f.renameTo(g);
+		return true;
 	}
 
-	public boolean checkVacant(int date,int startTime, Movie movie){
+	public boolean checkVacant(String movie,Date startDate) throws ParseException{
 		System.out.println("test");
-		int endTime = calculateEndTime(startTime, movie);
+		Date endDate = calculateEndDate(startDate, movie);
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		String l[] = f.list();
 		String s1;
 		String s2[];
+		Date checkStart;
+		Date checkEnd;
 		for (int i=0;i<l.length;i++) {
 			if(l.length==0)
 				break;
 			s1 = l[i];
 			s2 = s1.split("@",5);
-			if(Integer.valueOf(s2[0]) != date)
+			checkStart = df.parse(s2[0]);
+			checkEnd = df.parse(s2[1]);
+			if(startDate.compareTo(checkEnd) >= 0)
 				continue;
-			if (Integer.valueOf(s2[1]) >= endTime) {
-				if(i==0)
-					break;
-				s1 = l[i-1];
-				s2 = s1.split("@",5);
-				if (Integer.valueOf(s2[2]) > startTime) {
+			if (startDate.compareTo(checkEnd) < 0) {
+				System.out.println( startDate +" ||| " + checkEnd+ "|||"+endDate+"|||"+ startDate.compareTo(checkEnd));
+				if (endDate.compareTo(checkStart) > 0) {
 					System.out.println("Timing clash, failed to add movie");
 					return false;
 				}
 				else 
 					continue;
 			}
-			if (Integer.valueOf(s2[2]) > startTime) {
-				System.out.println("Timing clash, failed to add movie");
-				return false;
-			}	
 		}
 		return true;
 	}
-
-	public ArrayList<MovieScreening> getMlist() {
-		return mlist;
-	}
-
-	public boolean checkSeatVacant(int movieID, String seatID) {
-		return mlist.get(movieID).seats[seatConversion(seatID)].getVacancy();
-	}
-
-		
 }
 

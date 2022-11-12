@@ -3,15 +3,16 @@ package Cineplex;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
-
+import java.text.SimpleDateFormat;
 
 public class Screenings {
-    public ArrayList<Integer> listofTimings = new ArrayList<Integer>();
+    ArrayList<Date> listofTimings = new ArrayList<Date>();
     public String MovieName;
     final private static String route = Path.of("").toAbsolutePath().toString() + "\\src\\Cineplex\\";
     private final String path;
-    private int ListingCount=0;
+    int ListingCount=0;
 
     public Screenings(String MovieName,String cineplex) throws Exception{
         try{    
@@ -20,7 +21,8 @@ public class Screenings {
             File MovFile = new File(path);
             Scanner sc= new Scanner(MovFile);
             while(sc.hasNextLine()){
-                listofTimings.get(Integer.valueOf(sc.nextLine()));
+                Date date = new SimpleDateFormat("yyyyMMddHHmm").parse(sc.nextLine());
+                listofTimings.add(date);
                 ListingCount++;
             }
             sc.close();
@@ -30,24 +32,23 @@ public class Screenings {
         }
     }
 
-    public void AddTiming(int startTime,int date){
-        int DateandTime=date*10000+startTime,i;
+    void AddTiming(Date date){
+        int i=0;
         for(i=0;i<ListingCount;i++){
-            if(DateandTime<listofTimings.get(i)){
-                listofTimings.add(i,DateandTime);
+            if(listofTimings.get(i).after(date)){
+                listofTimings.add(i,date);
                 break;
             }
         }
         if(ListingCount==0||i==ListingCount){
-            listofTimings.add(DateandTime);
+            listofTimings.add(date);
         }
         ListingCount++;
     }
 
-    public void RemoveTiming(int startTime, int date){
-        int DateandTime=date*10000+startTime;
+    void RemoveTiming(Date date){
         for(int i=0;i<ListingCount;i++){
-            if(DateandTime==listofTimings.get(i)){
+            if(date==listofTimings.get(i)){
                 listofTimings.remove(i);
                 ListingCount--;
                 break;
@@ -55,52 +56,41 @@ public class Screenings {
         }
     }
 
-    public void ListTiming(){
+    int listTiming(){
         System.out.println("List of Timings for "+MovieName+" :\n");
         for(int i=0;i<ListingCount;i++){
-            int[] time =new int[5];
-            int temp= listofTimings.get(i);
-            time[0]=temp%100;
-            temp=temp/100;
-            time[1]=temp%100;
-            temp=temp/100;
-            time[2]=temp%100;
-            temp=temp/100;
-            time[3]=temp%100;
-            temp=temp/100;
-            time[4]=temp;
-            System.out.println(time[2]+"/"+time[3]+"/"+time[4]+" "+time[1]+":"+time[0]);
+            System.out.printf("%d. %s\n", i+1, new SimpleDateFormat("dd MMM yyyy HH:mm").format(listofTimings.get(i)));
+        }
+        System.out.printf("%d. Exit \n",ListingCount+1);
+        return ListingCount+1;
+    }
+
+    Date showScreening(int index){
+        if(index==ListingCount+1){
+            return null;
+        }
+        else{
+            return listofTimings.get(index);
         }
     }
 
-    public void ListTimingbyLine(){
+    void listTimingByLine(){
+        System.out.print("List of Timings for "+MovieName+" :");
         for(int i=0;i<ListingCount;i++){
-            int[] time =new int[5];
-            int temp= listofTimings.get(i);
-            time[0]=temp%100;
-            temp=temp/100;
-            time[1]=temp%100;
-            temp=temp/100;
-            time[2]=temp%100;
-            temp=temp/100;
-            time[3]=temp%100;
-            temp=temp/100;
-            time[4]=temp;
-            System.out.print(time[2]+"/"+time[3]+"/"+time[4]+" "+time[1]+":"+time[0]+" ");
+            System.out.printf("%d. %s\n", i+1, new SimpleDateFormat("dd MMM yyyy HH:mm").format(listofTimings.get(i)));
         }
+        System.out.printf("%d. Exit \n",ListingCount+1);
     }
 
-    public void update(int prevStartTime, int afterStartTime, int prevDate, int afterDate){
-        int prevDateandTime=prevDate*10000+prevStartTime;
-        int afterDateandTime=afterDate*10000+afterStartTime;
+    void update(Date prevDate, Date newDate){
         for(int i=0;i<ListingCount;i++){
-            if(prevDateandTime==listofTimings.get(i)){
-                listofTimings.set(i,afterDateandTime);
+            if(prevDate==listofTimings.get(i)){
+                listofTimings.set(i,newDate);
             }
         }
     }
 
-    public int getListingCount() {
+    int getListingCount() {
         return ListingCount;
     }
 }
