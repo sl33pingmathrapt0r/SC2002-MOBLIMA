@@ -2,10 +2,10 @@ package usr;
 
 import movList.*;
 import cinema.*;
-import Cineplex.*;
+import cineplex.*;
 import ticket.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 //import Cineplex.Cineplex;
 //import movList.inputHandling;
@@ -14,13 +14,19 @@ import java.util.ArrayList;
 // import cineplex.*;
 
 public abstract class User {
-    private boolean isAdmin= false;
+    private boolean isAdmin;
     private String username, pw;
-    private String name, hp, email;
+    private Date syncClock;
 
-    // private static Scanner scan= new Scanner(System.in);
+    public User(boolean isAdmin, String username, String pw) {
+        this.isAdmin= isAdmin;
+        this.username= username;
+        this.pw= pw;
+    }
 
     public abstract void banner();
+    public abstract void logout();
+
     public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
         for(int i=0;i<cineplex.size();i++){
             System.out.println(String.valueOf(i+1)+": "+cineplex.get(i).getCineplexName());
@@ -44,24 +50,20 @@ public abstract class User {
         return username;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getHp() {
-        return hp;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     String getPW() {
         return pw;
     }
 
     boolean checkPW(String pw) {
         return this.pw.equals(pw) ? true : false;
+    }
+    
+    public Date getClock() {
+        return this.syncClock;
+    }
+
+    public void setClock(Date syncClock) {
+        this.syncClock = syncClock;
     }
 
     // public Movie selectMovie(MovieList movList) {
@@ -78,5 +80,5 @@ public abstract class User {
     //     Movie movie= movList.get(choice-1);  // accounts for zero-indexing
     //     return movie;
     // }
-
+    
 }

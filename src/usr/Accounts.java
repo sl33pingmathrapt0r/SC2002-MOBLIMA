@@ -90,11 +90,11 @@ public class Accounts{
 
                     // add reviews
                     data= goerFile.readLine().split(",", 2);
-                    user.addReview(strInput, data[0], data[1]);
+                    user.loadReview(strInput, data[0], data[1]);
                     while (goerFile.ready()) {
                         strInput= goerFile.readLine();
                         data= goerFile.readLine().split(",", 2);
-                        user.addReview(strInput, data[0], data[1]);
+                        user.loadReview(strInput, data[0], data[1]);
                     }
                     goerFile.close();
                 }
