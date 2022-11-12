@@ -1,10 +1,8 @@
 // package src;
 
-import adminApp;
-import goerApp;
 import java.util.*;
 import movList.inputHandling;
-import src.usr.MovieGoer;
+import usr.MovieGoer;
 import usr.*;
 
 public class loginApp {
