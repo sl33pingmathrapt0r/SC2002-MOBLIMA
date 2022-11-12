@@ -5,24 +5,22 @@ import java.text.SimpleDateFormat;
 // import ticket.*;
 
 public class MovieGoer extends User {
-    private String username, pw;
     private String name, hp, email;
 
     private static Scanner scan= new Scanner(System.in);
     // private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
     private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
     private Map<String, String> reviews= new HashMap<String, String>();
-    private Map<String, Integer> ratings= new HashMap<String, Integer>();
+    private Map<String, Integer> ratings= new HashMap<String, Integer>();}
 
-    public MovieGoer(){}
     public MovieGoer(String username, String pw, String name, String hp, String email) {
-        this.username = username;
-        this.pw = pw;
-        this.name = name;
+        super(false, username, pw);
+        this.name= name;
         this.hp = hp;
         this.email = email;
     }
 
+    @Override
     public void logout() {
         Accounts.goerStore();
     }
@@ -35,10 +33,6 @@ public class MovieGoer extends User {
         System.out.println("5: View booking history");
         System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers’ ratings");
         System.out.println("7: Exit");
-    }
-
-    public String getUser() {
-        return username;
     }
 
     public String getName() {
@@ -67,14 +61,6 @@ public class MovieGoer extends User {
 
     Set<String> getMoviesWatched() {
         return movieTickets.keySet();
-    }
-
-    String getPW() {
-        return pw;
-    }
-
-    boolean checkPW(String pw) {
-        return (this.pw.equals(pw)) ? true : false;
     }
 
     // public void viewMovieDetails(Movie movie) {
