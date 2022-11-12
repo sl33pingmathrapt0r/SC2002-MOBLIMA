@@ -93,20 +93,23 @@ public class MovieGoer extends User {
         System.out.println();
     }
 
+    private String getthefuckingmovid(ArrayList<String> movielist, String message) {
+        System.out.println(message);
+        for(int i=0;i<movielist.size();i++) System.out.printf("%d. %s \n", i+1, movielist.get(i));
+        System.out.println((movielist.size()+1) + ". Exit");
+        int choice = inputHandling.getInt("", "Invalid input: ", 1, movielist.size()+1);
+        if(choice==movielist.size()+1) return null;
+        return movielist.get(choice-1);
+    }
+
     public boolean bookTicket(Cineplex cineplex) {
-        ArrayList<String> movieList = cineplex.getListOfMovies();
-        System.out.println("Select movie to watch: ");
-        for(int i=0; i<movieList.size(); i++) System.out.printf("%d. %s\n", i+1, movieList.get(i));
-        System.out.printf("%d. Exit", movieList.size()+1);
-        int choice = inputHandling.getInt("", "Invalid input", 1, movieList.size()+1);
-        if(choice==movieList.size()+1) return false;
-        String title = movieList.get(choice);
-        System.out.println();
+        String title = getthefuckingmovid(cineplex.getListOfMovies(), "Select movie to watch: ");
+        if(title==null) return false;
 
         int exit = cineplex.listShowtimeByMovie(title);
-        choice = inputHandling.getInt("Select showtime", "Invalid input: ", 1, exit);
+        int choice = inputHandling.getInt("Select showtime", "Invalid input: ", 1, exit);
         Date showtime = cineplex.choiceOfListing(choice, title);
-        if(showtime==null) continue;
+        if(showtime==null) return false;
 
         int cinemaID = cineplex.cinemaFinder(title, showtime);
         Cinema cinema = cineplex.getCinemas().get(cinemaID);
