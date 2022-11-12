@@ -1,11 +1,11 @@
-package Cineplex;
+package cineplex;
 
 import usr.*;
 import movList.*;
-import Cinema.*;
+import cinema.*;
 import ticket.*;
 
-import Cineplex.Screenings.*;
+import cineplex.Screenings.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
