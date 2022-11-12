@@ -14,11 +14,11 @@ public class Main {
 
     public static void main(String[] args) {
         // APPLICATION STARTUP
-        Accounts.load();
-        // Accounts.store();
-        ArrayList<Cineplex> cineplex=new ArrayList<Cineplex>();
-        Date globalClock = new Date();
-        String cineplexName = "AA";
+
+        src.usr.Accounts.load();
+        ArrayList<Cineplex> cineplex;
+        Date globalClock= new Date();
+        String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
         MovieList.initMovList();
         for (int i = 0; i < MAX_CINEPLEX; i++) {
