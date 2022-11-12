@@ -142,10 +142,10 @@ public class PriceTable {
 
     /**
      * Change price of a ticket
-     * @param classOfCinema 
-     * @param day
-     * @param ageGroup
-     * @param typeOfMovie
+     * @param classOfCinema Regular/ Atmos/ Platinum
+     * @param day Mon-Sun/ PH
+     * @param ageGroup Student/ Adult/ Senior
+     * @param typeOfMovie 3D/ Digital
      * @param price new price
      * @return boolean whether ticket has been successfully updated
      */
@@ -177,7 +177,7 @@ public class PriceTable {
     /**
      * Method to check price given the parameters
      * @param classOfCinema Regular/ Atmos/ Platinum
-     * @param day Mon-Sum/ PH
+     * @param day Mon-Sun/ PH
      * @param ageGroup Student/ Adult/ Senior
      * @param typeOfMovie 3D/ Digital
      * @return price of the ticket
