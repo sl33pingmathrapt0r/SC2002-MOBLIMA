@@ -69,7 +69,7 @@ public class Cinema {
 			}
 		}
 		switch(cinemaID){
-			case 0: type = ClassOfCinema.REGULAR; break;
+			default: type = ClassOfCinema.REGULAR; break;
 			case 1: type = ClassOfCinema.ATMOS; break;
 			case 2: type = ClassOfCinema.PLATINUM; break;
 		}
@@ -372,5 +372,11 @@ public class Cinema {
 		}
 		return true;
 	}
+
+	public ClassOfCinema getClassOfCinema() {
+		return type;
+	}
+
+	
 }
 

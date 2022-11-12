@@ -42,6 +42,8 @@ public class Movie {
 
 	private AGE_RATING ageRating;
 
+	final private boolean isBlockBuster;
+
 	private Date endDate;
 
 	/**
@@ -56,9 +58,6 @@ public class Movie {
 	 */
 	private ArrayList<String> reviews = new ArrayList<String>();
 
-	public Date getEndDate() {
-		return endDate;
-	}
 
 	/**
 	 * Maps ticket ID to the rating and review made by the ticket holder
@@ -115,6 +114,7 @@ public class Movie {
 				cast[i] = sc.nextLine();
 			}
 			ageRating = AGE_RATING.valueOf(sc.nextLine());
+			isBlockBuster = Boolean.valueOf(sc.nextLine());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			sdf.setLenient(false);
 			endDate = sdf.parse(sc.nextLine());
@@ -152,6 +152,11 @@ public class Movie {
 		setDuration(sc);
 		setCast(sc);
 		setRating(sc);
+		System.out.println("Is the movie a blockbuster?");
+		System.out.println("1. Yes");
+		System.out.println("2. No");
+		if(inputHandling.getInt("", "Invalid input", 1, 2)==1) isBlockBuster = true;
+		else isBlockBuster=false;
 		endDate = setEndDate(sc);
 		System.out.println();
 	}
@@ -411,6 +416,7 @@ public class Movie {
 			mov += actor + "\n";
 		}
 		mov += String.valueOf(ageRating) + "\n";
+		mov += String.valueOf(isBlockBuster) + "\n";
 		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate) + "\n";
 		if(pastRatings!=null){
 			mov += String.valueOf(pastRatings.size()) + "\n";
@@ -517,4 +523,14 @@ public class Movie {
 	public int getSales(){
 		return ticketSales;
 	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public boolean isBlockBuster() {
+		return isBlockBuster;
+	}
+
+	
 }
