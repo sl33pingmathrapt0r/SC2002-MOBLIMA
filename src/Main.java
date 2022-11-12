@@ -9,8 +9,7 @@ public class Main {
     
     public static void main(String[] args) {
         // APPLICATION STARTUP
-        Accounts.load();
-        // Accounts.store();
+        src.usr.Accounts.load();
         ArrayList<Cineplex> cineplex;
         String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);

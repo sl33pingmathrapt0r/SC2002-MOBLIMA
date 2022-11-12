@@ -83,8 +83,8 @@ public class Accounts{
 
                     // add booking history
                     // while ( (strInput= goerFile.readLine()).length() != "XXXyyyyMMddHHmmi".length() ) {
-                    //     user.addTransactionHistory(goerFile.readLine());
-                    //     user.addBookingHistory(goerFile.readLine().split(",", 10));
+                    //     user.loadTransactionHistory(goerFile.readLine());
+                    //     user.loadBookingHistory(goerFile.readLine().split(",", 10));
                     // }
 
                     // add reviews
@@ -219,13 +219,22 @@ public class Accounts{
         }
     }
 
-    public static User get(boolean admin, int index) {
+    public static Admin getAdminAcc(int index) {
         /*
-         * Obtain the account from storage given its index. Used for login. 
+         * Obtain admin account from storage given its index. Used for login. 
          * This function MUST only be called after calling on validAcc, 
          * else random accounts may be returned. 
          */ 
-        return admin ? adminAcc.get(index) : goerAcc.get(index);
+        return adminAcc.get(index);
+    }
+
+    public static MovieGoer getGoerAcc(int index) {
+        /*
+         * Obtain moviegoer account from storage given its index. Used for login. 
+         * This function MUST only be called after calling on validAcc, 
+         * else random accounts may be returned. 
+         */ 
+        return goerAcc.get(index);
     }
 
     public static void createAcc() {
@@ -287,6 +296,7 @@ public class Accounts{
             add(account);
         }
     }
+
 
     // testing functions below
     public static void printAcc() {
