@@ -90,7 +90,7 @@ public class Admin extends User {
         System.out.println("Which movie would you like to update? ");
         for(int i=0;i<movieList.size();i++) System.out.println((i+1)+". " +movieList.get(i));
         System.out.println((movieList.size()+1) + ". Exit");
-        int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+        int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
         if(choice==movieList.size()) return;
         String title = movieList.get(choice);
         MovieList.updateMovieAdmin(title);
@@ -101,7 +101,7 @@ public class Admin extends User {
         System.out.println("Which movie would you like to delete? ");
         for(int i=0;i<movieList.size();i++) System.out.println((i+1)+". " +movieList.get(i));
         System.out.println((movieList.size()+1) + ". Exit");
-        int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+        int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
         if(choice==movieList.size()) return;
         //MovieList.setEndDate(MovieList.getMovieByTitle(movieList.get(choice)));
     }
@@ -112,7 +112,7 @@ public class Admin extends User {
             System.out.println("Select movie to add ");
             for(int i=0; i<movieList.size(); i++) System.out.println((i+1)+". "+movieList.get(i));
             System.out.println((movieList.size()+1) + ". Exit");
-            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
             if(choice==movieList.size()) return;
             String title = movieList.get(choice);
             System.out.println();
@@ -120,13 +120,19 @@ public class Admin extends User {
             ArrayList<Cinema> cinemaList = cineplex.getCinemas();
             int noCinemas = cineplex.getCinemas().size();
             System.out.printf("Select cinema number (1-%d) \n", noCinemas);
-            choice = inputHandling.getInt("", "Invalid number: ", 1, noCinemas)-1;
+            choice = inputHandling.getInt("", "Invalid number: ", 1, noCinemas);
             if(choice==movieList.size()) continue;
             System.out.println();
 
             String screen = new SimpleDateFormat("HHmmyyyyMMdd").format(inputHandling.getDate());
-            String type = scan.nextLine();
-            TypeOfMovie typeOfMovie = TypeOfMovie.valueOf(type);
+            int type = inputHandling.getInt("Enter Type of Movie : \n 1) Digital \n 2) 3D\n","Invalid Number",1,2);
+            TypeOfMovie typeOfMovie;
+            if(type ==1){
+                typeOfMovie=TypeOfMovie.DIGITAL;
+            }
+            else{
+                typeOfMovie=TypeOfMovie.D3;
+            }
             try {
                 cineplex.addScreening(choice, title, Integer.valueOf(screen.substring(0, 4)), Integer.valueOf(screen.substring(4) ), typeOfMovie);
             } catch (NumberFormatException e) {
@@ -149,12 +155,11 @@ public class Admin extends User {
                 if(cineplexMovieList.contains(mov.getTitle())) continue;
                 validTitles.add(mov.getTitle());
             }
-            for(String i : validTitles) System.out.println(i);
 
             System.out.println("Select movie to add: ");
             for(int i=0; i<validTitles.size(); i++) System.out.println((i+1)+". "+validTitles.get(i));
             System.out.println((validTitles.size()+1)+". Exit");
-            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
             if(choice==validTitles.size()) return;
             boolean b;
             String title = validTitles.get(choice);
@@ -177,7 +182,7 @@ public class Admin extends User {
             System.out.println("Select movie to update ");
             for(int i=0; i<movieList.size(); i++) System.out.println((i+1)+". "+movieList.get(i));
             System.out.println((movieList.size()+1) + ". Exit");
-            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
             if(choice==movieList.size()) return;
             String title = movieList.get(choice);
             System.out.println();
@@ -193,7 +198,7 @@ public class Admin extends User {
                     e.printStackTrace();
                 }
             System.out.println((movieList.size()+1)+". Return");
-            choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1)-1;
+            choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
             if(choice==movieList.size()) continue;
             
             String newScreen = new SimpleDateFormat("HHmmyyyyMMdd").format(inputHandling.getDate());

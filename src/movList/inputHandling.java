@@ -53,10 +53,10 @@ public class inputHandling {
         while(true){
             System.out.print("Enter date in dd/MM/yyyy format: ");
             String date = sc.nextLine();
-            System.out.println("Enter 24 hour time in HH:mm:ss");
+            System.out.println("Enter 24 hour time in HH:mm");
             String time = sc.nextLine();
             try{
-                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 sdf.setLenient(false);
                 return sdf.parse(date + " " + time);
             }

@@ -101,7 +101,7 @@ public class Cineplex {
     public void addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
         boolean b=false;
         Movie mov= MovieList.getMovieByTitle(MovieName);
-        if(mov.getEndDate().before(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
+        if(mov.getEndDate().after(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
             b=cinemas.get(cinema-1).AddMovie(mov,startTime,date,typeOfMovie);
             if(!b){
                 System.out.println("Movie Screening invalid to add.");

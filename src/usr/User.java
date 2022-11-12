@@ -23,10 +23,10 @@ public abstract class User {
     public abstract void banner();
     public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
         for(int i=0;i<cineplex.size();i++){
-            System.out.println(i+cineplex.get(i).getCineplexName());
+            System.out.println(String.valueOf(i+1)+": "+cineplex.get(i).getCineplexName());
         }
-        int choice=inputHandling.getInt("Enter Cineplex index","Invalid Index",0,cineplex.size());
-        return cineplex.get(choice);
+        int choice=inputHandling.getInt("Enter Cineplex index: ","Invalid Index",1,cineplex.size()+1);
+        return cineplex.get(choice-1);
     }
     /*
      * Search/ List Movie

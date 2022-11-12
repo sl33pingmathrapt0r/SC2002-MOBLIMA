@@ -266,13 +266,13 @@ public class Main {
                         // exit
                         case 7:
                             System.out.println("Logging out");
-                            System.exit(0);
+                            flag = 1;
                         default:
                             System.out.println("Invalid option");
                     }
 
                 }
-            } while (true);
+            } while (flag != 1);
         }
     }
 }
