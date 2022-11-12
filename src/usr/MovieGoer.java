@@ -15,10 +15,10 @@ public class MovieGoer extends User {
     private String name, hp, email;
 
     private static Scanner scan= new Scanner(System.in);
-    // private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
+    private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
     private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
     private Map<String, String> reviews= new HashMap<String, String>();
-    private Map<String, Integer> ratings= new HashMap<String, Integer>();}
+    private Map<String, Integer> ratings= new HashMap<String, Integer>();
 
     public MovieGoer(String username, String pw, String name, String hp, String email) {
         super(false, username, pw);
@@ -171,25 +171,13 @@ public class MovieGoer extends User {
         System.out.println("Select movie to watch: ");
         for(int i=0; i<movieList.size(); i++) System.out.printf("%d. %s\n", i+1, movieList.get(i));
         System.out.println("%d. Exit");
-    }
-
-    public Set<String[]> selectSeat(Set<String[]> selectedSeats, Cineplex cineplex, String title) {
-        /* 
-         * choose a seat from CINEMA, w.r.t movie, 
-         * showtime, and no single-seat gaps. 
-         * Requires Cinema to check for validity (correct 
-         * gap, available). 
-         * Stores selected Seats temporarily before booking
-         */
-        int cinemaID = cineplex.cinemaFinder(title, ) 
-    }
-    
+    }    
     
     public void viewBookingHistory() {
         System.out.println("Bookings by " + name);
         int i= 0;
         for (Map.Entry transaction : bookingHistory.entrySet()) {
-            System.out.println("i: "transaction.getKey());
+            System.out.println("i: "+ transaction.getKey());
             for (Ticket tix : bookingHistory.get(transaction.getKey()))
                 printTicket(tix);
             i++;
@@ -208,7 +196,7 @@ public class MovieGoer extends User {
         if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
     }
 
-    void addBookingHistory(String[] bookingDetails) {
+    void loadBookingHistory(String[] bookingDetails) {
         Ticket tix= new Ticket(
             bookingDetails[0],
             TypeOfMovie.valueOf(bookingDetails[1]),
@@ -232,8 +220,7 @@ public class MovieGoer extends User {
         try {
             cineplex.listTop5();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
