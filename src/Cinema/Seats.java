@@ -1,10 +1,15 @@
 package Cinema;
 
+import usr.*;
+import movList.*;
+import Cinema.*;
+import Cineplex.*;
+import ticket.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-enum type {normal, couple, elite, ultima}
 
 /*
    An instance of a seat specific to an instance of movie screening
@@ -22,7 +27,7 @@ public class Seats {
     /*
      * Type of seat such as normal,couple,etc
      */
-    type  seatType;
+    SeatType  seatType;
     /*
      * A boolean variable to indicate whether or not the seat has been booked by a guest
      */
@@ -34,7 +39,7 @@ public class Seats {
      * @param ID The unique identifier for this seat
      * @param type The type of seat this is such as normal,couple,etc
      */
-    public Seats(int c,int ID, type type){
+    public Seats(int c,int ID, SeatType type){
         this.Cinema = c;
         this.seatID = ID;
         this.seatType = type;
@@ -47,30 +52,30 @@ public class Seats {
      */
     public static Seats[] create(int Cinema){
         Seats s[] = new Seats[80];
-        type t = type.normal;
+        SeatType seatType = SeatType.NORMAL;
         for (int k=0;k<80;k++){
             if(k<60)
-                t = type.normal;
+                seatType = SeatType.NORMAL;
             else if (k<70)
-                t = type.couple;
+                seatType = SeatType.COUPLE;
             else if (k<75)
-                t = type.elite;
+                seatType = SeatType.ELITE;
             else
-                t = type.ultima;
-            s[k] = new Seats(Cinema,k,t);
+                seatType = SeatType.ULTIMA;
+                s[k] = new Seats(Cinema,k,seatType);
         }
         return s;
     }
 
     public static Seats[] createP(int Cinema){
         Seats s[] = new Seats[20];
-        type t = type.normal;
+        SeatType seatType = SeatType.NORMAL;
         for (int k=0;k<20;k++){
             if(k<15)
-                t = type.normal;
+            seatType = SeatType.NORMAL;
             else
-                t = type.couple;
-            s[k] = new Seats(Cinema,k,t);
+            seatType = SeatType.COUPLE;
+            s[k] = new Seats(Cinema,k,seatType);
         }
         return s;
     }
@@ -82,20 +87,20 @@ public class Seats {
      */
     public static Seats[] create(int Cinema, File f) throws FileNotFoundException{
         Seats s[] = new Seats[80];
-        type t = type.normal;
+        SeatType seatType = SeatType.NORMAL;
         Scanner sc = new Scanner(f);
         String p = "";
         for (int k=0;k<80;k++){
             p = sc.nextLine();
             if(k<60)
-                t = type.normal;
+            seatType = SeatType.NORMAL;
             else if (k<70)
-                t = type.couple;
+            seatType = SeatType.COUPLE;
             else if (k<75)
-                t = type.elite;
+            seatType = SeatType.ELITE;
             else
-                t = type.ultima;
-            s[k] = new Seats(Cinema,k,t);
+            seatType = SeatType.ULTIMA;
+            s[k] = new Seats(Cinema,k,seatType);
             if (p.charAt(0) != 'A')
                 s[k].taken = true;
         }
@@ -105,16 +110,16 @@ public class Seats {
 
     public static Seats[] createP(int Cinema, File f) throws FileNotFoundException{
         Seats s[] = new Seats[20];
-        type t = type.normal;
+        SeatType seatType = SeatType.NORMAL;
         Scanner sc = new Scanner(f);
         String p = "";
         for (int k=0;k<80;k++){
             p = sc.nextLine();
             if(k<15)
-                t = type.normal;
+            seatType = SeatType.NORMAL;
             else
-                t = type.couple;
-            s[k] = new Seats(Cinema,k,t);
+            seatType = SeatType.COUPLE;
+            s[k] = new Seats(Cinema,k,seatType);
             if (p.charAt(0) != 'A')
                 s[k].taken = true;
         }
