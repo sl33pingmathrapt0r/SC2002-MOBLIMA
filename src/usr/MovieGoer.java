@@ -3,7 +3,7 @@ package usr;
 import usr.*;
 import movList.*;
 import cinema.*;
-import cineplex.*;
+import Cineplex.*;
 import ticket.*;
 
 import java.text.SimpleDateFormat;
@@ -303,7 +303,7 @@ public class MovieGoer extends User {
         return;
     }
 
-    public void addReview(String tixId, String review, String rating) {
+    public void loadReview(String tixId, String review, String rating) {
         reviews.put(tixId, review);
         ratings.put(tixId, Integer.valueOf(rating));
         

@@ -152,7 +152,7 @@ public class Movie {
 		setDuration(sc);
 		setCast(sc);
 		setRating(sc);
-		endDate = setEndDate(sc);
+		setEndDate();
 		System.out.println();
 	}
 
@@ -202,21 +202,6 @@ public class Movie {
 		}
 		return r;
 	}
-
-	private static Date setEndDate(Scanner sc) {
-        while(true){
-            System.out.print("Enter end date in dd/MM/yyyy format: ");
-            String date = sc.nextLine();
-            System.out.println("Enter 24 hour time in HH:mm");
-            String time = sc.nextLine();
-            try{
-                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                sdf.setLenient(false);
-                return sdf.parse(date + " " + time);
-            }
-            catch(Exception e){System.out.println("Invalid input");}
-        }
-    }
 
 	/**
 	 * Utility method for updating director's name
@@ -272,13 +257,13 @@ public class Movie {
 		}
 	}
 
-	void setEndDate(Date end) {
-		endDate = end;
-	}
-
 	void setEndDate() {
-		if(endDate==null) endDate = inputHandling.getDate();
+		if(endDate==null){
+			System.out.println("No end date set");
+			endDate = inputHandling.getDate();
+		}
 		else{
+			System.out.printf("Current end date: %s\n", new SimpleDateFormat("dd MMM yyyy HH:mm").format(endDate));
 			while(true){
 				Date newDate = inputHandling.getDate();
 				if(newDate.after(endDate)){
@@ -289,6 +274,7 @@ public class Movie {
 				new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate));
 			}
 		}
+		System.out.printf("End date set to %s\n", new SimpleDateFormat("dd MMM yyyy HH:mm").format(endDate));
 	}
 
 	 /**

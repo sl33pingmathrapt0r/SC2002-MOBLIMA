@@ -285,6 +285,7 @@ public class Accounts{
         if (admin) {
             Admin account= new Admin(username, pw);
             add(account);
+            Accounts.adminStore();
         } 
         else {
             System.out.print("Enter name (as per NRIC):\t");
@@ -295,6 +296,7 @@ public class Accounts{
             email= scan.nextLine();
             MovieGoer account= new MovieGoer(username, pw, name, hp, email);
             add(account);
+            Accounts.goerStore();
         }
     }
 

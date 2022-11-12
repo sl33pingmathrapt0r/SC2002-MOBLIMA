@@ -11,6 +11,7 @@ package ticket;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import movList.inputHandling;
@@ -57,7 +58,7 @@ public class PriceTable {
      */
     private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType, Hashtable<TypeOfMovie, Double>>>> atmosPriceTable;
 
-    private static ArrayList<Date> publicHolidays;
+    private static ArrayList<Date> publicHolidays=new ArrayList<Date>();
 
     /**
      * Constructor for price table, loads text file into hash tables
@@ -96,14 +97,14 @@ public class PriceTable {
      * Saving all public holidays in the list to a text file
      */
     private static void savePH() {
-
-        File file = new File(absolutePath + "/src/ticket/PH");
-        FileWriter fw;
         try {
+            File file = new File(absolutePath + "/src/ticket/PH.txt");
+            FileWriter fw;
             fw = new FileWriter(file);
             for (Date date : publicHolidays) {
-                fw.write(date.getTime() + "\n");
-            }
+                fw.append(Long.valueOf(date.getTime())+ "\n");
+            } 
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,6 +121,8 @@ public class PriceTable {
 
         Calendar calendarDate = Calendar.getInstance();
         calendarDate.setTime(date);
+        if(PriceTable.publicHolidays.size()==0) return false; //no public holidays
+    
         for (Date d : PriceTable.publicHolidays) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
@@ -163,7 +166,7 @@ public class PriceTable {
             return true;
         } else {
             System.out.println("Date not in list of public holidays");
-            return true;
+            return false;
         }
     }
 
@@ -172,18 +175,30 @@ public class PriceTable {
      * Used by admin in configure system settings
      */
     public static void editPH(){
-        int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Exit\n","Invalid index",1,3);
+        int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Print list of public holidays\n4: Exit\n","Invalid index",1,3);
         if(choice==1){
             System.out.println("Enter date to be added");
             Date date = inputHandling.getDate();
             PriceTable.addPH(date);
+            savePH();
         }
         else if(choice==2){
             System.out.println("Enter date to be removed");
             Date date = inputHandling.getDate();
             PriceTable.removePH(date);
+            savePH();
         }
         else if(choice==3){
+           if(publicHolidays.size()!=0){
+            for(Date d : publicHolidays){
+                System.out.println(d);
+            }
+           }
+           else{
+            System.out.println("No public holidays");
+           }
+        }
+        else if(choice==4){
             System.out.println("Exiting edit public holiday");
             return;
         }
@@ -278,8 +293,12 @@ public class PriceTable {
      * @param price         new price
      * @return boolean whether ticket has been successfully updated
      */
-    public static boolean setPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
+    public static boolean setPrice(ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,
             TypeOfMovie typeOfMovie, double price) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int d= calendar.get(Calendar.DAY_OF_WEEK);
+        Day day = Day.values()[d];
         try {
             switch (classOfCinema) {
                 case REGULAR:
@@ -314,8 +333,33 @@ public class PriceTable {
      * @param typeOfMovie   3D/ Digital
      * @return price of the ticket
      */
+    public static double checkPrice(ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,
+            TypeOfMovie typeOfMovie) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int d= calendar.get(Calendar.DAY_OF_WEEK);
+        Day day = Day.values()[d];
+        double price = 0;
+        switch (classOfCinema) {
+            case REGULAR:
+                price = regularPriceTable.get(day).get(ageGroup).get(seatType).get(typeOfMovie);
+                break;
+            case PLATINUM:
+                price = platinumPriceTable.get(day).get(ageGroup).get(seatType).get(typeOfMovie);
+                break;
+            case ATMOS:
+                price = atmosPriceTable.get(day).get(ageGroup).get(seatType).get(typeOfMovie);
+                break;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
+        return price;
+    }
+
     public static double checkPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
             TypeOfMovie typeOfMovie) {
+      
         double price = 0;
         switch (classOfCinema) {
             case REGULAR:

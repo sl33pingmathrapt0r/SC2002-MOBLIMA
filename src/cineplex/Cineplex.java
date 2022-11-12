@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Cineplex implements TextFileHandler {
+public class Cineplex {
 
     final private static String route = Path.of("").toAbsolutePath().toString() + "/src/Cineplex";
     final private String path;
@@ -36,49 +36,45 @@ public class Cineplex implements TextFileHandler {
     public static ArrayList<String> CineplexNames = new ArrayList<String>();
 
     public Cineplex(String cineplex) throws Exception {
-
         this.cineplex = cineplex;
         this.path = route + "\\" + cineplex;
-        readFile();
-    }
-
-    @Override
-    public void readFile() {
-        try {
-            boolean b;
-            File f = new File(this.path + "\\");
-            if (!f.exists()) {
-                b = f.mkdir();
-                File j = new File(path + "\\MovieList");
-                b = j.mkdir();
+    try{
+        File f = new File(this.path);
+        if (!f.exists()) {
+            f.mkdir();
+            File j = new File(path + "\\MovieList");
+            j.mkdir();
+        }
+        File[] listofFiles = new File(path).listFiles();
+        if (listofFiles.length == 1) {
+            for (int i = 1; i <= 3; i++) {
+                File MovieCreation = new File(path + "\\" + i);
+                MovieCreation.mkdir();
             }
-            File[] listofFiles = new File(path).listFiles();
-            if (listofFiles.length == 1) {
-                for (int i = 1; i <= 3; i++) {
-                    File MovieCreation = new File(path + "\\" + i);
-                    MovieCreation.mkdir();
-                }
+        }
+        noOfCinema = listofFiles.length - 1;
+        for (File it : listofFiles) {
+            if (!it.getName().equals("MovieList")) {
+                cinemas.add(new Cinema(Integer.valueOf(it.getName()), cineplex, Integer.valueOf(it.getName()) - 1));
             }
-            noOfCinema = listofFiles.length - 1;
-            for (File it : listofFiles) {
-                if (!it.getName().equals("MovieList")) {
-                    cinemas.add(new Cinema(Integer.valueOf(it.getName()), cineplex, Integer.valueOf(it.getName()) - 1));
-                }
+        }
+        File[] movFolder = new File(path + "\\MovieList").listFiles();
+        if (movFolder.length > 0) {
+            for (File it : movFolder)
+                listofMovies.add(it.getName().substring(0, it.getName().length() - 4));
+            for (int i = 0; i < listofMovies.size(); i++) {
+                ScreeningTimes.add(new Screenings(listofMovies.get(i), cineplex));
             }
-            File[] movFolder = new File(path + "\\MovieList").listFiles();
-            if (movFolder.length > 0) {
-                for (File it : movFolder)
-                    listofMovies.add(it.getName().substring(0, it.getName().length() - 4));
-                for (int i = 0; i < listofMovies.size(); i++) {
-                    ScreeningTimes.add(new Screenings(listofMovies.get(i), cineplex));
-                }
-
-                MovieCount++;
+            MovieCount++;
             }
         } catch (Exception e) {
             System.out.println("File not found");
-            e.getMessage();
+            e.printStackTrace();
         }
+    }
+
+    public static int getCineplexCount() {
+        return CineplexCount;
     }
 
     public int getMovieCount() {
@@ -205,7 +201,7 @@ public class Cineplex implements TextFileHandler {
 
     public int cinemaFinder(String MovieName, Date startDate) {
         for (int i = 0; i < noOfCinema; i++) {
-            if (cinemas.get(i).search(MovieName, startDate) > 0) {
+            if (cinemas.get(i).search(MovieName, startDate) >= 0) {
                 return i + 1;
             }
         }
@@ -291,7 +287,6 @@ public class Cineplex implements TextFileHandler {
         return choice;
     }
 
-    @Override
     public void writeFile() {
         try {
             for (int i = 0; i < MovieCount; i++) {
@@ -337,6 +332,11 @@ public class Cineplex implements TextFileHandler {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public SeatType getTypeofSeat(int Cinema, int index, String SeatID){
+        int seat = cinemas.get(Cinema - 1).seatConversion(SeatID);
+        return cinemas.get(Cinema-1).getMlist().get(index).getSeats()[seat].getSeatType();
     }
 
 }

@@ -327,4 +327,11 @@ public class Ticket {
 		return seatID;
 	}
 
+	/**
+	 * Get Cinema Code so that movie goers are able to find their cinema
+	 * @return the corresponding cinema code
+	 */
+	public String getCinemaCode(){
+		return ticketID.substring(0, 2);
+	}
 }

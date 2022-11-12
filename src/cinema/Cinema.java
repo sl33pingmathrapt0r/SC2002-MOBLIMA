@@ -31,7 +31,7 @@ public class Cinema {
 	/*
 	 * path to the database for this specific cinema which contains all the movie screenings and occupancy.
 	 */
-	String path = System.getProperty("user.dir") + "\\src\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
+	String path = System.getProperty("user.dir") + "\\src\\Cineplex\\"; /////CHANGE THIS STRING TO LOCATION OF THIS JAVA FILE
 	
 	/*
 	 * An array list of all the movies that are scheduled to be screened in the cinema.
@@ -58,7 +58,6 @@ public class Cinema {
 			String l[] = f.list();
 			String s2[];
 			for (int i=0;i<l.length;i++){
-				System.out.println(l[i]);
 				s2 = l[i].split("@",5);
 				Date startDate = new SimpleDateFormat("yyyyMMddHHmm").parse(s2[0]);
 				Date endDate = new SimpleDateFormat("yyyyMMddHHmm").parse(s2[1]);
@@ -87,9 +86,9 @@ public class Cinema {
 			System.out.println("Movie with similar showtime already exists");
 			return false;
 		}
-		System.out.println(this.path+this.Cineplex+"\\"+this.name+"\\"+start+"@"+end+"@"+movie+"@"+typeOfMovie+"@.txt");
-		if(checkVacant(movie,startDate) == false)
+		if(checkVacant(movie,startDate) == false){
 			return false;
+		}
 		mlist.add(new MovieScreening(this.name, startDate, endDate, movie,typeOfMovie,this.Cineplex));
 		g.createNewFile();
 		FileWriter w = new FileWriter(this.path+this.Cineplex+"\\"+this.name+"\\"+start+"@"+end+"@"+movie+"@"+typeOfMovie+"@.txt",true);
@@ -318,11 +317,10 @@ public class Cinema {
 		return mlist;
 	}
 
-	public int search(String movie,Date startDate){
+	public int search(String title,Date startDate){
 		for(int i=0;i<this.mlist.size();i++){
 			MovieScreening movieScreening = this.mlist.get(i);
-			if(startDate.compareTo(movieScreening.startDate) == 0 && movieScreening.movie.equals(movie)){
-				System.out.println("found");
+			if(startDate.equals(movieScreening.startDate) && movieScreening.movie.equals(title)){
 				return i;
 			}
 		}
@@ -346,7 +344,6 @@ public class Cinema {
 	}
 
 	public boolean checkVacant(String movie,Date startDate) throws ParseException{
-		System.out.println("test");
 		Date endDate = calculateEndDate(startDate, movie);
 		File f = new File(this.path+this.Cineplex+"\\"+this.name);
 		String l[] = f.list();
@@ -364,7 +361,6 @@ public class Cinema {
 			if(startDate.compareTo(checkEnd) >= 0)
 				continue;
 			if (startDate.compareTo(checkEnd) < 0) {
-				System.out.println( startDate +" ||| " + checkEnd+ "|||"+endDate+"|||"+ startDate.compareTo(checkEnd));
 				if (endDate.compareTo(checkStart) > 0) {
 					System.out.println("Timing clash, failed to add movie");
 					return false;

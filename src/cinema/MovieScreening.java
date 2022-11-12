@@ -68,7 +68,7 @@ public class MovieScreening {
         this.typeOfMovie = typeOfMovie;
         String startString = df.format(startDate);
         String endString = df.format(endDate);
-        this.path = System.getProperty("user.dir")+"\\src\\"+this.Cineplex+"\\"+this.Cinema+"\\"+startString+"@"+endString+"@"+movie+"@"+this.typeOfMovie+"@.txt";
+        this.path = System.getProperty("user.dir")+"\\src\\Cineplex\\"+this.Cineplex+"\\"+this.Cinema+"\\"+startString+"@"+endString+"@"+movie+"@"+this.typeOfMovie+"@.txt";
         File f = new File(path);
         if(!f.exists())
             this.seats = Seats.create(cinema);
