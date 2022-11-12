@@ -1,7 +1,7 @@
 package usr;
 
 import movList.*;
-import Cinema.*;
+import cinema.*;
 import Cineplex.*;
 import ticket.*;
 
@@ -91,8 +91,8 @@ public class Admin extends User {
         for(int i=0;i<movieList.size();i++) System.out.println((i+1)+". " +movieList.get(i));
         System.out.println((movieList.size()+1) + ". Exit");
         int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
-        if(choice==movieList.size()) return;
-        String title = movieList.get(choice);
+        if(choice==movieList.size()+1) return;
+        String title = movieList.get(choice-1);
         MovieList.updateMovieAdmin(title);
     }
 
@@ -102,7 +102,7 @@ public class Admin extends User {
         for(int i=0;i<movieList.size();i++) System.out.println((i+1)+". " +movieList.get(i));
         System.out.println((movieList.size()+1) + ". Exit");
         int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
-        if(choice==movieList.size()) return;
+        if(choice==movieList.size()+1) return;
         //MovieList.setEndDate(MovieList.getMovieByTitle(movieList.get(choice)));
     }
 
@@ -113,15 +113,15 @@ public class Admin extends User {
             for(int i=0; i<movieList.size(); i++) System.out.println((i+1)+". "+movieList.get(i));
             System.out.println((movieList.size()+1) + ". Exit");
             int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
-            if(choice==movieList.size()) return;
-            String title = movieList.get(choice);
+            if(choice==movieList.size()+1) return;
+            String title = movieList.get(choice-1);
             System.out.println();
 
             ArrayList<Cinema> cinemaList = cineplex.getCinemas();
             int noCinemas = cineplex.getCinemas().size();
             System.out.printf("Select cinema number (1-%d) \n", noCinemas);
             choice = inputHandling.getInt("", "Invalid number: ", 1, noCinemas);
-            if(choice==movieList.size()) continue;
+            if(choice==noCinemas+1) continue;
             System.out.println();
 
             String screen = new SimpleDateFormat("HHmmyyyyMMdd").format(inputHandling.getDate());
@@ -183,13 +183,14 @@ public class Admin extends User {
             for(int i=0; i<movieList.size(); i++) System.out.println((i+1)+". "+movieList.get(i));
             System.out.println((movieList.size()+1) + ". Exit");
             int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
-            if(choice==movieList.size()) return;
-            String title = movieList.get(choice);
+            if(choice==movieList.size()+1) return;
+            String title = movieList.get(choice-1);
             System.out.println();
 
             ArrayList<Integer> screenList = cineplex.listOfScreeningByMovie(title);
+            System.out.println(screenList.size()+"\n");
             System.out.println("Select screening to modify: ");
-            for(int i=0; i<movieList.size(); i++)
+            for(int i=0; i<screenList.size(); i++)
                 try {
                     System.out.println((i+1)+". "+
                     new SimpleDateFormat("dd MMM yyyy HH:mm").format(new SimpleDateFormat("yyyyMMddHHmm").parse(String.valueOf(screenList.get(i)))));
@@ -199,11 +200,11 @@ public class Admin extends User {
                 }
             System.out.println((movieList.size()+1)+". Return");
             choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size()+1);
-            if(choice==movieList.size()) continue;
+            if(choice==movieList.size()+1) continue;
             
             String newScreen = new SimpleDateFormat("HHmmyyyyMMdd").format(inputHandling.getDate());
-            cineplex.updateScreeningShowtime(cineplex.cinemaFinder(title, screenList.get(choice)%1000, screenList.get(choice)/1000),
-            title, screenList.get(choice)%1000, Integer.valueOf(newScreen.substring(0,5)), screenList.get(choice)/1000, Integer.valueOf(newScreen.substring(5)));
+            cineplex.updateScreeningShowtime(cineplex.cinemaFinder(title, screenList.get(choice-1)%1000, screenList.get(choice-1)/1000),
+            title, screenList.get(choice-1)%1000, Integer.valueOf(newScreen.substring(0,5)), screenList.get(choice-1)/1000, Integer.valueOf(newScreen.substring(5)));
         }  
     }
 

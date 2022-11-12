@@ -1,7 +1,7 @@
 
 import usr.*;
 import movList.*;
-import Cinema.*;
+import cinema.*;
 import Cineplex.*;
 import ticket.*;
 
@@ -149,18 +149,43 @@ public class Main {
                             if (option == 1) {
                                 Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
                                 adminUser.createCinemaShowtimes(selectedCineplex);
+                                try {
+                                    selectedCineplex.updateCineplex();
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
                             } else if (option == 2) {
                                 Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
                                 adminUser.updateCinemaShowtimes(selectedCineplex);
+                                try {
+                                    selectedCineplex.updateCineplex();
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
                             } else if (option == 3) {
                                 Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
                                 adminUser.addMovieToCineplex(selectedCineplex);
+                                try {
+                                    selectedCineplex.updateCineplex();
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
                             } else if (option == 4) {
                                 Cineplex selectedCineplex = adminUser.selectCineplex(cineplex); 
                                 adminUser.deleteMovieListing(selectedCineplex);
+                                try {
+                                    selectedCineplex.updateCineplex();
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
                             } else {
                                 System.out.println("Invalid option");
                             }
+                            
                             break;
                         // Configure System Settings
                         case 3:

@@ -115,7 +115,7 @@ public class Movie {
 				cast[i] = sc.nextLine();
 			}
 			ageRating = AGE_RATING.valueOf(sc.nextLine());
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 			sdf.setLenient(false);
 			endDate = sdf.parse(sc.nextLine());
 			n = sc.nextInt();
@@ -207,10 +207,10 @@ public class Movie {
         while(true){
             System.out.print("Enter end date in dd/MM/yyyy format: ");
             String date = sc.nextLine();
-            System.out.println("Enter 24 hour time in HH:mm:ss");
+            System.out.println("Enter 24 hour time in HH:mm");
             String time = sc.nextLine();
             try{
-                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 sdf.setLenient(false);
                 return sdf.parse(date + " " + time);
             }
@@ -286,7 +286,7 @@ public class Movie {
 					break;
 				}
 				else System.out.printf("Invalid end date. New end date must be after %s \n", 
-				new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate));
+				new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate));
 			}
 		}
 	}
@@ -411,7 +411,7 @@ public class Movie {
 			mov += actor + "\n";
 		}
 		mov += String.valueOf(ageRating) + "\n";
-		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate) + "\n";
+		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate) + "\n";
 		if(pastRatings!=null){
 			mov += String.valueOf(pastRatings.size()) + "\n";
 			for(String tixID : tixIDToIdx.keySet()){

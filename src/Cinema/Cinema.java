@@ -1,4 +1,4 @@
-package Cinema;
+package cinema;
 import movList.*;
 import ticket.TypeOfMovie;
 
@@ -54,7 +54,6 @@ public class Cinema {
 			String s2[];
 			int temp[] = {0,0,0};
 			for (int i=0;i<l.length;i++){
-				System.out.println(l[i]);
 				s2 = l[i].split("@",6);
 				for (int k=0;k<3;k++){
 					temp[k] = Integer.valueOf(s2[k]);

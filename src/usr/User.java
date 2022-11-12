@@ -1,7 +1,7 @@
 package usr;
 
 import movList.*;
-import Cinema.*;
+import cinema.*;
 import Cineplex.*;
 import ticket.*;
 

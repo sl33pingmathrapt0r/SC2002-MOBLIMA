@@ -2,10 +2,10 @@ package Cineplex;
 
 import usr.*;
 import movList.*;
-import Cinema.*;
 import ticket.*;
-
+import cinema.*;
 import Cineplex.Screenings.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -65,6 +65,7 @@ public class Cineplex {
             for(int i=0;i<listofMovies.size();i++){
                 ScreeningTimes.add(new Screenings(listofMovies.get(i),cineplex));
             }
+
             MovieCount++;
         }
         }
@@ -98,17 +99,17 @@ public class Cineplex {
         return cineplex;
     }
 
-    public void addScreening(int cinema,String MovieName, int startTime, int date,TypeOfMovie typeOfMovie)throws Exception{
+    public void addScreening(int cinema,String MovieName, Date showingDate,TypeOfMovie typeOfMovie)throws Exception{
         boolean b=false;
         Movie mov= MovieList.getMovieByTitle(MovieName);
         if(mov.getEndDate().after(new SimpleDateFormat("yyyyMMdd").parse(String.valueOf(date)))){
-            b=cinemas.get(cinema-1).AddMovie(mov,startTime,date,typeOfMovie);
+            b=cinemas.get(cinema-1).AddMovie(mov,showingDate,typeOfMovie);
             if(!b){
                 System.out.println("Movie Screening invalid to add.");
                 return;
             }
             int index=searchMovies(MovieName);
-            ScreeningTimes.get(cinema).AddTiming(startTime, date);
+            ScreeningTimes.get(index).AddTiming(showingDate);
         }
         else{
             System.out.println("Screening cannot be added after last date of showing.");
@@ -137,9 +138,14 @@ public class Cineplex {
         return -1;
     }
 
-    public void listShowtimebyMovie(String MovieName){
+    public Date choiceOfListing(int Argument,String MovieName){
+        int index= searchMovies(MovieName);
+        return ScreeningTimes.get(index).showScreening(Argument);
+    }
+
+    public int listShowtimeByMovie(String MovieName){
         int index=searchMovies(MovieName);
-        ScreeningTimes.get(index).ListTiming();
+        return ScreeningTimes.get(index).listTiming();
     }
 
     public String listShowtimeByMovie(int index){
@@ -159,14 +165,14 @@ public class Cineplex {
         cinemas.get(cinema-1).deleteSelect(cinemas.get(cinema-1).getMlist().get(Option-1));
     }
 
-    public void updateScreeningShowtime(int Cinema, String MovieName, int prevStartTime, int afterStartTime, int prevDate, int afterDate){
+    public void updateScreeningShowtime(int Cinema, String MovieName, Date prevDate,Date newDate){
         Movie mov = MovieList.getMovieByTitle(MovieName);
-        cinemas.get(Cinema-1).updateScreening(mov, prevStartTime, afterStartTime, prevDate, afterDate);
+        cinemas.get(Cinema-1).updateScreening(mov,prevDate,newDate);
         int index=searchMovies(MovieName);
-        ScreeningTimes.get(index).update(prevStartTime, afterStartTime, prevDate, afterDate);
+        ScreeningTimes.get(index).update(prevDate,newDate);
     }
 
-    public ArrayList<Integer> listOfScreeningByMovie(String MovieName){
+    public ArrayList<Date> listOfScreeningByMovie(String MovieName){
         int index=searchMovies(MovieName);
         return ScreeningTimes.get(index).listofTimings;
     }
@@ -201,7 +207,7 @@ public class Cineplex {
     public void listTimingsByCineplex(){
         for(int i=0;i<MovieCount;i++){
             System.out.print(listofMovies.get(i)+": ");
-            ScreeningTimes.get(i).ListTimingbyLine();
+            ScreeningTimes.get(i).listTimingByLine();
             System.out.print("\n");
         }
     }
@@ -284,8 +290,8 @@ public class Cineplex {
             reset.append("");
             reset.close();
             FileWriter w = new FileWriter(path+"\\MovieList\\"+movie+".txt",true);
-            for(int j=0;j<ScreeningTimes.get(i).getListingCount();j++){
-                w.append(String.valueOf(ScreeningTimes.get(i).listofTimings.get(j))+"/n");
+            for(int j=0;j<ScreeningTimes.get(i).ListingCount;j++){
+                w.append(new SimpleDateFormat("yyyyMMddHHmm").format(ScreeningTimes.get(i).listofTimings.get(j))+"\n");
             }
             w.close();
         }
