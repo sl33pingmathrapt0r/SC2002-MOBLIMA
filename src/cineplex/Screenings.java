@@ -21,6 +21,8 @@ public class Screenings {
             File MovFile = new File(path);
             Scanner sc= new Scanner(MovFile);
             while(sc.hasNextLine()){
+                if(sc.hasNextLine() == false)
+                    break;
                 Date date = new SimpleDateFormat("yyyyMMddHHmm").parse(sc.nextLine());
                 listofTimings.add(date);
                 ListingCount++;
@@ -46,14 +48,19 @@ public class Screenings {
         ListingCount++;
     }
 
-    void RemoveTiming(Date date){
-        for(int i=0;i<ListingCount;i++){
-            if(date==listofTimings.get(i)){
+    void removeTiming(Date date){
+        for(int i=ListingCount;i>=0;i--){
+            if(date.equals(listofTimings.get(i))){
                 listofTimings.remove(i);
                 ListingCount--;
                 break;
             }
         }
+    }
+
+    void removeTiming(int index){
+        listofTimings.remove(index);
+        ListingCount--;
     }
 
     int listTiming(){
@@ -65,8 +72,8 @@ public class Screenings {
         return ListingCount+1;
     }
 
-    Date showScreening(int index){
-        if(index==ListingCount+1){
+    public Date showScreening(int index){
+        if(index==ListingCount){
             return null;
         }
         else{
@@ -84,13 +91,9 @@ public class Screenings {
 
     void update(Date prevDate, Date newDate){
         for(int i=0;i<ListingCount;i++){
-            if(prevDate==listofTimings.get(i)){
+            if(prevDate.equals(listofTimings.get(i))){
                 listofTimings.set(i,newDate);
             }
         }
-    }
-
-    int getListingCount() {
-        return ListingCount;
     }
 }

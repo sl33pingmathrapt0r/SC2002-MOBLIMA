@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -60,21 +61,31 @@ public class Cineplex {
         }
         File[] movFolder = new File(path + "\\MovieList").listFiles();
         if (movFolder.length > 0) {
-            for (File it : movFolder)
+            for (File it : movFolder){
                 listofMovies.add(it.getName().substring(0, it.getName().length() - 4));
+                MovieCount++;
+            }
             for (int i = 0; i < listofMovies.size(); i++) {
                 ScreeningTimes.add(new Screenings(listofMovies.get(i), cineplex));
             }
-            MovieCount++;
             }
+        CineplexCount++;
         } catch (Exception e) {
             System.out.println("File not found");
             e.printStackTrace();
         }
     }
 
+    public ArrayList<Screenings> getScreeningTimes() {
+        return ScreeningTimes;
+    }
+
     public static int getCineplexCount() {
         return CineplexCount;
+    }
+
+    public int getNoOfCinema() {
+        return noOfCinema;
     }
 
     public int getMovieCount() {
@@ -132,7 +143,7 @@ public class Cineplex {
 
     private int searchMovies(String MovieName) {
         for (int i = 0; i < listofMovies.size(); i++) {
-            if (MovieName == listofMovies.get(i)) {
+            if (MovieName.equals(listofMovies.get(i))) {
                 return i;
             }
         }
@@ -157,15 +168,15 @@ public class Cineplex {
         cinemas.get(Cinema - 1).listMovie();
     }
 
-    public void removeScreening(int cinema, int Option) throws Exception {
+    public void removeScreening(int cinema, int Option){
         Date startDate = cinemas.get(cinema - 1).getMlist().get(Option - 1).getStartDate();
         String MovieName = cinemas.get(cinema - 1).getMlist().get(Option - 1).getMovie();
         int index = searchMovies(MovieName);
-        ScreeningTimes.get(index).RemoveTiming(startDate);
+        ScreeningTimes.get(index).removeTiming(startDate);
         cinemas.get(cinema - 1).deleteSelect(Option - 1);
     }
 
-    public void updateScreeningShowtime(int Cinema, String MovieName, Date prevDate, Date newDate) {
+    public void updateScreeningShowtime(int Cinema, String MovieName, Date prevDate, Date newDate){
         try {
             cinemas.get(Cinema - 1).updateScreening(MovieName, prevDate, newDate);
         } catch (ParseException e) {
@@ -175,6 +186,8 @@ public class Cineplex {
         int index = searchMovies(MovieName);
         ScreeningTimes.get(index).update(prevDate, newDate);
     }
+
+    
 
     public ArrayList<Date> listOfScreeningByMovie(String MovieName) {
         int index = searchMovies(MovieName);
@@ -240,6 +253,20 @@ public class Cineplex {
         }
     }
 
+    public void deleteByTime(Date date){
+        for(int i=0;i<noOfCinema;i++){
+            cinemas.get(i).delete(date);
+        }
+        for(int j=0;j<ScreeningTimes.size();j++){
+            int count =getListingCount(ScreeningTimes.get(j));
+            for(int k=count-1;k>=0;k--){
+                if(ScreeningTimes.get(j).showScreening(k).before(date)){
+                    ScreeningTimes.get(j).removeTiming(k);
+                }
+            }
+        }
+    }
+
     public void listTopSales() throws Exception {
         String[] MovieListArray;
         File f = new File(path + "\\MovieList");
@@ -278,12 +305,12 @@ public class Cineplex {
         }
     }
 
-    public void setChoice(Choice AdminChoice) {
+    public static void setChoice(Choice AdminChoice) {
         choice = AdminChoice;
         return;
     }
 
-    public Choice getChoice(Choice AdminChoice) {
+    public static Choice getChoice() {
         return choice;
     }
 
@@ -317,6 +344,10 @@ public class Cineplex {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public int getListingCount(Screenings screening) {
+        return screening.ListingCount;
     }
 
     public boolean checkVacancy(int Cinema, int index, String SeatID) {

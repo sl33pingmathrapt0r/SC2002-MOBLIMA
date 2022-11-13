@@ -63,4 +63,16 @@ public class inputHandling {
             catch(Exception e){System.out.println("Invalid input");}
         }
     }
+    public static Date getDateOnly() {
+        while(true){
+            System.out.print("Enter date in dd/MM format: ");
+            String date = sc.nextLine();
+            try{
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM");
+                sdf.setLenient(false);
+                return sdf.parse(date);
+            }
+            catch(Exception e){System.out.println("Invalid input");}
+        }
+    }
 }

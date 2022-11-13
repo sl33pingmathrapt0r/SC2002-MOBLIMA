@@ -1,5 +1,6 @@
 
 
+
 import java.util.*;
 import movList.inputHandling;
 import usr.MovieGoer;
@@ -10,7 +11,7 @@ public class loginApp {
     // CURRENT MAIN NEED TO BE SPLIT TO AdminMain AND GoerMain
     private static Scanner scan= new Scanner(System.in);
 
-    public static void loginMenu() {
+    public static void loginMenu(){
         // APPLICATION STARTUP
         Date globalClock= new Date();
         int intInput;

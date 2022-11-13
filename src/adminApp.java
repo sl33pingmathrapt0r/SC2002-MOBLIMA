@@ -1,25 +1,43 @@
 // package src;
 
+
 import java.util.*;
 import usr.*;
 import Cineplex.*;
 import movList.*;
+import ticket.PriceTable;
 
 public class adminApp {
     final static int MAX_CINEPLEX= 3;
     
-    public static Date adminMain(Admin admin) {
+    public static Date adminMain(Admin admin){
         // SETUP
         ArrayList<Cineplex> cineplex= new ArrayList<Cineplex>();
         String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
-        MovieList.initMovList();
+        MovieList.initMovList(admin.getClock());
+        PriceTable.initPriceTable();
         for (int i = 0; i < MAX_CINEPLEX; i++) {
             try {
                 cineplex.add(new Cineplex(strBuilder.toString()));
             } catch (Exception e) {
                 e.getMessage();
             }
+            for(int j=0;j<cineplex.get(i).getMovieCount();j++){
+                Movie mov = MovieList.getMovieByTitle(cineplex.get(i).getListOfMovies().get(j));
+                if(mov.getEndDate().before(admin.getClock())){
+                    for(int k=0;k<cineplex.get(i).getNoOfCinema();k++){
+                        cineplex.get(i).getCinemas().get(k).deleteMovieName(cineplex.get(i).getListOfMovies().get(j));
+                    }
+                    try {
+                        cineplex.get(i).removeMovieCineplex(cineplex.get(i).getListOfMovies().get(j));
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    };
+                }
+            }
+            cineplex.get(i).deleteByTime(admin.getClock());
             char digit = strBuilder.charAt(1);
             digit++;
             strBuilder.setCharAt(1, digit);
@@ -31,6 +49,7 @@ public class adminApp {
             admin.banner();
             int max = 4;
             intInput = inputHandling.getInt("Enter a digit between 1 and "+max+": ", "Invalid input", 1, max);
+            System.out.println();
             switch (intInput) {
 
                 // Create/Update/Remove movie listing
@@ -42,7 +61,7 @@ public class adminApp {
                         "4: Exit"
                         );
                     intInput = inputHandling.getInt("Enter a digit between 1 and 4: ","Invalid input",1, 4);
-                    
+                    System.out.println();
                     if (intInput==4) break;
 
                     if (intInput == 1) {
@@ -70,7 +89,7 @@ public class adminApp {
                         "5: Exit"
                         );
                     intInput = inputHandling.getInt("Enter a digit between 1 and 5: ","Invalid intInput",1, 5);
-
+                    System.out.println();
                     if (intInput==5) break;
 
                     if (intInput == 1) {

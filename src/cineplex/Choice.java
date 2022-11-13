@@ -1,6 +1,6 @@
 package Cineplex;
 
-enum Choice {
+public enum Choice {
     RATINGTOP,
     SALESTOP,
     BOTH

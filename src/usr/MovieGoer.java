@@ -189,7 +189,7 @@ public class MovieGoer extends User {
         }
 
         ArrayList<Ticket> purchase = new ArrayList<Ticket>();
-        String transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyyyMMddHHmm").format(globalClock);
+        String transactionId= cinema.getCinemaCode() + new SimpleDateFormat("yyMMdd").format(getClock()) + new SimpleDateFormat("HHmm").format(new Date());
         for(int i=0; i<bookedSeatID.size(); i++){
             String tixId= transactionId+Integer.toString(i);
             purchase.add(new Ticket(name, hp, title, 

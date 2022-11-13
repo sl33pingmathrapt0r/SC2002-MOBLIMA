@@ -63,7 +63,7 @@ public class PriceTable {
     /**
      * Constructor for price table, loads text file into hash tables
      */
-    public PriceTable() {
+    public static void initPriceTable() {
 
         regularPriceTable = new Hashtable<>();
         platinumPriceTable = new Hashtable<>();
@@ -77,16 +77,14 @@ public class PriceTable {
      * Public holidays are calculated in long due to Date constructor
      */
     private static void loadPH() {
-        File file = new File(absolutePath + "/src/ticket/PH");
+        File file = new File(absolutePath + "/src/ticket/PH.txt");
         Scanner fr;
         try {
             fr = new Scanner(file);
             while (fr.hasNextLine()) {
-                Long tempDate = fr.nextLong();
-                Date date = new Date(tempDate);
-                PriceTable.publicHolidays.add(date);
-                fr.close();
+                PriceTable.publicHolidays.add(new Date(Long.valueOf(fr.nextLine())));
             }
+            fr.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -100,7 +98,7 @@ public class PriceTable {
         try {
             File file = new File(absolutePath + "/src/ticket/PH.txt");
             FileWriter fw;
-            fw = new FileWriter(file);
+            fw = new FileWriter(file, false);
             for (Date date : publicHolidays) {
                 fw.append(Long.valueOf(date.getTime())+ "\n");
             } 
@@ -162,7 +160,7 @@ public class PriceTable {
 
         if (PriceTable.isPH(date)) {
             PriceTable.publicHolidays.remove(date);
-            System.out.println("Date successfuly removed");
+            System.out.println("Date successfully removed");
             return true;
         } else {
             System.out.println("Date not in list of public holidays");
@@ -175,35 +173,38 @@ public class PriceTable {
      * Used by admin in configure system settings
      */
     public static void editPH(){
-        int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Print list of public holidays\n4: Exit\n","Invalid index",1,3);
-        if(choice==1){
-            System.out.println("Enter date to be added");
-            Date date = inputHandling.getDate();
-            PriceTable.addPH(date);
-            savePH();
-        }
-        else if(choice==2){
-            System.out.println("Enter date to be removed");
-            Date date = inputHandling.getDate();
-            PriceTable.removePH(date);
-            savePH();
-        }
-        else if(choice==3){
-           if(publicHolidays.size()!=0){
-            for(Date d : publicHolidays){
-                System.out.println(d);
+        while(true){
+            int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Print list of public holidays\n4: Exit\n","Invalid index",1,4);
+            System.out.println();
+            if(choice==1){
+                System.out.println("Enter date to be added");
+                Date date = inputHandling.getDateOnly();
+                if(PriceTable.addPH(date)) savePH();
             }
-           }
-           else{
-            System.out.println("No public holidays");
-           }
-        }
-        else if(choice==4){
-            System.out.println("Exiting edit public holiday");
-            return;
-        }
-        else{
-            System.out.println("Should never reached here");
+            else if(choice==2){
+                System.out.println("Enter date to be removed");
+                Date date = inputHandling.getDateOnly();
+                PriceTable.removePH(date);
+                savePH();
+            }
+            else if(choice==3){
+            if(publicHolidays.size()!=0){
+                for(Date d : publicHolidays){
+                    System.out.println(d);
+                }
+            }
+            else{
+                System.out.println("No public holidays");
+            }
+            }
+            else if(choice==4){
+                System.out.println("Exiting edit public holiday");
+                return;
+            }
+            else{
+                System.out.println("Should never reached here");
+            }
+            System.out.println();;
         }
     }
     /**
@@ -214,30 +215,39 @@ public class PriceTable {
      */
     private static void fileToTable(
             Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType, Hashtable<TypeOfMovie, Double>>>> table, File file) {
+        int count=0;
+        String r = "";
         try {
             Scanner fr = new Scanner(file);
             while (fr.hasNextLine()) {
                 for (Day i : Day.values()) {
                     String temp = fr.nextLine();
+                    count++;
                     Day day = Day.valueOf(temp);
                     table.put(day, new Hashtable<>());
 
                     for (AgeGroup j : AgeGroup.values()) {
                         String temp2 = fr.nextLine();
+                        count++;
                         AgeGroup age = AgeGroup.valueOf(temp2);
                         table.get(day).put(age, new Hashtable<>());
 
                         for (SeatType k : SeatType.values()) {
                             String temp3 = fr.nextLine();
-                            SeatType seatType = SeatType.valueOf(temp2);
+                            count++;
+                            SeatType seatType = SeatType.valueOf(temp3);
                             table.get(day).get(age).put(seatType, new Hashtable<>());
 
                             for (TypeOfMovie l : TypeOfMovie.values()) {
                                 String temp4 = fr.nextLine();
-                                TypeOfMovie type = TypeOfMovie.valueOf(temp3);
+                                count++;
+                                TypeOfMovie type = TypeOfMovie.valueOf(temp4);
                                 String m = fr.nextLine();
+                                count++;
                                 Double price = Double.valueOf(m);
                                 fr.nextLine();
+                                r = m;
+                                count++;
                                 table.get(day).get(age).get(seatType).put(type, price);
 
                             }
@@ -249,6 +259,10 @@ public class PriceTable {
             fr.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.out.println("count = " + count);
+            System.out.println("r = " + r);
+            System.out.println(file.getName());
+            System.out.println();
             e.printStackTrace();
         }
     }
@@ -268,11 +282,11 @@ public class PriceTable {
                 for (Object j : regularPriceTable.get(i).keySet()) {
                     fw.append(j + "\n");
                     for (Object k : regularPriceTable.get(i).get(j).keySet()) {
-                        fw.append(j + "\n");
+                        fw.append(k + "\n");
                         for (Map.Entry<TypeOfMovie, Double> l : regularPriceTable.get(i).get(j).get(k).entrySet()) {
                             fw.append(l.getKey() + "\n");
                             fw.append(l.getValue() + "\n");
-                            fw.append("\n");
+                            fw.append(" \n");
                         }
                     }
                 }
@@ -299,30 +313,35 @@ public class PriceTable {
         calendar.setTime(date);
         int d= calendar.get(Calendar.DAY_OF_WEEK);
         Day day = Day.values()[d];
-        try {
-            switch (classOfCinema) {
-                case REGULAR:
-                    regularPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
-                    break;
-                case PLATINUM:
-                    platinumPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
-                    break;
-                case ATMOS:
-                    atmosPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
-                    break;
-                default:
-                    System.out.println("Invalid option");
-                    return false;
-            }
-            PriceTable.writeFile();
-            return true;
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return false;
-        }
+        return setPrice(classOfCinema, day, ageGroup, seatType, typeOfMovie, price);
     }
+
+    public static boolean setPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
+            TypeOfMovie typeOfMovie, double price){
+                try {
+                    switch (classOfCinema) {
+                        case REGULAR:
+                            regularPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
+                            break;
+                        case PLATINUM:
+                            platinumPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
+                            break;
+                        case ATMOS:
+                            atmosPriceTable.get(day).get(ageGroup).get(seatType).put(typeOfMovie, price);
+                            break;
+                        default:
+                            System.out.println("Invalid option");
+                            return false;
+                    }
+                    PriceTable.writeFile();
+                    return true;
+        
+                } catch (Exception e) {
+        
+                    e.printStackTrace();
+                    return false;
+                }
+            }
 
     /**
      * Method to check price given the parameters

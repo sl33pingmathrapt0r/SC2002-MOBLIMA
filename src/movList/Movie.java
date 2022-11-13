@@ -277,6 +277,8 @@ public class Movie {
 		System.out.printf("End date set to %s\n", new SimpleDateFormat("dd MMM yyyy HH:mm").format(endDate));
 	}
 
+	void setEndDate(Date d) {endDate = d;}
+
 	 /**
 	  * Utility method for updating reviews
 	  * @param tixID Ticket ID associated with review

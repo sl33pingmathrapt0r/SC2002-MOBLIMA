@@ -43,7 +43,7 @@ public class MovieList {
 	/**
 	 * Utility function to initialise the movieList ArrayList
 	 */
-	public static void initMovList() {
+	public static void initMovList(Date clock) {
 		new File(cwd).mkdirs();
 		// Initialises movieList for ease of access
 		File[] movFolder = new File(cwd).listFiles();
@@ -57,6 +57,12 @@ public class MovieList {
 				catch(Exception e){System.out.printf("Failed to load movie %s \n", mov.getName());}
 			}
 		}
+		for(Movie mov : movieList){
+			if(mov.getEndDate().before(clock)){
+				mov.setStatus(STATUS.END_OF_SHOWING);
+			}
+		}
+		updateFiles();
 	}
 
 	/**

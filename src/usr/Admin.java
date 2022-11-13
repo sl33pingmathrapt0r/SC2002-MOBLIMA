@@ -5,9 +5,12 @@ import cinema.*;
 import Cineplex.*;
 import ticket.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
 // import MovieList.*;
 
@@ -98,8 +101,25 @@ public class Admin extends User {
         MovieList.setEndDate(movieList.get(choice-1));
     }
 
-    public void deleteScreening(Cineplex cineplex) {
-        
+    public void deleteScreening(Cineplex cineplex){
+        try {
+            Scanner sc = new Scanner(System.in);
+            int cinemaNumber = inputHandling.getInt("Enter Cinema number (1-3): ","Invalid option",1,3);
+            cineplex.listMoviesByCinema(cinemaNumber);
+            Cinema cinema = cineplex.getCinemas().get(cinemaNumber-1);
+            if(cinema.getMlist().isEmpty()){
+                System.out.println("No screenings available to delete");
+                return;
+            }
+            int i=1;
+            for(MovieScreening screen : cinema.getMlist()) System.out.printf("%d. %s \n", i++, new SimpleDateFormat("dd MMM yyyy HH:mm").format(screen.getStartDate()));
+            System.out.println(i + ". Exit");
+            int deleteChoice = inputHandling.getInt("Enter screening to remove","Invalid option",1,i);
+            cineplex.removeScreening(cinemaNumber, deleteChoice);
+            System.out.println("Deletion complete");
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     public void createCinemaShowtimes(Cineplex cineplex) {
@@ -158,11 +178,10 @@ public class Admin extends User {
                 validTitles.add(mov.getTitle());
             }
 
-            System.out.println("Select movie to add: ");
             for (int i = 0; i < validTitles.size(); i++)
                 System.out.println((i + 1) + ". " + validTitles.get(i));
             System.out.println((validTitles.size() + 1) + ". Exit");
-            int choice = inputHandling.getInt("", "Invalid input: ", 1, movieList.size() + 1);
+            int choice = inputHandling.getInt("", "Invalid input: ", 1, validTitles.size() + 1);
             if (choice == validTitles.size()+1)
                 return;
             boolean b;
@@ -210,44 +229,78 @@ public class Admin extends User {
 
             Date newScreen = inputHandling.getDate();
             int idx = cineplex.cinemaFinder(title, screenList.get(choice-1));
+            System.out.println("idx is "+ idx);
             if(idx==-1){
                 System.out.println("Error fetching movie");
                 return;
             }
-            cineplex.updateScreeningShowtime(idx-1,
-                    title, screenList.get(choice), newScreen);
+            cineplex.updateScreeningShowtime(idx,
+                    title, screenList.get(choice-1), newScreen);
         }
     }
 
-    public void configureSystemSettings() {
+    private void setListingOption() {
+        System.out.println("Current Available User Options:");
+        switch (Cineplex.getChoice()) {
+          case RATINGTOP: 
+            System.out.println("List by Viewer Ratings");
+            break;
+          case SALESTOP:
+            System.out.println("List by Sales Rankings");
+            break;
+          case BOTH:
+            System.out.println("List by Viewer Ratings\nList by Sales Rankings");
+            break;
+        }
+        System.out.println(
+          "What will the new options be?\n"+
+          "1. List by Viewer Ratings\n" +
+          "2. List by Sales Rankings\n" +
+          "3. Both options available"
+          );
+        int intInput= inputHandling.getInt("Choose an option: ", "Please select a valid option: ", 1, 3);
+        Cineplex.setChoice(Choice.values()[intInput-1]);
+      }
 
-        System.out.println("1: Change Ticket Pricing");
-        System.out.println("2: Edit Public Holiday");
-        System.out.println("3: Edit Top 5 Filter");
-        System.out.println("4: Exit");
+    public void configureSystemSettings() {
+        System.out.println("1: Change Ticket Pricing\n" +
+                            "2: Edit Public Holiday\n" +
+                            "3: Edit Top 5 Filter\n" +
+                            "4: Set Clock\n" + 
+                            "5: Exit"
+                            );;
         int choice;
         Scanner sc = new Scanner(System.in);
-        choice=inputHandling.getInt("Enter Option","Invalid Option",1,4);
+        choice=inputHandling.getInt("Enter Option: ","Invalid Option",1,4);
+        System.out.println();
         switch(choice){
             //public static boolean setPrice(ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,TypeOfMovie typeOfMovie, double price
             case 1:
                 ClassOfCinema classOfCinema=ClassOfCinema.ATMOS;
                 System.out.printf("1: Regular\n2: Atmos\n3: Platinum\n");
-                int option = inputHandling.getInt("Enter a number between 1 to 3", "Invalid Index",1,3);
+                int option = inputHandling.getInt("Enter option: ", "Invalid Index",1,3);
+                System.out.println();
                 if(option==1) classOfCinema=ClassOfCinema.REGULAR;
                 else if(option==2) classOfCinema=ClassOfCinema.ATMOS;
                 else if(option==3) classOfCinema=ClassOfCinema.PLATINUM;
-                Date date = inputHandling.getDate();
+
+                int i = 1;
+                for(Day str : Day.values()) System.out.printf("%d. %s \n", i++, String.valueOf(str));
+                Day day = Day.values()[inputHandling.getInt("Enter option: ", "Invalid Index ", 1, i-1)];
+                System.out.println();
 
                 AgeGroup ageGroup=AgeGroup.ADULT;
                 System.out.printf("1: Adult\n2: Senior\n3: Student\n");
-                option = inputHandling.getInt("Enter a number between 1 to 3", "Invalid Index",1,3);
+                option = inputHandling.getInt("Enter option: ", "Invalid Index",1,3);
+                System.out.println();
                 if(option==1) ageGroup=AgeGroup.ADULT;
                 else if(option==2) ageGroup=AgeGroup.SENIOR;
                 else if(option==3) ageGroup=AgeGroup.STUDENT;
+                
                 SeatType seatType=SeatType.COUPLE;
                 System.out.printf("1: Normal\n2: Elite\n3: Couple\n4: Ultima\n");
-                option = inputHandling.getInt("Enter a number between 1 to 4", "Invalid Index",1,4);
+                option = inputHandling.getInt("Enter option: ", "Invalid Index",1,4);
+                System.out.println();
                 if(option==1) seatType=SeatType.NORMAL;
                 else if(option==2) seatType=SeatType.ELITE;
                 else if(option==3) seatType=SeatType.COUPLE;
@@ -255,11 +308,12 @@ public class Admin extends User {
 
                 TypeOfMovie typeOfMovie=TypeOfMovie.D3;
                 System.out.printf("1: Digital\n2: 3D\n");
-                option = inputHandling.getInt("Enter a number between 1 to 2", "Invalid Index",1,2);
+                option = inputHandling.getInt("Enter option: ", "Invalid Index",1,2);
+                System.out.println();
                 if(option==1) typeOfMovie=TypeOfMovie.DIGITAL;
                 else if(option==2) typeOfMovie=TypeOfMovie.D3;
 
-                double price=PriceTable.checkPrice(classOfCinema, date, ageGroup, seatType, typeOfMovie);
+                double price=PriceTable.checkPrice(classOfCinema, day, ageGroup, seatType, typeOfMovie);
                 System.out.println("Current Price: "+price);
                 while(true){
                     System.out.print("Enter Price to change to: ");
@@ -272,17 +326,28 @@ public class Admin extends User {
                         System.out.printf("Input %s not a valid number. \n", str);
                     }
                 }
-                PriceTable.setPrice(classOfCinema, date, ageGroup, seatType, typeOfMovie, price);
+                System.out.println();
+                PriceTable.setPrice(classOfCinema, day, ageGroup, seatType, typeOfMovie, price);
                 break;
             case 2:
             PriceTable.editPH();
             break;
-            case 3:
-            //WIP
+            case 3: 
+                setListingOption();
             break;
             case 4:
-            System.out.println("Exiting");
-            break;
+              SimpleDateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy, HH:mm");
+              System.out.println("Programme Clock currently set to " + dateFormat.format(getClock()));
+              boolean exit;
+              String strInput;
+              do {
+                System.out.print("Set Clock? Please input Y/N: ");
+                strInput= sc.nextLine();
+              } while ( !( (exit= strInput.equalsIgnoreCase("n")) || strInput.equalsIgnoreCase("y") ) );
+              
+              if (exit) break;
+              setClock(inputHandling.getDate());
+              break;
             default:
             System.out.println("Should never reach here");
             break;

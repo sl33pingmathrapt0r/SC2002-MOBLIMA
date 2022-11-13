@@ -305,13 +305,19 @@ public class Cinema {
 		}
 	}
 
-	public void deleteSelect(int i){
-		File f = new File(this.mlist.get(i).path);
+	public void deleteSelect(int index){
+		File f = new File(this.mlist.get(index).path);
 		f.delete();
-		this.mlist.remove(i);
+		this.mlist.remove(index);
 	}
 
-	
+	public void deleteMovieName(String movieTitle){
+		for(int i=mlist.size()-1; i>=0;i--){
+			if(mlist.get(i).movie.equals(movieTitle)){
+				deleteSelect(i);
+			}
+		}
+	}
 
 	public List<MovieScreening> getMlist() {
 		return mlist;
@@ -370,5 +376,73 @@ public class Cinema {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Returns name of this cinema hall
+	 */
+	public int getName() {
+		return this.name;
+	}
+
+	/**
+	 * Sets the name of this cinema
+	 * @param name The new name of this cinema
+	 */
+	public void setName(int name) {
+		this.name = name;
+	}
+
+	/**
+	 * Returns the name of cineplex this cinema is located in
+	 */
+	public String getCineplex() {
+		return this.Cineplex;
+	}
+
+	/**
+	 * Sets the name of cineplex that this cinema is located in
+	 * @param Cineplex
+	 */
+	public void setCineplex(String Cineplex) {
+		this.Cineplex = Cineplex;
+	}
+
+	/**
+	 * Returns the directory of the class
+	 */
+	public String getPath() {
+		return this.path;
+	}
+
+	/**
+	 * Sets a new directory for this class
+	 * @param path The new directory for this class
+	 */
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	/**
+	 * Assings a new list of screenings to this hall
+	 * @param mlist the new list of movie screenings
+	 */
+	public void setMlist(List<MovieScreening> mlist) {
+		this.mlist = mlist;
+	}
+
+	/**
+	 * Returns the date format used through out this class
+	 */
+	public DateFormat getDf() {
+		return this.df;
+	}
+
+	/**
+	 * Sets a new date format to be used by this class
+	 * @param df the new date format
+	 */
+	public void setDf(DateFormat df) {
+		this.df = df;
 	}
 }
