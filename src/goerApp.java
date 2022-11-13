@@ -1,10 +1,11 @@
-// package src;
-
 import java.io.IOException;
-import java.util.*;
-import usr.*;
-import Cineplex.*;
-import movList.*;
+import java.util.ArrayList;
+
+import Cineplex.Cineplex;
+import movList.inputHandling;
+import movList.MovieList;
+import usr.Accounts;
+import usr.MovieGoer;
 
 public class goerApp {
     final static int MAX_CINEPLEX= 3; 
@@ -33,6 +34,7 @@ public class goerApp {
             goer.banner();
             int max = 6;
             intInput = inputHandling.getInt("Enter a digit between 1 and "+max+": ", "Invalid input", 1, max);
+            System.out.println();
             switch (intInput) {
 
                 // List Movies and View Movie Details
@@ -48,7 +50,7 @@ public class goerApp {
 
                 // View Top 5 Listings
                 case 3:
-                    System.out.println("View Listing a Cineplex");
+                    System.out.println("View Listing in Cineplex");
                     goer.listTop5Movies(goer.selectCineplex(cineplex));
                     break;
 
@@ -66,18 +68,19 @@ public class goerApp {
                     }
                     System.out.println((moviesWatched.size()+1) +": "+ "---Cancel Reviewing---");
                     intInput= inputHandling.getInt("Choose a movie to review: ", "Please choose a valid option: ", 1, moviesWatched.size()+1);
+                    System.out.println();
                     if (intInput==moviesWatched.size()+1) break;
                     goer.newReview(moviesWatched.get(intInput-1));
                     break;
 
                 // Exit
                 case 6: 
-                    System.out.println(goer.getName()+ " Logging Out");
+                    System.out.println(goer.getName()+ " Logging Out...\n----------------------");
                     flag = true;
                     break;
 
                 default:
-                    System.out.println("Invalid Input");
+                    System.out.println("\nInvalid Input!\n");
                     break;
             }
             if (flag) break;

@@ -1,15 +1,10 @@
 package cinema;
 
-import usr.*;
-import movList.*;
-import cinema.*;
-
-import Cineplex.*; 
-import ticket.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import ticket.SeatType;
 
 
 /*
@@ -28,7 +23,7 @@ public class Seats {
     /*
      * Type of seat such as normal,couple,etc
      */
-    SeatType  seatType;
+    SeatType seatType;
     /*
      * A boolean variable to indicate whether or not the seat has been booked by a guest
      */
@@ -129,14 +124,14 @@ public class Seats {
         return s;
     }
 
+    public SeatType getSeatType() {
+        return seatType;
+    }
+
     /*
      * Returns the value of whether seat is taken or not
      */
     public boolean getVacancy(){
         return this.taken;
-    }
-
-    public SeatType getSeatType() {
-        return seatType;
     }
 }

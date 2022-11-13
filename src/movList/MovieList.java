@@ -1,8 +1,13 @@
 package movList;
-import movList.inputHandling;
-import java.util.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
   Method class that interfaces with movie database
@@ -55,7 +60,7 @@ public class MovieList {
 				try{
 					movieList.add(new Movie(mov));
 				}
-				catch(FileNotFoundException e){System.out.printf("Movie %s not found \n", mov.getName());}
+				catch(FileNotFoundException e){}
 				catch(Exception e){
 					
 					System.out.printf("Failed to load movie %s \n", mov.getName());

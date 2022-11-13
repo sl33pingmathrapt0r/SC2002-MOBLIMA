@@ -2,10 +2,10 @@ package Cineplex;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.text.SimpleDateFormat;
 
 public class Screenings {
     ArrayList<Date> listofTimings = new ArrayList<Date>();

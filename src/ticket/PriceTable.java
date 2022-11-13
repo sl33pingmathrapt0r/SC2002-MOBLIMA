@@ -8,11 +8,18 @@
  */
 package ticket;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Scanner;
 
 import movList.inputHandling;
 
@@ -58,6 +65,9 @@ public class PriceTable {
      */
     private static Hashtable<Day, Hashtable<AgeGroup, Hashtable<SeatType, Hashtable<TypeOfMovie, Double>>>> atmosPriceTable;
 
+    /**
+     * The list of public holidays
+     */
     private static ArrayList<Date> publicHolidays=new ArrayList<Date>();
 
     /**
@@ -72,141 +82,6 @@ public class PriceTable {
         loadPH();
     }
 
-    /**
-     * Load all public holidays which is stored in a text file
-     * Public holidays are calculated in long due to Date constructor
-     */
-    private static void loadPH() {
-        File file = new File(absolutePath + "/src/ticket/PH.txt");
-        Scanner fr;
-        try {
-            fr = new Scanner(file);
-            while (fr.hasNextLine()) {
-                PriceTable.publicHolidays.add(new Date(Long.valueOf(fr.nextLine())));
-            }
-            fr.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Saving all public holidays in the list to a text file
-     */
-    private static void savePH() {
-        try {
-            File file = new File(absolutePath + "/src/ticket/PH.txt");
-            FileWriter fw;
-            fw = new FileWriter(file, false);
-            for (Date date : publicHolidays) {
-                fw.append(Long.valueOf(date.getTime())+ "\n");
-            } 
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * A checker to check if a given date is in the list of public holidays
-     * 
-     * @param date date to be checked
-     * @return boolean on whether the date is a public holiday
-     */
-    public static boolean isPH(Date date) {
-
-        Calendar calendarDate = Calendar.getInstance();
-        calendarDate.setTime(date);
-        if(PriceTable.publicHolidays.size()==0) return false; //no public holidays
-    
-        for (Date d : PriceTable.publicHolidays) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(d);
-            if (calendarDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) &&
-                    calendarDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) &&
-                    calendarDate.get(Calendar.DATE) == calendar.get(Calendar.DATE)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Adding a date into the list of public holidays
-     * 
-     * @param date date to be added
-     * @return boolean on whether the add is successful
-     */
-    private static boolean addPH(Date date) {
-
-        if (PriceTable.isPH(date)) {
-            System.out.println("Date already in list of Public Holidays");
-            return false;
-        } else {
-            PriceTable.publicHolidays.add(date);
-            return true;
-        }
-    }
-
-    /**
-     * Removing a date into the list of public holidays
-     * 
-     * @param date date to be removed
-     * @return boolean on whether the removal is successful
-     */
-    private static boolean removePH(Date date) {
-
-        if (PriceTable.isPH(date)) {
-            PriceTable.publicHolidays.remove(date);
-            System.out.println("Date successfully removed");
-            return true;
-        } else {
-            System.out.println("Date not in list of public holidays");
-            return false;
-        }
-    }
-
-    /**
-     * To add or remove a public holiday
-     * Used by admin in configure system settings
-     */
-    public static void editPH(){
-        while(true){
-            int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Print list of public holidays\n4: Exit\n","Invalid index",1,4);
-            System.out.println();
-            if(choice==1){
-                System.out.println("Enter date to be added");
-                Date date = inputHandling.getDate();
-                if(PriceTable.addPH(date)) savePH();
-            }
-            else if(choice==2){
-                System.out.println("Enter date to be removed");
-                Date date = inputHandling.getDate();
-                PriceTable.removePH(date);
-                savePH();
-            }
-            else if(choice==3){
-            if(publicHolidays.size()!=0){
-                for(Date d : publicHolidays){
-                    System.out.println(d);
-                }
-            }
-            else{
-                System.out.println("No public holidays");
-            }
-            }
-            else if(choice==4){
-                System.out.println("Exiting edit public holiday");
-                return;
-            }
-            else{
-                System.out.println("Should never reached here");
-            }
-            System.out.println();;
-        }
-    }
     /**
      * Converting text file to a hashtable for corresponding parameter and price
      * 
@@ -298,14 +173,14 @@ public class PriceTable {
     }
 
     /**
-     * Change price of a ticket
-     * 
-     * @param classOfCinema Regular/ Atmos/ Platinum
-     * @param day           Mon-Sun/ PH
-     * @param ageGroup      Student/ Adult/ Senior
-     * @param typeOfMovie   3D/ Digital
-     * @param price         new price
-     * @return boolean whether ticket has been successfully updated
+     * Change pirce of a ticket given date object
+	 * @param classOfCinema     Regular/ Atmos/ Platinum
+	 * @param date              a Date object containing time
+	 * @param ageGroup	        Student/ Adult/ Senior
+	 * @param seatType          Normal/ Couple/ Elite/ Ultima
+	 * @param typeOfMovie       3D and Digital
+     * @param price             Price to be updated to
+     * @return if the update was successful or not
      */
     public static boolean setPrice(ClassOfCinema classOfCinema, Date date, AgeGroup ageGroup, SeatType seatType,
             TypeOfMovie typeOfMovie, double price) {
@@ -316,6 +191,16 @@ public class PriceTable {
         return setPrice(classOfCinema, day, ageGroup, seatType, typeOfMovie, price);
     }
 
+    /**
+     * Overloaded method to take day as well
+     * @param classOfCinema
+     * @param day
+     * @param ageGroup
+     * @param seatType
+     * @param typeOfMovie
+     * @param price
+     * @return
+     */
     public static boolean setPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
             TypeOfMovie typeOfMovie, double price){
                 try {
@@ -344,11 +229,11 @@ public class PriceTable {
             }
 
     /**
-     * Method to check price given the parameters
-     * 
+     * Method to calculate based on the Date object
      * @param classOfCinema Regular/ Atmos/ Platinum
-     * @param day           Mon-Sun/ PH
-     * @param ageGroup      Student/ Adult/ Senior
+     * @param date          Date object, date of movie
+     * @param ageGroup      Student/ Adult/ Senior   
+     * @param seatType      Normal/ Couple/ Elite/ Ultima
      * @param typeOfMovie   3D/ Digital
      * @return price of the ticket
      */
@@ -376,7 +261,17 @@ public class PriceTable {
         return price;
     }
 
-    public static double checkPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
+    /**
+     * Overloaded method to check price given the parameters
+     * when using ticket constructor
+     * @param classOfCinema Regular/ Atmos/ Platinum
+     * @param day           Mon-Sun/ PH
+     * @param ageGroup      Student/ Adult/ Senior
+     * @param seatType      Normal/ Couple/ Elite/ Ultima
+     * @param typeOfMovie   3D/ Digital
+     * @return price of the ticket
+     */
+     public static double checkPrice(ClassOfCinema classOfCinema, Day day, AgeGroup ageGroup, SeatType seatType,
             TypeOfMovie typeOfMovie) {
       
         double price = 0;
@@ -401,7 +296,6 @@ public class PriceTable {
      * Saving any updates to the text files
      */
     public static void writeFile() {
-
         saveTable(regularPriceTable, rPT);
         saveTable(platinumPriceTable, pPT);
         saveTable(atmosPriceTable, aPT);
@@ -414,6 +308,142 @@ public class PriceTable {
         fileToTable(regularPriceTable, rPT);
         fileToTable(platinumPriceTable, pPT);
         fileToTable(atmosPriceTable, aPT);
+    }
+
+    /**
+     * A checker to check if a given date is in the list of public holidays
+     * 
+     * @param date date to be checked
+     * @return boolean on whether the date is a public holiday
+     */
+    public static boolean isPH(Date date) {
+
+        Calendar calendarDate = Calendar.getInstance();
+        calendarDate.setTime(date);
+        if(PriceTable.publicHolidays.size()==0) return false; //no public holidays
+    
+        for (Date d : PriceTable.publicHolidays) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+            if (calendarDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) &&
+                    calendarDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) &&
+                    calendarDate.get(Calendar.DATE) == calendar.get(Calendar.DATE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Load all public holidays which is stored in a text file
+     * Public holidays are calculated in long due to Date constructor
+     */
+    private static void loadPH() {
+        File file = new File(absolutePath + "/src/ticket/PH.txt");
+        Scanner fr;
+        try {
+            fr = new Scanner(file);
+            while (fr.hasNextLine()) {
+                PriceTable.publicHolidays.add(new Date(Long.valueOf(fr.nextLine())));
+            }
+            fr.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Saving all public holidays in the list to a text file
+     */
+    private static void savePH() {
+        try {
+            File file = new File(absolutePath + "/src/ticket/PH.txt");
+            FileWriter fw;
+            fw = new FileWriter(file, false);
+            for (Date date : publicHolidays) {
+                fw.append(Long.valueOf(date.getTime())+ "\n");
+            } 
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Adding a date into the list of public holidays
+     * 
+     * @param date date to be added
+     * @return boolean on whether the add is successful
+     */
+    private static boolean addPH(Date date) {
+
+        if (PriceTable.isPH(date)) {
+            System.out.println("Date already in list of Public Holidays");
+            return false;
+        } else {
+            PriceTable.publicHolidays.add(date);
+            return true;
+        }
+    }
+
+    /**
+     * Removing a date into the list of public holidays
+     * 
+     * @param date date to be removed
+     * @return boolean on whether the removal is successful
+     */
+    private static boolean removePH(Date date) {
+
+        if (PriceTable.isPH(date)) {
+            PriceTable.publicHolidays.remove(date);
+            System.out.println("Date successfully removed");
+            return true;
+        } else {
+            System.out.println("Date not in list of public holidays");
+            return false;
+        }
+    }
+    
+    /**
+     * To add or remove a public holiday
+     * Used by admin in configure system settings
+     */
+    public static void editPH(){
+        while(true){
+            int choice = inputHandling.getInt("1: Add public holidays\n2: Remove public holidays\n3: Print list of public holidays\n4: Exit\n","Invalid index",1,4);
+            System.out.println();
+            if(choice==1){
+                System.out.println("Enter date to be added");
+                Date date = inputHandling.getDate();
+                if(PriceTable.addPH(date)) savePH();
+            }
+            else if(choice==2){
+                System.out.println("Enter date to be removed");
+                Date date = inputHandling.getDate();
+                PriceTable.removePH(date);
+                savePH();
+            }
+            else if(choice==3){
+            if(publicHolidays.size()!=0){
+                for(Date d : publicHolidays){
+                    System.out.println(d);
+                }
+            }
+            else{
+                System.out.println("No public holidays");
+            }
+            }
+            else if(choice==4){
+                System.out.println("Exiting edit public holiday");
+                return;
+            }
+            else{
+                System.out.println("Should never reached here");
+            }
+            System.out.println();;
+        }
     }
 
 }

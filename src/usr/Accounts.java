@@ -1,12 +1,23 @@
 package usr;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-import java.util.*;
-
-import movList.Movie;
-import ticket.*;
-
-import java.io.*;
+import ticket.AgeGroup;
+import ticket.ClassOfCinema;
+import ticket.SeatType;
+import ticket.Ticket;
+import ticket.TypeOfMovie;
 
 public class Accounts{
     /* 
@@ -218,8 +229,6 @@ public class Accounts{
     
                         }
                     }
-               
-               
 
                 for (Map.Entry review : acc.getReviews().entrySet()){
                     writer.println(review.getKey());

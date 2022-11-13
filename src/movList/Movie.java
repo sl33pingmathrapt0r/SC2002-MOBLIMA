@@ -1,14 +1,15 @@
 package movList;
 
-import movList.inputHandling;
-import java.time.*;
-import java.util.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Movie {
 
@@ -302,7 +303,7 @@ public class Movie {
 	String editReview(String tixID, Scanner sc) {
 		int idx = tixIDToIdx.containsKey(tixID) ? tixIDToIdx.get(tixID) : -1;
 		int r = getR(sc);
-		System.out.println("Enter review: ");
+		System.out.println("\nEnter review: ");
 		String newReview = sc.nextLine();
 		if(idx!=-1){
 			reviews.set(idx, newReview);
@@ -315,7 +316,7 @@ public class Movie {
 			totalRating = (totalRating*pastRatings.size() + r)/reviews.size();
 			pastRatings.add(r);
 		}
-		System.out.println("Review edited");
+		System.out.println("\nReview edited\n");
 		return Integer.valueOf(r) + newReview;
 	}
 
@@ -325,9 +326,6 @@ public class Movie {
 	 */
 	void setStatus(STATUS newStatus){
 		status = newStatus;
-		if(status==STATUS.END_OF_SHOWING) {
-			System.out.printf("Movie %s no longer showing \n", title);
-		}
 	}
 
 	/**

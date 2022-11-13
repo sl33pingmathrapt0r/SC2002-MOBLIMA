@@ -1,11 +1,13 @@
-// package src;
+import java.util.ArrayList;
+import java.util.Date;
 
-
-import java.util.*;
-import usr.*;
-import Cineplex.*;
-import movList.*;
+import Cineplex.Cineplex;
+import movList.inputHandling;
+import movList.Movie;
+import movList.MovieList;
 import ticket.PriceTable;
+import usr.Accounts;
+import usr.Admin;
 
 public class adminApp {
     final static int MAX_CINEPLEX= 3;
@@ -34,7 +36,6 @@ public class adminApp {
                     try {
                         cineplex.get(i).removeMovieCineplex(cineplex.get(i).getListOfMovies().get(j));
                     } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     };
                 }

@@ -1,9 +1,7 @@
-
-
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.*;
-import ticket.*;
+
+import ticket.PriceTable;
 
 public class Main {
     final static int MAX_CINEPLEX = 3;

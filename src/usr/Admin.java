@@ -1,21 +1,27 @@
 package usr;
 
-import movList.*;
-import cinema.*;
-import Cineplex.*;
-import ticket.*;
-
-import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
 
-
-// import MovieList.*;
+import Cineplex.Choice;
+import Cineplex.Cineplex;
+import cinema.Cinema;
+import cinema.MovieScreening;
+import movList.inputHandling;
+import movList.Movie;
+import movList.MovieList;
+import movList.STATUS;
+import ticket.AgeGroup;
+import ticket.ClassOfCinema;
+import ticket.Day;
+import ticket.PriceTable;
+import ticket.SeatType;
+import ticket.TypeOfMovie;
 
 public class Admin extends User {
 
-    // private static movList = new MovieList(scan);
 
     public Admin(String username, String pw) {
         super(true, username, pw);
@@ -136,7 +142,6 @@ public class Admin extends User {
             String title = movieList.get(choice - 1);
             System.out.println();
 
-            ArrayList<Cinema> cinemaList = cineplex.getCinemas();
             int noCinemas = cineplex.getCinemas().size();
             System.out.printf("Select cinema number (1-%d) \n", noCinemas);
             choice = inputHandling.getInt("", "Invalid number: ", 1, noCinemas);

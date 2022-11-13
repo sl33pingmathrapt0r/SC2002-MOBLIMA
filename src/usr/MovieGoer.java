@@ -1,18 +1,22 @@
 package usr;
 
-import usr.*;
-import movList.*;
-import cinema.*;
-import Cineplex.*;
-import ticket.*;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import ticket.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import Cineplex.Cineplex;
+import Cineplex.Screenings;
+import cinema.Cinema;
+import movList.inputHandling;
+import movList.Movie;
+import movList.MovieList;
+import movList.STATUS;
+import ticket.AgeGroup;
+import ticket.Ticket;
 
 public class MovieGoer extends User {
     private String name, hp, email;
@@ -21,7 +25,6 @@ public class MovieGoer extends User {
         this.movieTickets = movieTickets;
     }
 
-    private static Scanner scan= new Scanner(System.in);
     private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
     private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
     private Map<String, String> reviews= new HashMap<String, String>();
@@ -84,6 +87,7 @@ public class MovieGoer extends User {
 
     public void viewMovieDetails(String title) {
         Movie mov = MovieList.getMovieByTitle(title);
+        System.out.println();
         System.out.println(mov.getTitle());
         System.out.println("Duration: " + mov.getDuration());
         System.out.println("Director: " + mov.getDirector());
@@ -91,6 +95,7 @@ public class MovieGoer extends User {
         System.out.print("Cast: ");
         for(String member : mov.getCast()) System.out.println(member + "; ");
         System.out.println("Age rating: " + mov.getAgeRating());
+        System.out.println();
         System.out.printf("Overall rating: %.1f/5 \n", mov.getTotalRating());
         System.out.println("Reviews: ");
         ArrayList<Integer> ratings = mov.getPastRatings();
@@ -238,22 +243,27 @@ public class MovieGoer extends User {
     }    
     
     public void viewBookingHistory() {
-        System.out.println("Bookings by " + name +"\n");
+        System.out.println("\nBookings by " + name +":\n");
         int i= 0;
+        if (bookingHistory.isEmpty()) {
+            System.out.println("No bookings have been made...\n");
+            return;
+        }
         for (Map.Entry transaction : bookingHistory.entrySet()) {
             System.out.println((i+1)+": "+ transaction.getKey());
             for (Ticket tix : bookingHistory.get(transaction.getKey()))
                 printTicket(tix);
             i++;
         }
+        System.out.println();
     }
 
     private void printTicket(Ticket tix) {
         System.out.println(
-            "\t" + tix.getCinemaCode() + "\n" +
-            "\t" + tix.getMovieTitle() + "\n" +
-            "\t" + (new SimpleDateFormat("yyyy-MM-dd\n\tHH:mm")).format(tix.getDate()) + "\n" +
-            "\t" + tix.getSeatID() + "\n"
+            "\t    Hall: " + tix.getCinemaCode() + "\n" +
+            "\t   Movie: " + tix.getMovieTitle() + "\n" +
+            "\tShowtime: " + (new SimpleDateFormat("yyyy-MM-dd\n\t\tHH:mm")).format(tix.getDate()) + "\n" +
+            "\t    Seat: " + tix.getSeatID() + "\n"
             );
         if (tix.getAgeGroup()==AgeGroup.valueOf("STUDENT")) System.out.println("\tFree 12oz Coke\n");
         if (tix.getAgeGroup()==AgeGroup.valueOf("SENIOR")) System.out.println("\tFree Tea / Coffee\n");
@@ -286,6 +296,7 @@ public class MovieGoer extends User {
         }
         System.out.println((tickets.size()+1) +":\t"+ "---CANCEL REVIEWING---");
         intInput= inputHandling.getInt("Select Review: ", "Please select a valid option: ", 1, tickets.size()+1);
+        System.out.println();
 
         if (intInput==tickets.size()+1) return;
         

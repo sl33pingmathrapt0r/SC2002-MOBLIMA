@@ -1,17 +1,12 @@
 package usr;
 
-import movList.*;
-import cinema.*;
-import Cineplex.*;
-import ticket.*;
+import java.util.ArrayList;
+import java.util.Date;
 
-import java.util.*;
-
-//import Cineplex.Cineplex;
-//import movList.inputHandling;
-
-// import java.util.*;
-// import cineplex.*;
+import Cineplex.Cineplex;
+import movList.inputHandling;
+import movList.Movie;
+import movList.MovieList;
 
 public abstract class User {
     private boolean isAdmin;
@@ -28,29 +23,35 @@ public abstract class User {
     public abstract void logout();
 
     public Cineplex selectCineplex(ArrayList<Cineplex>cineplex){
+        System.out.println();
         for(int i=0;i<cineplex.size();i++){
             System.out.println(String.valueOf(i+1)+": "+cineplex.get(i).getCineplexName());
         }
         int choice=inputHandling.getInt("Enter Cineplex index: ","Invalid Index",1,cineplex.size()+1);
+        System.out.println();
         return cineplex.get(choice-1);
     }
 
     public String selectMovie() {
+        System.out.println();
         ArrayList<Movie> movList = MovieList.getMovieList();
         int i = 1;
         System.out.println("Select movie: ");
         for(Movie mov : movList) System.out.printf("%d. %s \n", i++, mov.getTitle());
         int idx = inputHandling.getInt("", "Invalid input", 1, i);
+        System.out.println();
         if(idx==i) return null;
         return movList.get(idx-1).getTitle();
     }
 
     public String selectMovie(Cineplex cineplex) {
+        System.out.println();
         ArrayList<String> movList= cineplex.getListOfMovies();
         int i=1;
         System.out.println("Select movie: ");
         for(String mov : movList) System.out.printf("%d. %s \n", i++, mov);
         int idx = inputHandling.getInt("", "Invalid input", 1, i);
+        System.out.println();
         if(idx==i) return null;
         return movList.get(idx-1);
     }
@@ -62,14 +63,7 @@ public abstract class User {
             e.getMessage();
         }
     }
-    /*
-     * Search/ List Movie
-     * View Movie details
-     * Check seat availability
-     * Book and purchase ticket
-     * View booking history
-     * List top 5 ranking by ticket sales
-     */
+
     public boolean isAdmin() {
         return isAdmin;
     }

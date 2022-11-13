@@ -1,4 +1,5 @@
 package cinema;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import ticket.*;
+
+import ticket.TypeOfMovie;
 
 /*
    An instance of a movie screening.
@@ -150,7 +152,7 @@ public class MovieScreening {
         }
     }
 
-    /*
+    /**
      * Used to change the occupancy of a seat from false to true
      * Typically used when buying tickets
      * @param SeatID The seat that will be booked by the guest
@@ -219,6 +221,4 @@ public class MovieScreening {
     public DateFormat getDf() {
         return df;
     }
-
-    
 }

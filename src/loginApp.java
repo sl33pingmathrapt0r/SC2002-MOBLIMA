@@ -1,16 +1,13 @@
-
-
-
 import java.io.IOException;
-import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
 
-import movList.MovieList;
 import movList.inputHandling;
+import usr.Accounts;
+import usr.Admin;
 import usr.MovieGoer;
-import usr.*;
-import ticket.*;
 
 public class loginApp {
     // TO BE RENAMED AS Main
@@ -23,7 +20,7 @@ public class loginApp {
         int intInput;
         while (true) {
             System.out.println(
-                "Welcome to MOBLIMA\n\n" +
+                "\nWelcome to MOBLIMA\n\n" +
                 "1. Register new account\n" +
                 "2. Already a user? Login\n" +
                 "3. Exit"
@@ -33,6 +30,7 @@ public class loginApp {
                 "Please input a valid option, (1 or 2):\t",
                 1, 3
                 );
+            System.out.println();
 
             if (intInput==3) break;
 
@@ -55,6 +53,7 @@ public class loginApp {
                 username = scan.nextLine();
                 System.out.print("Enter password:\t");
                 pw = scan.nextLine();
+                System.out.println();
 
                 int tries = 1;
                 if ((accLocation = Accounts.isValid(admin, username, pw)) == -1) {
@@ -64,6 +63,7 @@ public class loginApp {
                         username = scan.nextLine();
                         System.out.print("Enter password:\t");
                         pw = scan.nextLine();
+                        System.out.println();
                         if ((accLocation = Accounts.isValid(admin, username, pw)) != -1)
                             break;
                         tries++;
@@ -71,9 +71,10 @@ public class loginApp {
                 }
                 if (tries == 3) {
                     System.out.println("Too many tries. Exiting account login...");
+                    System.out.println();
                     continue;
                 }
-                System.out.println();
+                System.out.println("---LOGIN SUCCESSFUL---\n");
 
                 if (admin) {
                     Admin user= Accounts.getAdminAcc(accLocation);
