@@ -8,8 +8,8 @@ import ticket.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-// import java.text.SimpleDateFormat;
-// import ticket.*;
+import java.text.SimpleDateFormat;
+import ticket.*;
 
 import Cineplex.Cineplex;
 
@@ -35,13 +35,14 @@ public class MovieGoer extends User {
     }
 
     public void banner() {
-        System.out.println("1: Search/List movie");
-        System.out.println("2: View movie details - including reviews and ratings");
-        System.out.println("3: Check seat availability and selection of seat/s.");
-        System.out.println("4: Book and purchase ticket");
-        System.out.println("5: View booking history");
-        System.out.println("6: List the Top 5 ranking by ticket sales OR by overall reviewers' ratings");
-        System.out.println("7: Exit");
+        System.out.println(
+            "1: List Movies and View Movie Details\n" +
+            "2: View Available Seats and Book Tickets\n" +
+            "3: View Top 5 Listings\n" +
+            "4: View Booking History\n" +
+            "5: Add/Edit a Review\n" +
+            "6: Exit"
+            );
     }
 
     public String getName() {
@@ -68,7 +69,7 @@ public class MovieGoer extends User {
         return ratings;
     }
 
-    Set<String> getMoviesWatched() {
+    public Set<String> getMoviesWatched() {
         return movieTickets.keySet();
     }
 
@@ -227,7 +228,7 @@ public class MovieGoer extends User {
         System.out.println("Bookings by " + name);
         int i= 0;
         for (Map.Entry transaction : bookingHistory.entrySet()) {
-            System.out.println("i: "+ transaction.getKey());
+            System.out.println((i+1)+": "+ transaction.getKey());
             for (Ticket tix : bookingHistory.get(transaction.getKey()))
                 printTicket(tix);
             i++;
@@ -236,14 +237,13 @@ public class MovieGoer extends User {
 
     private void printTicket(Ticket tix) {
         System.out.println(
-            "\t" + tix.getCinema() + "\n" +
-            "\t" + tix.getMovie() + "\n" +
-            "\t" + tix.getDate() + "\n" +
-            "\t" + tix.getTime() + "\n" +
-            "\t" + tix.getSeat() + "\n"
+            "\t" + tix.getCinemaCode() + "\n" +
+            "\t" + tix.getMovieTitle() + "\n" +
+            "\t" + (new SimpleDateFormat("yyyy-MM-dd\nHH:mm")).format(tix.getDate()) + "\n" +
+            "\t" + tix.getSeatID() + "\n"
             );
-        if (tix.clientType==STUDENT) System.out.println("\tFree 12oz Coke\n");
-        if (tix.clientType==SENIOR) System.out.println("\tFree Tea / Coffee\n");
+        if (tix.getAgeGroup()==AgeGroup.valueOf("STUDENT")) System.out.println("\tFree 12oz Coke\n");
+        if (tix.getAgeGroup()==AgeGroup.valueOf("SENIOR")) System.out.println("\tFree Tea / Coffee\n");
     }
 
     // void loadBookingHistory(String[] bookingDetails) {
@@ -266,14 +266,6 @@ public class MovieGoer extends User {
     //     movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
     // }
 
-    public void listTop5Movies(Cineplex cineplex) {
-        try {
-            cineplex.listTop5();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
     public void newReview(String movieName) {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
 
@@ -290,19 +282,19 @@ public class MovieGoer extends User {
         System.out.println("Choose a review to edit: "); 
         for (int i=0; i<tickets.size(); i++) {
             if (ratings.get(tickets.get(i))== -1) {
-                System.out.println(i +":\t---ADD A REVIEW---");
+                System.out.println((i+1) +":\t---ADD A REVIEW---");
             } else {
                 System.out.println(
-                    i +":\t"+ 
+                    (i+1) +":\t"+ 
                     ratings.get(tickets.get(i)) +" / 5 STARS;\t"+
                     reviews.get(tickets.get(i))
                     );
             }
         }
-        do {
-            System.out.println("Select Option:\t");
-            intInput= Integer.valueOf(scan.nextLine());
-        } while (intInput>tickets.size() || intInput<=0);
+        System.out.println((tickets.size()+1) +":\t"+ "---CANCEL REVIEWING---");
+        intInput= inputHandling.getInt("Select Review: ", "Please select a valid option: ", 1, tickets.size()+1);
+
+        if (intInput==tickets.size()+1) return;
         
         review= updateMovieReviews(tickets.get(intInput-1), movieName);
         reviews.replace(tickets.get(intInput-1), review.substring(1));
