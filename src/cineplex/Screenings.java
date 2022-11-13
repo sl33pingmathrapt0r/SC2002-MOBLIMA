@@ -69,7 +69,7 @@ public class Screenings {
             System.out.printf("%d. %s\n", i+1, new SimpleDateFormat("dd MMM yyyy HH:mm").format(listofTimings.get(i)));
         }
         System.out.printf("%d. Exit \n",ListingCount+1);
-        return ListingCount+1;
+        return ListingCount;
     }
 
     public Date showScreening(int index){

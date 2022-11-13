@@ -4,6 +4,7 @@ package usr;
 import java.util.*;
 
 import movList.Movie;
+import ticket.*;
 
 import java.io.*;
 
@@ -20,6 +21,7 @@ public class Accounts{
     final private static String ADMIN_PATH= ACC_DIR + "admin" +File.separator;
     final private static String GOER_PATH= ACC_DIR + "moviegoer" +File.separator;
     final private static String ADMIN_KEY_PATH= ACC_DIR + "adminSecret.txt";
+
 
 
     private static ArrayList<MovieGoer> goerAcc= new ArrayList<MovieGoer>();
@@ -57,6 +59,10 @@ public class Accounts{
         File goerDir= new File(GOER_PATH);
         String strInput= "";
         String[] data;
+        
+        Map<String,ArrayList<Ticket>> txIDTicket=new HashMap<>();
+        Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>(); 
+        //tx to ticketid
         if (goerDir.exists()) {
             try {
                 for (File accFile : goerDir.listFiles()) {
@@ -81,16 +87,54 @@ public class Accounts{
                         goerFile.close();
                         continue;   
                     }
-
-                    // add booking history
-                    // while ( (strInput= goerFile.readLine()).length() != "XXXyyyyMMddHHmmi".length() ) {
-                    //     user.loadTransactionHistory(goerFile.readLine());
-                    //     user.loadBookingHistory(goerFile.readLine().split(",", 10));
-                    // }
-
+                     //add booking history
+                     String i=goerFile.readLine(); //no of key value pairs
+                     int noKV = Integer.valueOf(i);
+                     for(int j=0;j<noKV;j++){
+                         String tx = goerFile.readLine(); //transaction id
+                         ArrayList<Ticket> ticketList = new ArrayList<Ticket>();
+                         ArrayList<String> ticketIDs = new ArrayList<String>();
+                         String tic = goerFile.readLine();
+                         String movieTitle="";
+                         int noOfTix = Integer.valueOf(tic); //no of tickets to be in the list
+                         //creating ticket
+                         for(int k=0;k<noOfTix;k++){
+                             //Strings
+                             String clientName = goerFile.readLine();
+                             String clientContact = goerFile.readLine();
+                             movieTitle = goerFile.readLine();
+                             String seatID = goerFile.readLine();
+                             String ticketID = goerFile.readLine();
+                             //enum
+                             String typeOfMovie = goerFile.readLine();
+                             String classOfCinema = goerFile.readLine();
+                             String date = goerFile.readLine();
+                             String ageGroup = goerFile.readLine();
+                             String seatType = goerFile.readLine();
+                             //boolean
+                             String blockbuster = goerFile.readLine();
+                             String preview = goerFile.readLine();
+                             
+                             //type casting 
+                             TypeOfMovie type = TypeOfMovie.valueOf(typeOfMovie);
+                             ClassOfCinema classCinema = ClassOfCinema.valueOf(classOfCinema);
+                             long d = Long.valueOf(date);
+                             Date day = new Date(d);
+                             AgeGroup age = AgeGroup.valueOf(ageGroup);
+                             SeatType seat = SeatType.valueOf(seatType);
+                             Boolean isBlockBuster = Boolean.valueOf(blockbuster);
+                             Boolean isPreview = Boolean.valueOf(preview);
+                             Ticket tix = new Ticket(clientName, clientContact, movieTitle, seatID, tic, type, classCinema, day, age, seat, isBlockBuster, isPreview);
+                             tix.setTicketID(ticketID);
+                             ticketList.add(tix);
+                             ticketIDs.add(ticketID);
+                         }
+                         txIDTicket.put(tx, ticketList);
+                         movieTickets.put(movieTitle,ticketIDs);
+                     }
+                    user.setBookingHistory(txIDTicket);
+                    user.setMovieTickets(movieTickets);
                     // add reviews
-                    data= goerFile.readLine().split(",", 2);
-                    user.loadReview(strInput, data[0], data[1]);
                     while (goerFile.ready()) {
                         strInput= goerFile.readLine();
                         data= goerFile.readLine().split(",", 2);
@@ -99,6 +143,8 @@ public class Accounts{
                     goerFile.close();
                 }
             } catch (Exception e) {
+                e.getStackTrace();
+                System.out.println(e.getMessage());
                 System.out.println("MovieGoer account files could not be retrieved.");
             }
         }
@@ -147,22 +193,33 @@ public class Accounts{
                     acc.getHp() +","+
                     acc.getEmail()
                     );
-                
-                // for (Map.Entry transaction : acc.getBookingHistory().entrySet()) {
-                //     writer.println(transaction.getKey());
-                //     for (Ticket tix : acc.getBookingHistory().get(transaction.getKey())) {
-                //         writer.println(
-                //             tix.getMovieTitle() +","+
-                //             tix.getTypeOfMovie() +","+
-                //             tix.getClassOfCinema() +","+
-                //             tix.getDayOfWeek() +","+
-                //             tix.getTimeOfMovie() +","+
-                //             tix.getAgeGroup() +","+
-                //             tix.getSeatID() +","+
-                //             tix.getDate()
-                //             );
-                //     }
-                // }
+                    Map<String, ArrayList<Ticket>> bookingHistory = acc.getBookingHistory();
+                    int i = bookingHistory.size(); //number of key value pairs
+                    writer.println(i);
+                    for(String tx:bookingHistory.keySet()){
+                        writer.println(tx); //transaction id
+                        ArrayList<Ticket> ticketList = bookingHistory.get(tx);
+                        int noOfTix = ticketList.size();
+                        writer.println(noOfTix); //no of ticket in ticket list
+                        
+                        for(int j=0;j<noOfTix;j++){
+                            writer.println(ticketList.get(j).getClientName());
+                            writer.println(ticketList.get(j).getClientContact());
+                            writer.println(ticketList.get(j).getMovieTitle());
+                            writer.println(ticketList.get(j).getSeatID());
+                            writer.println(ticketList.get(j).getTicketID());
+                            writer.println(ticketList.get(j).getTypeOfMovie());
+                            writer.println(ticketList.get(j).getClassOfCinema());
+                            writer.println(ticketList.get(j).getDate().getTime());
+                            writer.println(ticketList.get(j).getAgeGroup());
+                            writer.println(ticketList.get(j).getSeatType());
+                            writer.println(ticketList.get(j).isBlockBuster());
+                            writer.println(ticketList.get(j).isPreview());
+    
+                        }
+                    }
+               
+               
 
                 for (Map.Entry review : acc.getReviews().entrySet()){
                     writer.println(review.getKey());

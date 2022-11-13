@@ -1,4 +1,5 @@
 package movList;
+
 import movList.inputHandling;
 import java.time.*;
 import java.util.*;
@@ -6,13 +7,9 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-/**
-  Movie class that contains metadata not tied
-  to the cineplex or user
-  @author Wesley Low
-  @version 1.0
-  @since 2022-11-11
- */
+import java.util.ArrayList;
+import java.util.Date;
+
 public class Movie {
 
 	/**
@@ -42,6 +39,8 @@ public class Movie {
 
 	private AGE_RATING ageRating;
 
+	final private boolean isBlockBuster;
+
 	private Date endDate;
 
 	/**
@@ -56,9 +55,6 @@ public class Movie {
 	 */
 	private ArrayList<String> reviews = new ArrayList<String>();
 
-	public Date getEndDate() {
-		return endDate;
-	}
 
 	/**
 	 * Maps ticket ID to the rating and review made by the ticket holder
@@ -115,6 +111,7 @@ public class Movie {
 				cast[i] = sc.nextLine();
 			}
 			ageRating = AGE_RATING.valueOf(sc.nextLine());
+			isBlockBuster = Boolean.valueOf(sc.nextLine());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 			sdf.setLenient(false);
 			endDate = sdf.parse(sc.nextLine());
@@ -152,7 +149,12 @@ public class Movie {
 		setDuration(sc);
 		setCast(sc);
 		setRating(sc);
-		setEndDate();
+		System.out.println("Is the movie a blockbuster?");
+		System.out.println("1. Yes");
+		System.out.println("2. No");
+		if(inputHandling.getInt("", "Invalid input", 1, 2)==1) isBlockBuster = true;
+		else isBlockBuster=false;
+		endDate = setEndDate(sc);
 		System.out.println();
 	}
 
@@ -202,6 +204,21 @@ public class Movie {
 		}
 		return r;
 	}
+
+	private static Date setEndDate(Scanner sc) {
+        while(true){
+            System.out.print("Enter end date in dd/MM/yyyy format: ");
+            String date = sc.nextLine();
+            System.out.println("Enter 24 hour time in HH:mm");
+            String time = sc.nextLine();
+            try{
+                SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                sdf.setLenient(false);
+                return sdf.parse(date + " " + time);
+            }
+            catch(Exception e){System.out.println("Invalid input");}
+        }
+    }
 
 	/**
 	 * Utility method for updating director's name
@@ -257,13 +274,13 @@ public class Movie {
 		}
 	}
 
+	void setEndDate(Date end) {
+		endDate = end;
+	}
+
 	void setEndDate() {
-		if(endDate==null){
-			System.out.println("No end date set");
-			endDate = inputHandling.getDate();
-		}
+		if(endDate==null) endDate = inputHandling.getDate();
 		else{
-			System.out.printf("Current end date: %s\n", new SimpleDateFormat("dd MMM yyyy HH:mm").format(endDate));
 			while(true){
 				Date newDate = inputHandling.getDate();
 				if(newDate.after(endDate)){
@@ -274,10 +291,7 @@ public class Movie {
 				new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate));
 			}
 		}
-		System.out.printf("End date set to %s\n", new SimpleDateFormat("dd MMM yyyy HH:mm").format(endDate));
 	}
-
-	void setEndDate(Date d) {endDate = d;}
 
 	 /**
 	  * Utility method for updating reviews
@@ -399,7 +413,8 @@ public class Movie {
 			mov += actor + "\n";
 		}
 		mov += String.valueOf(ageRating) + "\n";
-		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate) + "\n";
+		mov += String.valueOf(isBlockBuster) + "\n";
+		mov += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(endDate) + "\n";
 		if(pastRatings!=null){
 			mov += String.valueOf(pastRatings.size()) + "\n";
 			for(String tixID : tixIDToIdx.keySet()){
@@ -505,4 +520,14 @@ public class Movie {
 	public int getSales(){
 		return ticketSales;
 	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public boolean isBlockBuster() {
+		return isBlockBuster;
+	}
+
+	
 }

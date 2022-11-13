@@ -44,6 +44,8 @@ public class MovieList {
 	 * Utility function to initialise the movieList ArrayList
 	 */
 	public static void initMovList(Date clock) {
+		//clear array list of Movie first
+		while(!movieList.isEmpty()) movieList.remove(0);
 		new File(cwd).mkdirs();
 		// Initialises movieList for ease of access
 		File[] movFolder = new File(cwd).listFiles();
@@ -54,7 +56,10 @@ public class MovieList {
 					movieList.add(new Movie(mov));
 				}
 				catch(FileNotFoundException e){System.out.printf("Movie %s not found \n", mov.getName());}
-				catch(Exception e){System.out.printf("Failed to load movie %s \n", mov.getName());}
+				catch(Exception e){
+					
+					System.out.printf("Failed to load movie %s \n", mov.getName());
+				}
 			}
 		}
 		for(Movie mov : movieList){

@@ -130,44 +130,7 @@ public class Cinema {
 	 */
 	public void listVacancy(int index) throws FileNotFoundException {
 		mlist.get(index).listVacancy();
-		/*String s = movie.getTitle();
-		int e = calculateEndTime(t, movie);
-		File f = new File(this.path+this.name+"\\"+date+"@"+t+"@"+e+"@"+s+"@.txt");
-		if(!f.exists()) {
-			System.out.println("No such movie with the showtime exists");
-			return;
-		}
-		Scanner sc = new Scanner(f);
-		int i=1;
-		System.out.println("Vacancy of "+s+" at "+t+" on "+date);
-		System.out.println("   A B C D E F G H I J");
-		System.out.println("   ___________________");
-		while(sc.hasNextLine()) {
-			System.out.println(i + " |" +sc.nextLine());
-			i++;
-		}
-		sc.close();*/
-		/*MovieScreening movS = mlist.get(index);
-		for(int i=0;i<60;i++){
-			if(movS.seats[i].taken == false)
-				System.out.print("X");
-			else
-				System.out.print("O");
-			if(i-(i/10)*10 !=9)
-				System.out.print(" ");
-			else
-			System.out.print("\n");
-		}
-		for(int i=60;i<80;i++){
-			if(movS.seats[i].taken == false)
-				System.out.print("XXX");
-			else
-				System.out.print("OOO");
-			if(i-(i/10)*10 ==9 || i-(i/10)*10 ==4 && i != 60)
-				System.out.print("\n");
-			else
-				System.out.print(" ");
-		}*/
+		
 	}
 
 	public int seatConversion(String SeatID){
@@ -324,10 +287,11 @@ public class Cinema {
 	}
 
 	public int search(String title,Date startDate){
+
 		for(int i=0;i<this.mlist.size();i++){
 			MovieScreening movieScreening = this.mlist.get(i);
 			if(startDate.equals(movieScreening.startDate) && movieScreening.movie.equals(title)){
-				return i;
+				return i+1;
 			}
 		}
 		return -1;
@@ -444,5 +408,9 @@ public class Cinema {
 	 */
 	public void setDf(DateFormat df) {
 		this.df = df;
+	}
+
+	public ClassOfCinema getType() {
+		return type;
 	}
 }

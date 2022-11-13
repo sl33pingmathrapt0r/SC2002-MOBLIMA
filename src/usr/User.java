@@ -16,7 +16,7 @@ import java.util.*;
 public abstract class User {
     private boolean isAdmin;
     private String username, pw;
-    private Date syncClock;
+    private Date syncClock=new Date();
 
     public User(boolean isAdmin, String username, String pw) {
         this.isAdmin= isAdmin;
@@ -40,9 +40,9 @@ public abstract class User {
         int i = 1;
         System.out.println("Select movie: ");
         for(Movie mov : movList) System.out.printf("%d. %s \n", i++, mov.getTitle());
-        int idx = inputHandling.getInt("", "Invalid input", 1, i-1);
-        if(idx==i-1) return null;
-        return movList.get(i).getTitle();
+        int idx = inputHandling.getInt("", "Invalid input", 1, i);
+        if(idx==i) return null;
+        return movList.get(idx-1).getTitle();
     }
 
     public String selectMovie(Cineplex cineplex) {
@@ -50,9 +50,9 @@ public abstract class User {
         int i=1;
         System.out.println("Select movie: ");
         for(String mov : movList) System.out.printf("%d. %s \n", i++, mov);
-        int idx = inputHandling.getInt("", "Invalid input", 1, i-1);
-        if(idx==i-1) return null;
-        return movList.get(i);
+        int idx = inputHandling.getInt("", "Invalid input", 1, i);
+        if(idx==i) return null;
+        return movList.get(idx-1);
     }
 
     public void listTop5Movies(Cineplex cineplex) {

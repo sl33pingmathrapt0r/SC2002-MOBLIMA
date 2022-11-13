@@ -92,6 +92,7 @@ public class Seats {
         Scanner sc = new Scanner(f);
         String p = "";
         for (int k=0;k<80;k++){
+            if(sc.hasNextLine())
             p = sc.nextLine();
             if(k<60)
             seatType = SeatType.NORMAL;

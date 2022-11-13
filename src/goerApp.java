@@ -1,19 +1,21 @@
 // package src;
 
+import java.io.IOException;
 import java.util.*;
 import usr.*;
-import cineplex.*;
+import Cineplex.*;
 import movList.*;
 
 public class goerApp {
     final static int MAX_CINEPLEX= 3; 
 
-    public static void goerMain(MovieGoer goer) {
+    public static void goerMain(MovieGoer goer) throws IOException {
         // SETUP
         ArrayList<Cineplex> cineplex= new ArrayList<Cineplex>();
+        Cineplex.setCineplexCount(0);
         String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
-        MovieList.initMovList();
+        MovieList.initMovList(goer.getClock());
         for (int i = 0; i < MAX_CINEPLEX; i++) {
             try {
                 cineplex.add(new Cineplex(strBuilder.toString()));
@@ -29,7 +31,7 @@ public class goerApp {
         int intInput;
         while (true) {
             goer.banner();
-            int max = 7;
+            int max = 6;
             intInput = inputHandling.getInt("Enter a digit between 1 and "+max+": ", "Invalid input", 1, max);
             switch (intInput) {
 
@@ -80,5 +82,11 @@ public class goerApp {
             }
             if (flag) break;
         }
+        // cineplex store
+        for(int i=0;i<Cineplex.getCineplexCount();i++){
+            cineplex.get(i).writeFile();
+        }
+        MovieList.updateFiles();
+        Accounts.goerStore();
     }
 }

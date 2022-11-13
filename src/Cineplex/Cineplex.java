@@ -24,6 +24,10 @@ import java.util.List;
 
 public class Cineplex {
 
+    public static void setCineplexCount(int cineplexCount) {
+        CineplexCount = cineplexCount;
+    }
+
     final private static String route = Path.of("").toAbsolutePath().toString() + "/src/Cineplex";
     final private String path;
     final private String cineplex;
@@ -70,6 +74,7 @@ public class Cineplex {
             }
             }
         CineplexCount++;
+        System.out.println("Cineplex count is "+ CineplexCount);
         } catch (Exception e) {
             System.out.println("File not found");
             e.printStackTrace();
@@ -244,13 +249,14 @@ public class Cineplex {
         System.out.println("Top 5 Movies by rating: \n");
         if (size >= 5) {
             for (int i = 0; i < 5; i++) {
-                System.out.println(SortedMovie[i].getTitle() + "\n");
+                System.out.println(SortedMovie[i].getTitle());
             }
         } else {
             for (int i = 0; i < size; i++) {
-                System.out.println(SortedMovie[i].getTitle() + "\n");
+                System.out.println(SortedMovie[i].getTitle());
             }
         }
+        System.out.println();
     }
 
     public void deleteByTime(Date date){
@@ -281,27 +287,47 @@ public class Cineplex {
         System.out.println("Top 5 Movies by sales: \n");
         if (size >= 5) {
             for (int i = 0; i < 5; i++) {
-                System.out.println(SortedMovie[i].getTitle() + "\n");
+                System.out.println(SortedMovie[i].getTitle());
             }
         } else {
             for (int i = 0; i < size; i++) {
-                System.out.println(SortedMovie[i].getTitle() + "\n");
+                System.out.println(SortedMovie[i].getTitle());
             }
         }
+        System.out.println();
     }
 
-    public void listTop5() throws Exception {
-        switch (choice) {
-            case RATINGTOP:
-                listTopRating();
-                break;
-            case SALESTOP:
-                listTopSales();
-                break;
-            case BOTH:
-                listTopRating();
-                listTopSales();
-                break;
+    public void listTop5(boolean admin) throws Exception{
+        if (!admin) {
+            switch (choice) {
+                case RATINGTOP:
+                    listTopRating();
+                    break;
+                case SALESTOP:
+                    listTopSales();
+                    break;
+                case BOTH:
+                    System.out.println(
+                    "View by\n" +
+                    "1. Viewer's Rating\n"+
+                    "2. Sales Ranking"
+                    );
+                    int intInput= inputHandling.getInt("Choose option: ", "Please select a valid input: ", 1, 2); 
+                    if (intInput==1) listTopRating();
+                    else listTopSales();
+                    break;
+                }
+        } else {
+            System.out.println(
+                "View by\n" +
+                "1. Viewer's Rating\n"+
+                "2. Sales Ranking"
+                );
+            int intInput= inputHandling.getInt("Choose option: ", "Please select a valid input: ", 1, 2); 
+            if (intInput==1) listTopRating();
+            else listTopSales();
+            listTopSales();
+
         }
     }
 

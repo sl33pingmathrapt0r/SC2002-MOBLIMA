@@ -8,6 +8,9 @@ package ticket;
 
 import movList.MovieList;
 import java.util.Date;
+import ticket.*;
+import cinema.Cinema;
+
 import java.util.Calendar;
 
 public class Ticket {
@@ -92,7 +95,7 @@ public class Ticket {
 	 * @param seatID where the seat is at 
 	 * @param transactionID a unique ID corresponding to the transaction when booking ticket
 	 * @param typeOfMovie 3D and Digital
-	 * @param classOfCinema Regular/ Atmos/ Platinum
+	 * @param class1 Regular/ Atmos/ Platinum
 	 * @param date a Date object containing time
 	 * @param ageGroup	Student/ Adult/ Senior
 	 * @param seatType Normal/ Couple/ Elite/ Ultim
@@ -176,14 +179,18 @@ public class Ticket {
 		double price;
 		//check if date is a public holiday
 		if(PriceTable.isPH(date)){
+			System.out.println("Warning: Date selected is a Public Holiday");
 			price=PriceTable.checkPrice(classOfCinema, Day.PH, AgeGroup.ADULT,seatType, typeOfMovie);
+			
 		}
 		//weekdays after 6 no student/ senior promo 
 		else if((ageGroup==AgeGroup.STUDENT || ageGroup==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
+			System.out.println("Warning: No Student/ Senior promo for selected showtime\nPrice will be calculated as Adult");
 			price=PriceTable.checkPrice(classOfCinema, dayOfWeek, AgeGroup.ADULT,seatType, typeOfMovie);
 		}
 		else if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
+			System.out.println("Warning: Weekend Pricing used for Friday after 6pm");
 			price=PriceTable.checkPrice(classOfCinema, Day.SATURDAY, ageGroup,seatType, typeOfMovie);
 		}
 		else{
@@ -210,7 +217,9 @@ public class Ticket {
 		//weekdays after 6 no student/ senior promo 
 		if((ticket.getAgeGroup()==AgeGroup.STUDENT || ticket.getAgeGroup()==AgeGroup.SENIOR) && timeOfMovie>1800 &&
 		(dayOfWeek==Day.MONDAY||dayOfWeek==Day.TUESDAY||dayOfWeek==Day.WEDNESDAY||dayOfWeek==Day.THURSDAY)){
-			price=PriceTable.checkPrice(ticket.getClassOfCinema(), dayOfWeek, AgeGroup.ADULT, ticket.getSeatType(),ticket.getTypeOfMovie());
+			 ticket.setAgeGroup(AgeGroup.ADULT);
+
+			price=PriceTable.checkPrice(ticket.getClassOfCinema(), dayOfWeek, ticket.getAgeGroup(), ticket.getSeatType(),ticket.getTypeOfMovie());
 		}
 		if(dayOfWeek==Day.FRIDAY && timeOfMovie>1800){
 			price=PriceTable.checkPrice(ticket.getClassOfCinema(), Day.SATURDAY, ticket.getAgeGroup(), ticket.getSeatType(),ticket.getTypeOfMovie());
@@ -237,6 +246,10 @@ public class Ticket {
 	 */
 	public String getTicketID() {
 		return ticketID;
+	}
+
+	public void setAgeGroup(AgeGroup ageGroup) {
+		this.ageGroup = ageGroup;
 	}
 
 	/**
@@ -333,5 +346,9 @@ public class Ticket {
 	 */
 	public String getCinemaCode(){
 		return ticketID.substring(0, 2);
+	}
+
+	public void setTicketID(String ticketID) {
+		this.ticketID=ticketID;
 	}
 }

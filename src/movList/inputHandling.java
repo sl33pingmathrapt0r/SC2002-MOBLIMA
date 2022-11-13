@@ -75,4 +75,24 @@ public class inputHandling {
             catch(Exception e){System.out.println("Invalid input");}
         }
     }
+    public static String getSeat(int cinemaID) {
+        if(cinemaID==3){
+            while(true){
+                System.out.print("Enter seat ID (enter \"Exit\" to exit): ");
+                String seatID = sc.nextLine();
+                if(seatID.matches("^[A-D]{1}[0-5]{1}$")) return seatID;
+                if(seatID.equals("Exit")) return null;
+                else System.out.println("Invalid input");
+            }
+        }
+        else{
+            while(true){
+                System.out.print("Enter seat ID (enter \"Exit\" to exit): ");
+                String seatID = sc.nextLine();
+                if(seatID.matches("^[A-F]{1}[0-9]{1}$") || seatID.matches("^[G-J]{1}[0-4]{1}$")) return seatID;
+                if(seatID.equals("Exit")) return null;
+                else System.out.println("Invalid input");
+            }
+        }
+    }
 }

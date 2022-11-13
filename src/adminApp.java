@@ -13,10 +13,11 @@ public class adminApp {
     public static Date adminMain(Admin admin){
         // SETUP
         ArrayList<Cineplex> cineplex= new ArrayList<Cineplex>();
+        Cineplex.setCineplexCount(0);
         String cineplexName="AA";
         StringBuilder strBuilder = new StringBuilder(cineplexName);
-        MovieList.initMovList(admin.getClock());
         PriceTable.initPriceTable();
+        MovieList.initMovList(admin.getClock());
         for (int i = 0; i < MAX_CINEPLEX; i++) {
             try {
                 cineplex.add(new Cineplex(strBuilder.toString()));
@@ -25,7 +26,8 @@ public class adminApp {
             }
             for(int j=0;j<cineplex.get(i).getMovieCount();j++){
                 Movie mov = MovieList.getMovieByTitle(cineplex.get(i).getListOfMovies().get(j));
-                if(mov.getEndDate().before(admin.getClock())){
+                if(mov == null ) continue;
+                else if(mov.getEndDate().before(admin.getClock())){
                     for(int k=0;k<cineplex.get(i).getNoOfCinema();k++){
                         cineplex.get(i).getCinemas().get(k).deleteMovieName(cineplex.get(i).getListOfMovies().get(j));
                     }
@@ -148,6 +150,8 @@ public class adminApp {
         for(int i=0;i<Cineplex.getCineplexCount();i++){
             cineplex.get(i).writeFile();
         }
+        MovieList.updateFiles();
+        Accounts.adminStore();
         return admin.getClock();   
     }
 }

@@ -1,21 +1,26 @@
 
 
 
+import java.io.IOException;
 import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import movList.MovieList;
 import movList.inputHandling;
 import usr.MovieGoer;
 import usr.*;
+import ticket.*;
 
 public class loginApp {
     // TO BE RENAMED AS Main
     // CURRENT MAIN NEED TO BE SPLIT TO AdminMain AND GoerMain
     private static Scanner scan= new Scanner(System.in);
 
-    public static void loginMenu(){
+    public static void loginMenu() throws IOException, ParseException{
         // APPLICATION STARTUP
-        Date globalClock= new Date();
+        Date globalClock= new SimpleDateFormat("yyyyMMdd").parse("20221112");
         int intInput;
-
         while (true) {
             System.out.println(
                 "Welcome to MOBLIMA\n\n" +

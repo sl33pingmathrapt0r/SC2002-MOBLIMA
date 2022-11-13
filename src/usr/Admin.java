@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 // import MovieList.*;
 
@@ -33,8 +32,7 @@ public class Admin extends User {
             try {
                 cineplex.writeFile();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                e.getMessage();
             }
         MovieList.updateFiles();
         Accounts.adminStore();

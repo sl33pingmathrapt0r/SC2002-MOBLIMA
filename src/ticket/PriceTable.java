@@ -178,12 +178,12 @@ public class PriceTable {
             System.out.println();
             if(choice==1){
                 System.out.println("Enter date to be added");
-                Date date = inputHandling.getDateOnly();
+                Date date = inputHandling.getDate();
                 if(PriceTable.addPH(date)) savePH();
             }
             else if(choice==2){
                 System.out.println("Enter date to be removed");
-                Date date = inputHandling.getDateOnly();
+                Date date = inputHandling.getDate();
                 PriceTable.removePH(date);
                 savePH();
             }

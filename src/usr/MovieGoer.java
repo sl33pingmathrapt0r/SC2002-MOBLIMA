@@ -6,6 +6,7 @@ import cinema.*;
 import Cineplex.*;
 import ticket.*;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -16,11 +17,19 @@ import Cineplex.Cineplex;
 public class MovieGoer extends User {
     private String name, hp, email;
 
+    public void setMovieTickets(Map<String, ArrayList<String>> movieTickets) {
+        this.movieTickets = movieTickets;
+    }
+
     private static Scanner scan= new Scanner(System.in);
     private Map<String, ArrayList<Ticket>> bookingHistory= new HashMap<String, ArrayList<Ticket>>();
     private Map<String, ArrayList<String>> movieTickets= new HashMap<String, ArrayList<String>>();
     private Map<String, String> reviews= new HashMap<String, String>();
     private Map<String, Integer> ratings= new HashMap<String, Integer>();
+
+    public void setBookingHistory(Map<String, ArrayList<Ticket>> bookingHistory) {
+        this.bookingHistory = bookingHistory;
+    }
 
     public MovieGoer(String username, String pw, String name, String hp, String email) {
         super(false, username, pw);
@@ -90,36 +99,37 @@ public class MovieGoer extends User {
         System.out.println();
     }
 
-    public boolean bookTicket(Cineplex cineplex, String title) {
+    public boolean bookTicket(Cineplex cineplex, String title) throws IOException {
         int exit = cineplex.listShowtimeByMovie(title);
-        int choice = inputHandling.getInt("Select showtime", "Invalid input: ", 1, exit);
-        Date showtime = cineplex.choiceOfListing(choice, title);
+        if (exit == 0)
+            return false;
+        int choice = inputHandling.getInt("Select showtime: ", "Invalid input: ", 1, exit+1);
+        if(choice == exit+1)
+            return false;
+        Date showtime = cineplex.choiceOfListing(choice-1, title);
         if(showtime==null) return false;
 
         int cinemaID = cineplex.cinemaFinder(title, showtime);
-        Cinema cinema = cineplex.getCinemas().get(cinemaID);
+        Cinema cinema = cineplex.getCinemas().get(cinemaID-1);
         int movieID = cinema.search(title, showtime);
         if(movieID==-1){
-            System.out.println("Error occured");
+            System.out.println("Movie not found");
             return false;
         }
-        try{cinema.listVacancy(movieID);}
-        catch(Exception e){
-            System.out.println("Error occured");
-            return false;
-        }
-
+        
         ArrayList<String> bookedSeatID = new ArrayList<String>();
         ArrayList<AgeGroup> bookedAgeGroup = new ArrayList<AgeGroup>(); 
         double totalPrice = 0;
         while(bookedSeatID.size()<9){
             cineplex.listVacancy(cinemaID, movieID);
             String seatID;
-            System.out.println("Select vacant seat");
+            System.out.println("\nSelect vacant seat");
             while(true){
                 seatID = inputHandling.getSeat(cinemaID);
-                if(seatID==null) break;
-                if(!cineplex.checkSeatVacant(cinemaID, movieID, seatID)){
+                if(seatID==null) {
+                    System.out.println("Dog\n");
+                    break;}
+                if(cineplex.checkVacancy(cinemaID, movieID, seatID)){
                     System.out.println("Seat occupied");
                     continue;
                 }
@@ -135,7 +145,7 @@ public class MovieGoer extends User {
                 break;
             }
             if(seatID==null) break;
-            AgeGroup age;
+            AgeGroup age=AgeGroup.ADULT;
             System.out.println("Select ticket type: ");
             System.out.println("1. STUDENT");
             System.out.println("2. ADULT");
@@ -151,10 +161,10 @@ public class MovieGoer extends User {
             }
             if(flag) break;
 
-            double price = Ticket.calculatePrice(cinema.getClassOfCinema(),
+            double price =Ticket.calculatePrice(cinema.getType(),
                                     cineplex.getMovieType(cinemaID, movieID),
                                     age, 
-                                    cineplex.getTypeOfSeat(cinemaID, movieID, seatID), 
+                                    cineplex.getTypeofSeat(cinemaID, movieID, seatID), 
                                     showtime, 
                                     MovieList.getMovieByTitle(title).isBlockBuster(), 
                                     MovieList.getMovieByTitle(title).getStatus()==STATUS.PREVIEW);
@@ -162,13 +172,13 @@ public class MovieGoer extends User {
             System.out.println("1. Yes");
             System.out.println("2. No");
             if(inputHandling.getInt("", "Invalid input", 1, 2)==1){
-                System.out.println("Purchase confirmed");
+                System.out.println("Selection confirmed");
                 bookedSeatID.add(seatID);
                 bookedAgeGroup.add(age);
                 totalPrice += price;
             }
             else{
-                System.out.println("Purchase removed");
+                System.out.println("Selection removed");
             }
 
         }
@@ -181,7 +191,7 @@ public class MovieGoer extends User {
             System.out.println("Purchase limit reached, please claim your free prize from the counter");
         }
         
-        System.out.printf("Total price: %.2f. Confirm purchase? \n", totalPrice);
+        System.out.printf("Total price: %.2f. Purchase? \n", totalPrice);
         System.out.println("1. Yes");
         System.out.println("2. No");
         if(inputHandling.getInt("", "Invalid input", 1, 2)==2){
@@ -197,19 +207,19 @@ public class MovieGoer extends User {
                                     bookedSeatID.get(i), 
                                     transactionId, 
                                     cineplex.getMovieType(cinemaID, movieID), 
-                                    cinema.getClassOfCinema(), 
+                                    cinema.getType(), 
                                     showtime, 
                                     bookedAgeGroup.get(i), 
-                                    cineplex.getTypeOfSeat(cinemaID, movieID, bookedSeatID.get(i)), 
+                                    cineplex.getTypeofSeat(cinemaID, movieID, bookedSeatID.get(i)), 
                                     MovieList.getMovieByTitle(title).isBlockBuster(), 
                                     MovieList.getMovieByTitle(title).getStatus()==STATUS.PREVIEW));
             ratings.put(tixId, -1);
             reviews.put(tixId, "");
+            cinema.updateVacancy(cinema.search(title,showtime),bookedSeatID.get(i));
         }
         System.out.println("Payment successful!");
         System.out.println("Tickets bought by " + name + "."); 
         System.out.println("You will receive a message to HP(" +hp+ ") and E-mail(" +email+ ") confirming your booking.");
-
         // print transactionID
         bookingHistory.put(transactionId, purchase);
         System.out.println(transactionId + "\n");
@@ -222,10 +232,13 @@ public class MovieGoer extends User {
         System.out.println("Select movie to watch: ");
         for(int i=0; i<movieList.size(); i++) System.out.printf("%d. %s\n", i+1, movieList.get(i));
         System.out.println("%d. Exit");
+        int choice = inputHandling.getInt("Enter number between 1 to "+movieList.size()+1, "", 1, movieList.size()+1);
+        if(choice==movieList.size()+1) return null;
+        return cineplex.getScreeningTimes().get(choice-1);
     }    
     
     public void viewBookingHistory() {
-        System.out.println("Bookings by " + name);
+        System.out.println("Bookings by " + name +"\n");
         int i= 0;
         for (Map.Entry transaction : bookingHistory.entrySet()) {
             System.out.println((i+1)+": "+ transaction.getKey());
@@ -239,32 +252,12 @@ public class MovieGoer extends User {
         System.out.println(
             "\t" + tix.getCinemaCode() + "\n" +
             "\t" + tix.getMovieTitle() + "\n" +
-            "\t" + (new SimpleDateFormat("yyyy-MM-dd\nHH:mm")).format(tix.getDate()) + "\n" +
+            "\t" + (new SimpleDateFormat("yyyy-MM-dd\n\tHH:mm")).format(tix.getDate()) + "\n" +
             "\t" + tix.getSeatID() + "\n"
             );
         if (tix.getAgeGroup()==AgeGroup.valueOf("STUDENT")) System.out.println("\tFree 12oz Coke\n");
         if (tix.getAgeGroup()==AgeGroup.valueOf("SENIOR")) System.out.println("\tFree Tea / Coffee\n");
     }
-
-    // void loadBookingHistory(String[] bookingDetails) {
-    //     Ticket tix= new Ticket(
-    //         bookingDetails[0],
-    //         TypeOfMovie.valueOf(bookingDetails[1]),
-    //         ClassOfCinema.valueOf(bookingDetails[2]),
-    //         name,
-    //         hp,
-    //         Day.valueOf(bookingDetails[3]),
-    //         Integer.valueOf(bookingDetails[4]),
-    //         AgeGroup.valueOf(bookingDetails[5]),
-    //         bookingDetails[6],
-    //         Integer.valueOf(bookingDetails[7]), 
-    //         bookingDetails[8]
-    //     );
-    //     if (!movieTickets.containsKey(bookingDetails[0])) 
-    //         movieTickets.put(bookingDetails[0], new ArrayList<String>());
-        
-    //     movieTickets.get(bookingDetails[0]).add(bookingDetails[8]);
-    // }
 
     public void newReview(String movieName) {
         // ASSUMPTION: EACH TICKET HAS BEEN WATCHED BY UNIQUE VIEWER
@@ -296,7 +289,7 @@ public class MovieGoer extends User {
 
         if (intInput==tickets.size()+1) return;
         
-        review= updateMovieReviews(tickets.get(intInput-1), movieName);
+        review= MovieList.updateMovieReviews(tickets.get(intInput-1), movieName);
         reviews.replace(tickets.get(intInput-1), review.substring(1));
         ratings.replace(tickets.get(intInput-1), Integer.valueOf(review.substring(0,1)));
         
@@ -306,6 +299,5 @@ public class MovieGoer extends User {
     public void loadReview(String tixId, String review, String rating) {
         reviews.put(tixId, review);
         ratings.put(tixId, Integer.valueOf(rating));
-        
     }
 }
