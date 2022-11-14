@@ -1,0 +1,15 @@
+Bob
+Alice
+Bob build building
+120
+2
+A
+B
+G
+true
+20/12/2020 20:00:00
+0
+0.0
+END_OF_SHOWING
+0
+0
